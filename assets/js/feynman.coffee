@@ -7,7 +7,6 @@ initSnap = () ->
   # create the snap document
   paper = Snap 600, 300
   paper.anchors = []
-  paper.selectedLine = null
 
   # anchor a
   a = new Anchor paper, 50, 25
@@ -30,26 +29,29 @@ initSnap = () ->
   k.draw()
 
 
-# create the angular module
+# create the angular module 
 app = angular.module 'feynman', ['colorpicker.module']
-# define the controller
+# define the controller for the properties menu
 app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
   # when an element is selected in snap the event gets propagated through jquery
   $(document).on 'selectedLine', (event, line) ->
 
-
-    # load the stroke into the ui 
+    # load the elements properties into the ui 
     $scope.stroke = line.element.attr 'stroke'
+    $scope.label = line.element.attr 'label'
     
     # set the selected element
     $scope.selectedLine = line
     # apply the change since this is technically done in the jquery environment
     $scope.$apply()
 
-  # update the stroke of the appropriate element when we change the selectedLines stroke
+# update the properties of the appropriate element when we change the selectedLines 
   # the only reason to do this is because snap attributes are not settable with foo.bar = 2
   $scope.$watch 'stroke', (newVal, oldVal) ->
     if $scope.selectedLine
       $scope.selectedLine.element.attr 'stroke', newVal
+  $scope.$watch 'label', (newVal, oldVal) ->
+    if $scope.selectLine
+      $scope.selectedLine.element.attr 'label', newVal
 ]
 

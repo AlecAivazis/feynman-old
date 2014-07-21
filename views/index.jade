@@ -17,14 +17,16 @@ append css
 
 block content
   body(ng-app="feynman")
-    h1 #{title}! {{message}}
+    h1 #{title}!
 
     #propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
-
+      .property
+        label(for="label")
+          | label:
+        input(type="text" ng-model="label" name="label")
       .property
         label(for="stroke")
-          | stroke color: 
-        span.value(ng-click="showColorWheel = !showColorWheel")
-          input(colorpicker="rgb" type="text" ng-model="stroke" 
-                style="background: {{stroke}}; color: {{stroke}}")
+          | color: 
+        input(colorpicker="rgb" type="text" ng-model="stroke" name="stroke"
+              style="background: {{stroke}}; color: {{stroke}}; border: none;")
 

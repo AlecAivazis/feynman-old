@@ -18,7 +18,7 @@ class Line
     # add the line to the dom
     @element = @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y).attr
       stroke: 'black'
-      strokeWidth: 3
+      strokeWidth: 5
 
     # add the click event handler
     @element.node.onclick = =>
