@@ -4,28 +4,27 @@ append js
 
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
 
+  script(type="text/javascript" 
+         src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
+
   != js('Anchor')
   != js('Line')
 
   != js('feynman')
+
+append css
+  link(href="/thirdparty/angular-bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet")
 
 block content
   body(ng-app="feynman")
     h1 #{title}! {{message}}
 
     #propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
-      | {{selectedLine.anchor1.x}}
 
       .property
         label(for="stroke")
           | stroke color: 
         span.value(ng-click="showColorWheel = !showColorWheel")
-          {{selectedLine.element.attr('stroke')}}
-        input(ng-model="stroke")
-        .picker(ng-show="showColorWheel")
-          | hello
-          
-      select
-        option
-         | fill color
+          input(colorpicker="rgb" type="text" ng-model="stroke" 
+                style="background: {{stroke}}; color: {{stroke}}")
 
