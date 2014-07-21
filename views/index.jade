@@ -2,12 +2,30 @@ extends base
 
 append js
 
-  != js('snap.svg')
-  != js('underscore')
+  script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
 
   != js('Anchor')
   != js('Line')
+
   != js('feynman')
 
 block content
-  h1 #{title}!
+  body(ng-app="feynman")
+    h1 #{title}! {{message}}
+
+    #propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
+      | {{selectedLine.anchor1.x}}
+
+      .property
+        label(for="stroke")
+          | stroke color: 
+        span.value(ng-click="showColorWheel = !showColorWheel")
+          {{selectedLine.element.attr('stroke')}}
+        input(ng-model="stroke")
+        .picker(ng-show="showColorWheel")
+          | hello
+          
+      select
+        option
+         | fill color
+
