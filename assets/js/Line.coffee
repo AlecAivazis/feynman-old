@@ -21,5 +21,6 @@ class Line
       strokeWidth: 3
 
     # add the click event handler
-    @element.node.onclick = ->
-      console.log 'you clicked on a line'
+    @element.node.onclick = =>
+      console.log 'clicked on a line'
+      $(document).trigger 'selectedLine', [this]
