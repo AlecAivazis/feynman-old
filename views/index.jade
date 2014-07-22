@@ -3,10 +3,11 @@ extends base
 append js
 
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
-
+  script(type="text/javascript" src="/thirdparty/MathJax/MathJax.js")
   script(type="text/javascript" 
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
 
+  != js('MathJaxObject')
   != js('Anchor')
   != js('Line')
 
@@ -20,10 +21,11 @@ block content
     h1 #{title}!
 
     #propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
+      | Properties for {{label}}
       .property
         label(for="label")
           | label:
-        input(type="text" ng-model="label" name="label")
+        input(type="text" ng-model="selectedLine.label" name="label")
       .property
         label(for="stroke")
           | color: 

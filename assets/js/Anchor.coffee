@@ -50,6 +50,10 @@ class Anchor
     # clear the target anchor
     @targetAnchor = undefined
 
+    # draw any labels that need to be
+    _.each @lines, (line)->
+      line.drawLabel()
+
   dragStart: (x, y, event) =>
     # if the user is holding alt
     if event.altKey
@@ -59,6 +63,11 @@ class Anchor
     # record the location before the drag
     @origin_x = @x
     @origin_y = @y
+
+    # go to each line
+    _.each @lines, (line) ->
+      # and tell it to hide its label
+      line.removeLabel()
 
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
 

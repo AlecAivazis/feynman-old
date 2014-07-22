@@ -45,13 +45,18 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     # apply the change since this is technically done in the jquery environment
     $scope.$apply()
 
-# update the properties of the appropriate element when we change the selectedLines 
+  # update the properties of the appropriate element when we change the selectedLines 
   # the only reason to do this is because snap attributes are not settable with foo.bar = 2
   $scope.$watch 'stroke', (newVal, oldVal) ->
     if $scope.selectedLine
       $scope.selectedLine.element.attr 'stroke', newVal
-  $scope.$watch 'label', (newVal, oldVal) ->
-    if $scope.selectLine
-      $scope.selectedLine.element.attr 'label', newVal
+
+  # if they set the label
+  $scope.$watch 'selectedLine.label', (newVal, oldVal) ->
+    # we need to tell the element to redraw by hand to incorporate the new label 
+    if $scope.selectedLine
+      $scope.selectedLine.drawLabel()
+    
+
 ]
 

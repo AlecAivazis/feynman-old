@@ -8,19 +8,75 @@ class Line
     @anchor1.addLine this
     @anchor2.addLine this
 
-  draw: =>
-
+  # safely remove any elements on the DOM associated with this line
+  remove: =>
     # if this line has already been drawn
     if @element
       # remove it
       @element.remove()
+    @removeLabel
 
+  removeLabel: =>
+    # if this line has a label
+    if @labelEle
+      @labelEle.remove()
+
+  drawLabel: =>
+    # if theres no label defined
+    if not @label
+      return
+    # remove the previous label
+    @removeLabel()
+
+    # the distance to be from the line
+    r = 30
+      
+    # calculate the midpoint
+    midx = (@anchor1.x + @anchor2.x ) / 2
+    midy = (@anchor1.y + @anchor2.y ) / 2
+
+    # find the slope of the perpendicular line 
+    # m' = -1/m
+    m = -(@anchor1.x - @anchor2.x)/(@anchor1.y - @anchor2.y)
+
+    # the points that are perpedicular to the line a distance r away satisfy
+    # y = mx
+    # x^2 + y^2 = r
+
+    x = Math.sqrt(r*r / (1 + (m*m)))
+    y = m*x
+
+    # add these values to the mid point for the appropriate center of the label
+    # positive slope
+    if m > 0
+      labelx = midx - x
+      labely = midy - y
+    else
+      labelx = midx + x
+      labely = midy + y
+
+    # make the label
+    @labelEle = @paper.text labelx, labely, @label
+    # to compute the width
+    width =  @labelEle.getBBox().width
+    # remove the old label
+    @labelEle.remove()
+    # recenter the label based on the width
+    @labelEle = @paper.text (labelx - width/2), labely, @label
+
+
+
+  draw: =>
+    # clear any previous DOM elements
+    @remove()
     # add the line to the dom
-    @element = @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y).attr
+    @element = @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
+
+    # with the right attributes
+    @element.attr
       stroke: 'black'
       strokeWidth: 5
 
     # add the click event handler
     @element.node.onclick = =>
-      console.log 'clicked on a line'
       $(document).trigger 'selectedLine', [this]
