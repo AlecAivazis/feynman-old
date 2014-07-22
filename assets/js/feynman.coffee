@@ -49,6 +49,7 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
   # the only reason to do this is because snap attributes are not settable with foo.bar = 2
   $scope.$watch 'stroke', (newVal, oldVal) ->
     if $scope.selectedLine
+      $scope.selectedLine.stroke = newVal
       $scope.selectedLine.element.attr 'stroke', newVal
 
   # if they set the label

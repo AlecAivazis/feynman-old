@@ -8,7 +8,6 @@ class Anchor
   constructor: (@paper, @x, @y, @radius = 10, @snapRange = 21) ->
     @lines = []
     @paper.anchors.push this
-    console.log 'created an anchor'
 
   # add a line to the list of connected elements
   addLine: (element) =>

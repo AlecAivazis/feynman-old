@@ -55,15 +55,20 @@ class Line
       labelx = midx + x
       labely = midy + y
 
+    # create the label at the appropriate location
+    @createLabel labelx, labely
+
+  createLabel: (x, y) =>
+    @removeLabel()
+
     # make the label
-    @labelEle = @paper.text labelx, labely, @label
+    @labelEle = @paper.text x, y, @label
     # to compute the width
     width =  @labelEle.getBBox().width
     # remove the old label
     @labelEle.remove()
     # recenter the label based on the width
-    @labelEle = @paper.text (labelx - width/2), labely, @label
-
+    @labelEle = @paper.text (x - width/2), y, @label
 
 
   draw: =>
@@ -72,9 +77,10 @@ class Line
     # add the line to the dom
     @element = @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
 
+
     # with the right attributes
     @element.attr
-      stroke: 'black'
+      stroke: if @stroke then @stroke else 'black'
       strokeWidth: 5
 
     # add the click event handler
