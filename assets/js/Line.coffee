@@ -77,7 +77,6 @@ class Line
     # add the line to the dom
     @element = @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
 
-
     # with the right attributes
     @element.attr
       stroke: if @stroke then @stroke else 'black'

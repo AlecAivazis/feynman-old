@@ -58,15 +58,16 @@ class Anchor
     if event.altKey
       # then create a new anchor attached to this one
       @targetAnchor = @split true
+    # the user is not holding the alt key
+    else
+      # go to each line
+      _.each @lines, (line) ->
+        # and tell it to hide its label
+        line.removeLabel()
 
     # record the location before the drag
     @origin_x = @x
     @origin_y = @y
-
-    # go to each line
-    _.each @lines, (line) ->
-      # and tell it to hide its label
-      line.removeLabel()
 
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
 
