@@ -21,6 +21,7 @@ class Line
     if @labelEle
       @labelEle.remove()
 
+  # calculate the location for the label and then draw it
   drawLabel: =>
     # if theres no label defined
     if not @label

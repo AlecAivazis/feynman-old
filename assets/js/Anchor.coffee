@@ -18,7 +18,7 @@ class Anchor
     # if a element was previous defined
     if @element
       # remove it
-      @remove()
+      @element.remove()
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).drag @onMove, @dragStart, @dragEnd
 
@@ -43,14 +43,14 @@ class Anchor
   
         # check if the other anchor is within snap range
         if @snapRange * @snapRange > dx*dx + dy*dy
-          # if it is then merge the two (me onto him)
+          # if it is then merge the two
           compare.merge anchor
 
     # clear the target anchor
     @targetAnchor = undefined
 
     # draw any labels that need to be
-    _.each @lines, (line)->
+    _.each _.compact(@lines), (line)->
       line.drawLabel()
 
   dragStart: (x, y, event) =>
@@ -93,7 +93,6 @@ class Anchor
     # if were told to merge something with itself then our job is done
     if this == other
       return
-    
 
     # go over all of the lines of the anchor
     _.each other.lines, (line) =>
@@ -115,7 +114,10 @@ class Anchor
     @draw()
 
   remove: =>
+    console.log 'removing an anchor'
     @element.remove()
+    # remove this element from the papers list
+    @paper.anchors =  _.without @paper.anchors, this
 
   handleMove: (x, y) =>
     # check that newX falls within the page
