@@ -20,6 +20,8 @@ block content
   body(ng-app="feynman")
     h1 #{title}!
 
+    svg#canvas
+
     #propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
       | Properties for {{selectedLine.label}}
       .property
@@ -27,8 +29,8 @@ block content
           | label:
         input(type="text" ng-model="selectedLine.label" name="label")
       .property
-        label(for="stroke")
+        label(for="color")
           | color: 
-        input(colorpicker="rgb" type="text" ng-model="stroke" name="stroke"
-              style="background: {{stroke}}; color: {{stroke}}; border: none;")
+        input(colorpicker="rgb" type="text" ng-model="stroke" name="color"
+              style="background: {{stroke}}; color: {{stroke}}; border: 1px solid {{stroke}};")
 

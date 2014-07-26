@@ -4,7 +4,7 @@ class Line
 
   element = null
 
-  constructor: (@paper, @anchor1, @anchor2) ->
+  constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
     @anchor1.addLine this
     @anchor2.addLine this
 
@@ -14,6 +14,7 @@ class Line
     if @element
       # remove it
       @element.remove()
+    # remove the label
     @removeLabel
 
   removeLabel: =>
@@ -60,11 +61,11 @@ class Line
     @createLabel labelx, labely
 
   createLabel: (x, y) =>
+    # remove the previous label
     @removeLabel()
-
-    # make the label
+    # make the new label
     @labelEle = @paper.text x, y, @label
-    # to compute the width
+    # compute the width of the label
     width =  @labelEle.getBBox().width
     # remove the old label
     @labelEle.remove()
