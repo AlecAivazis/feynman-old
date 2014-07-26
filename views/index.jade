@@ -3,11 +3,9 @@ extends base
 append js
 
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
-  script(type="text/javascript" src="/thirdparty/MathJax/MathJax.js")
   script(type="text/javascript" 
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
 
-  != js('MathJaxObject')
   != js('Anchor')
   != js('Line')
 
@@ -20,17 +18,21 @@ block content
   body(ng-app="feynman")
     h1 #{title}!
 
-    svg#canvas
-
-    #propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
-      | Properties for {{selectedLine.label}}
-      .property
-        label(for="label")
+    table#propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
+      tr.headerRow
+        th(colspan=2)
+          | Properties for 
+          img(src="http://latex.codecogs.com/svg.latex?{{selectedLine.label}}", 
+            ng-show="selectedLine.label")
+      tr.property
+        td.label
           | label:
-        input(type="text" ng-model="selectedLine.label" name="label")
-      .property
-        label(for="color")
-          | color: 
-        input(colorpicker="rgb" type="text" ng-model="stroke" name="color"
-              style="background: {{stroke}}; color: {{stroke}}; border: 1px solid {{stroke}};")
-
+        td.value
+          input(type="text" ng-model="selectedLine.label" name="label")
+      tr.property
+        td.label
+          | color:
+        td.value
+          input(colorpicker="rgb" type="text" ng-model="stroke" name="color"
+            style="background: {{stroke}}; color: {{stroke}}; border: 1px solid {{stroke}};")
+            

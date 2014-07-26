@@ -1,11 +1,12 @@
 paper =
 
 $(document).ready ->
+
   initSnap()
 
 initSnap = () ->
   # create the snap document
-  paper = Snap('#canvas')
+  paper = Snap 600, 300
   paper.anchors = []
 
   # anchor a

@@ -60,17 +60,13 @@ class Line
     # create the label at the appropriate location
     @createLabel labelx, labely
 
+  # render the label in and add it in the right place
   createLabel: (x, y) =>
     # remove the previous label
     @removeLabel()
     # make the new label
-    @labelEle = @paper.text x, y, @label
-    # compute the width of the label
-    width =  @labelEle.getBBox().width
-    # remove the old label
-    @labelEle.remove()
-    # recenter the label based on the width
-    @labelEle = @paper.text (x - width/2), y, @label
+    @labelEle = paper.image "http://latex.codecogs.com/svg.latex?" + @label, x, y
+    
 
 
   draw: =>

@@ -1,14 +1,15 @@
 doctype html
 html
   head
-    title The Online Feynman Diagram Tool
+    block head
+      title The Online Feynman Diagram Tool
+      
+      block css
+        != css('default')
 
-    block css
-      != css('default')
-
-    block js
-      script(type="text/javascript" src="/thirdparty/jquery/dist/jquery.js")
-      script(type="text/javascript" src="/thirdparty/angular/angular.js")
-      script(type="text/javascript" src="/thirdparty/underscore/underscore.js")
+      block js
+        script(type="text/javascript" src="/thirdparty/jquery/dist/jquery.js")
+        script(type="text/javascript" src="/thirdparty/angular/angular.js")
+        script(type="text/javascript" src="/thirdparty/underscore/underscore.js")
 
   block content
