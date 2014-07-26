@@ -24,7 +24,6 @@ class Anchor
 
     # when you click on the circle
     @element.node.onclick = (event) ->
-      console.log 'clicked on anchor'
       event.stopPropagation()
 
     # update the associated lines
@@ -114,19 +113,18 @@ class Anchor
     @draw()
 
   remove: =>
-    console.log 'removing an anchor'
     @element.remove()
     # remove this element from the papers list
     @paper.anchors =  _.without @paper.anchors, this
 
   handleMove: (x, y) =>
+
     # check that newX falls within the page
-    if @radius <= x <= @paper.attr('width') - @radius
+    if @radius <= x <= $(@paper.node).width() - @radius
       @x = x
     # check that newY falls within the page
-    if @radius <= y <= @paper.attr('height') - @radius
+    if @radius <= y <= $(@paper.node).height() - @radius
       @y = y
-  
     # update the ui element
     @draw()
 

@@ -18,6 +18,8 @@ block content
   body(ng-app="feynman")
     h1 #{title}!
 
+    svg#canvas
+
     table#propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
       tr.headerRow
         th(colspan=2)
