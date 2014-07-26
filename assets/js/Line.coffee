@@ -24,11 +24,11 @@ class Line
 
   # calculate the location for the label and then draw it
   drawLabel: =>
+    # remove the previous label
+    @removeLabel()
     # if theres no label defined
     if not @label
       return
-    # remove the previous label
-    @removeLabel()
 
     # the distance to be from the line
     r = 30

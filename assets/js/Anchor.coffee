@@ -19,6 +19,7 @@ class Anchor
     if @element
       # remove it
       @element.remove()
+
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).drag @onMove, @dragStart, @dragEnd
 
