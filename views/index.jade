@@ -33,6 +33,15 @@ block content
           input(type="text" ng-model="selectedLine.label" name="label")
       tr.property
         td.label
+          | label position:
+        td.value
+          input(type="radio" ng-model="selectedLine.labelPosition" value="top")
+          |  top
+          br
+          input(type="radio" ng-model="selectedLine.labelPosition" value="bottom")
+          |  bottom
+      tr.property
+        td.label
           | color:
         td.value
           input(colorpicker="rgb" type="text" ng-model="stroke" name="color"

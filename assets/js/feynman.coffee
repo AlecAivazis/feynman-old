@@ -33,7 +33,6 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
     # load the elements properties into the ui 
     $scope.stroke = line.element.attr 'stroke'
-    $scope.label = line.element.attr 'label'
     
     # set the selected element
     $scope.selectedLine = line
@@ -57,6 +56,11 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
   $scope.$watch 'selectedLine.style', (newVal, oldVal) ->
     if $scope.selectedLine
       $scope.selectedLine.draw()
+
+  # if they change the line style
+  $scope.$watch 'selectedLine.labelPosition', (newVal, oldVal) ->
+    if $scope.selectedLine
+      $scope.selectedLine.drawLabel()
     
 
 ]

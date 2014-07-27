@@ -7,6 +7,7 @@ class Line
   constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
     @anchor1.addLine this
     @anchor2.addLine this
+    @labelPosition = 'top'
 
   # safely remove any elements on the DOM associated with this line
   remove: =>
@@ -53,12 +54,22 @@ class Line
 
     # add these values to the mid point for the appropriate center of the label
     # positive slope
+
     if m > 0
-      labelx = midx - x
-      labely = midy - y
-    else
-      labelx = midx + x
-      labely = midy + y
+      console.log 'positive slope'
+      if @labelPosition == 'top'
+        labelx = midx - x
+        labely = midy - y
+      else
+        labelx = midx + x
+        labely = midy + y
+    if m < 0
+      if @labelPosition == 'top'
+        labelx = midx + x
+        labely = midy + y
+      else
+        labelx = midx - x
+        labely = midy - y
 
     # create the label at the appropriate location
     @createLabel labelx, labely
@@ -80,7 +91,7 @@ class Line
     # compute the lengths between the anchors
     dx = @anchor1.x - @anchor2.x
     dy = @anchor1.y - @anchor2.y
-    length = Math.sqrt dx*dx + dy*dy
+    length = Math.sqrt(dx*dx + dy*dy)
 
     # figure out the angle that this line needs to take
     angle = Math.atan(dy/dx) * 180/Math.PI
@@ -90,7 +101,9 @@ class Line
 
     # create the alignment matrix by scaling it to match the width
     # and then rotating it along the line joining the two anchors
-    alignment = new Snap.Matrix().scale(length/width, 1, @anchor1.x, @anchor1.y).rotate(angle, @anchor1.x, @anchor1.y)
+    alignment = new Snap.Matrix().scale(length/width, 1, @anchor1.x, @anchor1.y)
+                                 .rotate(angle, @anchor1.x, @anchor1.y)
+
     # apply the transform and return the element
     element.transform(alignment)
 
@@ -99,7 +112,6 @@ class Line
     return @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
 
   drawAsGluon: =>
-
     # the width of one gluon loop
     gluonWidth = 20
     # the ratio of height to width for the loops
@@ -132,7 +144,7 @@ class Line
 
     # add the svg element
     element = @paper.path(pathString)
-
+    # align along the line created by the anchors
     @align(element)
     
 
@@ -161,14 +173,14 @@ class Line
         y1: amplitude * Math.sin(freq * (i - 1 + phase)) + @anchor1.y
         x2: i + @anchor1.x
         y2: amplitude * Math.sin(freq * (i + phase)) + @anchor1.y
-    
+    # align along the line created by the anchors
     @align(group)
 
   # draw the line on the DOM
   draw: =>
+
     # clear any previous DOM elements
     @remove()
-
     # what is drawn changes on the style
     switch @style
       when "line"
