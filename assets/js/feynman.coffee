@@ -2,33 +2,27 @@ paper =
 
 $(document).ready ->
 
-  initSnap()
-
-initSnap = () ->
   # create the snap document
   paper = Snap '#canvas' 
   paper.anchors = []
 
-  # anchor a
+  # define the anchors for the default view
+
   a = new Anchor paper, 50, 25
-  a.draw()
-
-  # anchor b
   b = new Anchor paper, 150, 100
-  b.draw()
-
-  # anchor c
   c = new Anchor paper, 50, 175
+  d = new Anchor paper, 300, 100
+
+  # and the lines connecting them
+
+  k = new Line paper, a, b 
+  l = new Line paper, c, b, 'gluon'
+  m = new Line paper, b, d, 'em'
+
+  a.draw()
+  b.draw()
   c.draw()
-
-  # line going from a to b
-  l = new Line paper, a, b 
-  l.draw()
-
-  # another line
-  k = new Line paper, c, b
-  k.draw()
-
+  d.draw()
 
 # create the angular module 
 app = angular.module 'feynman', ['colorpicker.module']
@@ -58,6 +52,11 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     # we need to tell the element to redraw by hand to incorporate the new label 
     if $scope.selectedLine
       $scope.selectedLine.drawLabel()
+
+  # if they change the line style
+  $scope.$watch 'selectedLine.style', (newVal, oldVal) ->
+    if $scope.selectedLine
+      $scope.selectedLine.draw()
     
 
 ]

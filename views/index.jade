@@ -37,4 +37,16 @@ block content
         td.value
           input(colorpicker="rgb" type="text" ng-model="stroke" name="color"
             style="background: {{stroke}}; color: {{stroke}}; border: 1px solid {{stroke}};")
+      tr.property
+        td.label
+          | line style:
+        td.value
+          select(ng-model="selectedLine.style")
+            option(value = 'line')
+              | line
+            option(value = 'gluon')
+              | gluon
+            option(value = 'em')
+              | em
+            
             
