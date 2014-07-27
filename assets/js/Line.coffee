@@ -165,11 +165,11 @@ class Line
     
 
   drawAsSine: =>
-    # define the neccessary paramters
+    # the length of the pattern
     period = 30
+    # the height of the pattern
     amplitude = 13
-    phase = 0
-
+    # compute frequency from period
     freq = 2 * Math.PI / period
 
     # compute the length of the line
@@ -186,9 +186,9 @@ class Line
     for i in [0... nCycles * period]
       group.add @paper.line().attr
         x1: (i-1) + @anchor1.x
-        y1: amplitude * Math.sin(freq * (i - 1 + phase)) + @anchor1.y
+        y1: amplitude * Math.sin(freq * (i - 1 )) + @anchor1.y
         x2: i + @anchor1.x
-        y2: amplitude * Math.sin(freq * (i + phase)) + @anchor1.y
+        y2: amplitude * Math.sin(freq * i) + @anchor1.y
     # align along the line created by the anchors
     @align(group)
 
