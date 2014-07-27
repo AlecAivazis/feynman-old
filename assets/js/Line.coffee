@@ -71,19 +71,28 @@ class Line
     @labelEle = paper.image "http://latex.codecogs.com/svg.latex?" + @label, x, y
 
   # align an element along the line connecting the two anchors
+  # assumes the element is horizontal before align for the purposes for scaling
   align: (element) =>
-    # compute the lengths
+
+    # figure out the width of the element
+    width = element.getBBox().width
+
+    # compute the lengths between the anchors
     dx = @anchor1.x - @anchor2.x
     dy = @anchor1.y - @anchor2.y
+    length = Math.sqrt dx*dx + dy*dy
+
     # figure out the angle that this line needs to take
     angle = Math.atan(dy/dx) * 180/Math.PI
     # we might need to flip the angle
     if dx > 0
       angle += 180
 
-    # perform the rotation
-    matrix = new Snap.Matrix().rotate angle, @anchor1.x, @anchor1.y
-    element.transform(matrix)
+    # create the alignment matrix by scaling it to match the width
+    # and then rotating it along the line joining the two anchors
+    alignment = new Snap.Matrix().scale(length/width, 1, @anchor1.x, @anchor1.y).rotate(angle, @anchor1.x, @anchor1.y)
+    # apply the transform and return the element
+    element.transform(alignment)
 
   drawAsLine: =>
     # add the line to the dom
@@ -147,13 +156,11 @@ class Line
     group = @paper.g()
 
     for i in [0... nCycles * period]
-      line = @paper.line().attr
+      group.add @paper.line().attr
         x1: (i-1) + @anchor1.x
         y1: amplitude * Math.sin(freq * (i - 1 + phase)) + @anchor1.y
         x2: i + @anchor1.x
         y2: amplitude * Math.sin(freq * (i + phase)) + @anchor1.y
-
-      group.add line
     
     @align(group)
 
