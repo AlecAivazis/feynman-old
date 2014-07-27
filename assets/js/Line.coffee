@@ -58,10 +58,8 @@ class Line
     y = m*x
 
     # add these values to the mid point for the appropriate center of the label
-
-    # CAREFUL: these slopes take into account the possible minus sign from midx/y
+    # CAREFUL: these signs take into account the possible minus sign from midx/y calculation
     if m > 0
-      console.log 'positive slope'
       if @labelPosition == 'top'
         labelx = midx - x
         labely = midy - y
@@ -75,6 +73,13 @@ class Line
       else
         labelx = midx - x
         labely = midy - y
+
+    # if we hit an infinity in y
+    if isNaN labely
+      if @labelPosition == 'top'
+        labely = midy - r
+      else
+        labely = midy + r
 
     # create the label at the appropriate location
     @createLabel labelx, labely
