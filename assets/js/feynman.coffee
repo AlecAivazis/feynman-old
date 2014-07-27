@@ -66,6 +66,10 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     if $scope.selectedLine
       $scope.selectedLine.draw()
 
+  $scope.$watch 'selectedLine.loopDirection', (newVal, oldVal) ->
+    if $scope.selectedLine
+      $scope.selectedLine.draw()
+
   # if they change the line style
   $scope.$watch 'selectedLine.labelPosition', (newVal, oldVal) ->
     if $scope.selectedLine

@@ -13,6 +13,7 @@ class Line
     @labelPosition = 'top'
     @width = 3.6
     @stroke = 'black'
+    @loopDirection = 1
 
   # safely remove any elements on the DOM associated with this line
   remove: =>
@@ -126,7 +127,7 @@ class Line
     gluonWidth = 20
     # the ratio of height to width for the loops
     ratio = 1
-    gluonHeight = ratio*gluonWidth
+    gluonHeight = ratio*gluonWidth * parseInt(@loopDirection)
 
     # compute the length of the line
     dx = @anchor1.x - @anchor2.x

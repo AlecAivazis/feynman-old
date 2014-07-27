@@ -66,5 +66,14 @@ block content
               | gluon
             option(value = 'em')
               | em
-            
+      tr.property(ng-show="selectedLine.style == 'gluon'")
+        td.label
+          | loop direction:
+        td.value
+          select(ng-model="selectedLine.loopDirection")
+            option(value="1")
+              | up
+            option(value="-1")
+              | down
+        
             
