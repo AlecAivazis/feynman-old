@@ -7,7 +7,12 @@ class Line
   constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
     @anchor1.addLine this
     @anchor2.addLine this
+
+    # default values
+
     @labelPosition = 'top'
+    @width = 3.6
+    @stroke = 'black'
 
   # safely remove any elements on the DOM associated with this line
   remove: =>
@@ -53,8 +58,8 @@ class Line
     y = m*x
 
     # add these values to the mid point for the appropriate center of the label
-    # positive slope
 
+    # CAREFUL: these slopes take into account the possible minus sign from midx/y
     if m > 0
       console.log 'positive slope'
       if @labelPosition == 'top'
@@ -192,8 +197,8 @@ class Line
 
     # apply the correct styling
     @element.attr
-      stroke: if @stroke then @stroke else 'black'
-      strokeWidth: 3.5
+      stroke: @stroke
+      strokeWidth: @width
       fill: 'none'
       
 

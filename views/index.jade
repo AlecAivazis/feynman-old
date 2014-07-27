@@ -5,6 +5,7 @@ append js
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
   script(type="text/javascript" 
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
+  script(type="text/javascript" src="/thirdparty/angular-slider/angular-slider.js")
 
   != js('Anchor')
   != js('Line')
@@ -13,6 +14,7 @@ append js
 
 append css
   link(href="/thirdparty/angular-bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet")
+  != css('slider')
 
 block content
   body(ng-app="feynman")
@@ -20,7 +22,7 @@ block content
 
     svg#canvas
 
-    table#propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine")
+    table#propertiesMenu(ng-controller="elementProperties" ng-show="selectedLine  != undefined")
       tr.headerRow
         th(colspan=2)
           | Properties for 
@@ -46,6 +48,13 @@ block content
         td.value
           input(colorpicker="rgb" type="text" ng-model="stroke" name="color"
             style="background: {{stroke}}; color: {{stroke}}; border: 1px solid {{stroke}};")
+      tr.property
+        td.label
+          | stroke width:
+        td.value
+          | {{selectedLine.width}}
+          slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
+                 style="width: 70%")
       tr.property
         td.label
           | line style:

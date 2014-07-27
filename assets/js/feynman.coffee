@@ -25,7 +25,7 @@ $(document).ready ->
   d.draw()
 
 # create the angular module 
-app = angular.module 'feynman', ['colorpicker.module']
+app = angular.module 'feynman', ['colorpicker.module', 'uiSlider']
 # define the controller for the properties menu
 app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
   # when an element is selected in snap the event gets propagated through jquery
@@ -33,9 +33,13 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
     # load the elements properties into the ui 
     $scope.stroke = line.element.attr 'stroke'
+
+    # fucking ui-slider
+    $scope.width = line.width
     
     # set the selected element
     $scope.selectedLine = line
+    console.log line.width
     # apply the change since this is technically done in the jquery environment
     $scope.$apply()
 
@@ -45,6 +49,11 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     if $scope.selectedLine
       $scope.selectedLine.stroke = newVal
       $scope.selectedLine.element.attr 'stroke', newVal
+
+  $scope.$watch 'width', (newVal, oldVal) ->
+    if $scope.selectedLine
+      $scope.selectedLine.width = newVal
+      $scope.selectedLine.draw()
 
   # if they set the label
   $scope.$watch 'selectedLine.label', (newVal, oldVal) ->
