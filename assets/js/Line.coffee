@@ -122,6 +122,11 @@ class Line
     # add the line to the dom
     return @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
 
+  # draw  
+  drawAsDashedLine: =>
+    element = @drawAsLine().attr
+      strokeDasharray: '10 '
+
   drawAsGluon: =>
     # the width of one gluon loop
     gluonWidth = 20
@@ -196,6 +201,8 @@ class Line
     switch @style
       when "line"
         @element = @drawAsLine()
+      when "dashed"
+        @element = @drawAsDashedLine()
       when "gluon"
         @element = @drawAsGluon()
       when "em"
