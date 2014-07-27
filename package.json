@@ -9,7 +9,14 @@
     "coffee-script": "*",
     "connect-assets": "*",
     "express": "^3.14.0",
+    "fs-tools": "^0.2.11",
+    "hike": "^0.1.4",
     "jade": "*",
+    "lodash": "^2.4.1",
+    "mimoza": "^0.3.0",
+    "pako": "^0.2.5",
+    "shellwords": "^0.1.0",
+    "source-map": "^0.1.37",
     "stylus": "*"
   }
 }
