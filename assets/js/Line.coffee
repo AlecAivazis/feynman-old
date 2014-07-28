@@ -194,6 +194,10 @@ class Line
   # draw the line on the DOM
   draw: =>
 
+    # if this element was previously selected
+    if @element and @element.hasClass('selectedElement')
+      isSelected = true
+
     # clear any previous DOM elements
     @remove()
     # what is drawn changes on the style
@@ -213,6 +217,9 @@ class Line
       stroke: @color
       strokeWidth: @width
       fill: 'none'
+
+    if isSelected
+      @element.addClass('selectedElement')
 
 
     # on drag move
