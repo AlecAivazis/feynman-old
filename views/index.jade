@@ -10,7 +10,8 @@ append js
   != js('Anchor')
   != js('Line')
 
-  != js('feynman')
+  != js('app')
+  != js('paper')
 
 append css
   link(href="/thirdparty/angular-bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet")
@@ -38,10 +39,10 @@ block content
           | label position:
         td.value
           input(type="radio" ng-model="selectedLine.labelPosition" value="top")
-          |  top
+          |  above
           br
           input(type="radio" ng-model="selectedLine.labelPosition" value="bottom")
-          |  bottom
+          |  below
       tr.property
         td.label
           | color:

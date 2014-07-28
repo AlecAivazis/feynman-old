@@ -208,6 +208,7 @@ class Line
       when "em"
         @element = @drawAsSine()
 
+
     # apply the correct styling
     @element.attr
       stroke: @stroke

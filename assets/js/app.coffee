@@ -1,28 +1,6 @@
-paper =
-
-$(document).ready ->
-
-  # create the snap document
-  paper = Snap '#canvas' 
-  paper.anchors = []
-
-  # define the anchors for the default view
-
-  a = new Anchor paper, 50, 25
-  b = new Anchor paper, 150, 100
-  c = new Anchor paper, 50, 175
-  d = new Anchor paper, 300, 100
-
-  # and the lines connecting them
-
-  k = new Line paper, a, b 
-  l = new Line paper, c, b, 'gluon'
-  m = new Line paper, b, d, 'em'
-
-  a.draw()
-  b.draw()
-  c.draw()
-  d.draw()
+# this file describes the angular app the runs alongside the snap.svg application
+# to draw feynman diagrams
+# author: alec aivazis
 
 # create the angular module 
 app = angular.module 'feynman', ['colorpicker.module', 'uiSlider']
@@ -77,4 +55,3 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     
 
 ]
-
