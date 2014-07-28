@@ -38,6 +38,8 @@ class Anchor
 
     if isSelected
       @element.addClass('selectedElement')
+    if @fixed
+      @element.addClass('fixed')
 
     @element.drag @onMove, @dragStart, @dragEnd
 
