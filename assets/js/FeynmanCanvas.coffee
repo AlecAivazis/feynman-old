@@ -97,7 +97,9 @@ class FeynmanCanvas
 
     # get the anchors within this range
     anchors = _.filter @paper.anchors, (anchor) ->
-      return bound1x <= anchor.x <= bound2x and bound1y <= anchor.y <= bound2y
+      return bound1x <= anchor.x <= bound2x and
+             bound1y <= anchor.y <= bound2y and
+             not anchor.fixed
 
     _.each anchors, (anchor) ->
       anchor.element.addClass('selectedElement')

@@ -11,6 +11,7 @@ class Anchor
 
     # default values
     @color = 'black'
+    @fixed = false
 
   # add a line to the list of connected elements
   addLine: (element) =>
@@ -18,14 +19,25 @@ class Anchor
 
   # update the anchor element on the user interface
   draw: =>
+
+    isSelected = false
+    
     # if a element was previous defined
     if @element
+      # if im selected
+      if @element.hasClass('selectedElement')
+        if not @fixed
+          isSelected = true
+
       # remove it
       @element.remove()
 
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).attr
       fill: if @color then @color else 'black'
+
+    if isSelected
+      @element.addClass('selectedElement')
 
     @element.drag @onMove, @dragStart, @dragEnd
 

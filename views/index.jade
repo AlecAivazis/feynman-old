@@ -34,6 +34,11 @@ block content
         td.value
           input(colorpicker="rgb" type="text" ng-model="color" name="color"
             style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+      tr.property
+        td.label
+          | fixed:
+        td.value
+          input(type="checkbox" ng-model="selectedElement.fixed")
 
 
     // line properties menu

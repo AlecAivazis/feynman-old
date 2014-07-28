@@ -13,14 +13,11 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
     switch type
       when 'line'
-        # load the elements properties into the ui 
-        $scope.color = element.color
-        # fucking ui-slider
         $scope.width = element.width
       when 'anchor'
-        $scope.radius = element.element.attr 'r'
-        $scope.color = element.color
+        $scope.radius = element.radius
 
+    $scope.color = element.color
     $scope.selectedElement = element
     # apply the change since this is technically done in the jquery environment
     $scope.$apply()
@@ -29,12 +26,10 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
   # the only reason to do this is because snap attributes are not settable with foo.bar = 2
   $scope.$watch 'color', (newVal, oldVal) ->
     if $scope.selectedElement
-      console.log 'changing an acutal color'
       $scope.selectedElement.color = newVal
       if $scope.type == 'line'
         $scope.selectedElement.element.attr 'stroke', newVal
       if $scope.type =='anchor'
-        console.log 'changing fill color'
         $scope.selectedElement.element.attr 'fill', newVal 
 
   $scope.$watch 'width', (newVal, oldVal) ->
@@ -59,8 +54,12 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
   # if they change the line style
   $scope.$watch 'selectedElement.labelPosition', (newVal, oldVal) ->
-    if $scope.selectedElement
+    if $scope.selectedElement and $scope.type == 'line'
       $scope.selectedElement.drawLabel()
+
+  $scope.$watch 'selectedElement.fixed', (newVal, oldVal) ->
+    if $scope.selectedElement and $scope.type == 'anchor'
+      $scope.selectedElement.draw()
     
 
 ]
