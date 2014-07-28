@@ -21,6 +21,7 @@ class Anchor
   draw: =>
 
     isSelected = false
+
     
     # if a element was previous defined
     if @element
@@ -35,6 +36,8 @@ class Anchor
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).attr
       fill: if @color then @color else 'black'
+
+    @element.anchor = this
 
     if isSelected
       @element.addClass('selectedElement')
@@ -75,27 +78,44 @@ class Anchor
       line.drawLabel()
 
   dragStart: (x, y, event) =>
-
+    # check if there are multiple selected
     event.stopPropagation()
-
-    # if the user is holding alt
-    if event.altKey
-      # then create a new anchor attached to this one
-      @targetAnchor = @split true
-    # the user is not holding the alt key
-    else
-      # go to each line
-      _.each @lines, (line) ->
-        # and tell it to hide its label
-        line.removeLabel()
 
     # record the location before the drag
     @origin_x = @x
     @origin_y = @y
 
+    # if the user is holding alt
+    if event.altKey
+      # then create a new anchor attached to this one
+      @targetAnchor = @split true
+      # and do nothing ele
+      return
+      
+    # user is not holding alt
+    # go to each line
+    _.each @lines, (line) ->
+      # and tell it to hide its label
+      line.removeLabel()
+    
+    # if im currently selected and there's more than one
+    if @element.hasClass('selectedElement') and Snap.selectAll('.selectedElement').length > 1
+      # flag this move as a group
+      @moveAsGroup = true
+      _.each Snap.selectAll('.selectedElement'), (anchor) ->
+        anchor.anchor.originX = anchor.anchor.x
+        anchor.anchor.originY = anchor.anchor.y
+
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
 
     event.stopPropagation()
+
+    if @moveAsGroup
+      _.each Snap.selectAll('.selectedElement'), (element) ->
+        anchor = element.anchor
+        anchor.handleMove anchor.originX + dx, anchor.originY + dy
+
+      return
 
     # compute the new location
     x = @origin_x + dx

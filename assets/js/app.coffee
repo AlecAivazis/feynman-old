@@ -34,10 +34,12 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
   $scope.clearSelection = ->
 
-    console.log 'clearing selection'
-    
     # find every selected element
     _.each Snap.selectAll('.selectedElement'), (element) ->
+      # only for anchors (ignore lines)
+      if element.anchor
+        # clear the group move flag
+        element.anchor.moveAsGroup = false
       # and deselect it
       element.removeClass('selectedElement')
       
