@@ -9,7 +9,6 @@ class Line
     @anchor2.addLine this
 
     # default values
-
     @labelPosition = 'top'
     @width = 3.6
     @stroke = 'black'
@@ -120,11 +119,11 @@ class Line
 
   drawAsLine: =>
     # add the line to the dom
-    return @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
+    @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
 
   # draw  
   drawAsDashedLine: =>
-    element = @drawAsLine().attr
+    @drawAsLine().attr
       strokeDasharray: '10 '
 
   drawAsGluon: =>
