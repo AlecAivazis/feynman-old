@@ -25,6 +25,7 @@ class FeynmanCanvas
 
   mouseDown: () =>
     @removeSelectionRect()
+    @clearSelectedElements()
 
 
   dragStart: (x, y, event) =>
@@ -39,7 +40,12 @@ class FeynmanCanvas
       x: event.offsetX
       y: event.offsetY
 
+  clearSelectedElements: () =>
+    _.each Snap.selectAll('.selectedElement'), (element) ->
+      element.removeClass('selectedElement')
+
   dragMove: (dx, dy, x_cursor, y_cursor) =>
+    @clearSelectedElements()
 
     # if there hasnt been a  selection rectangle drawn
     if not @selectionRect_element
@@ -68,9 +74,34 @@ class FeynmanCanvas
       strokeWidth: 1.5
       fill: 'none'
 
-    console.log @selectionRect_element.attr('x')
-      
-   
+    # turn the strings into floats
+    bound1x = parseInt(@selectionRect_element.attr('x'))
+    dx = parseFloat(dx)
+    
+    # create the inner bounds that these represent
+    if bound1x < bound1x + dx
+      bound2x = bound1x + dx
+    else
+      bound2x = bound1x
+      bound1x = bound1x + dx
+
+    bound1y = parseInt(@selectionRect_element.attr('y'))
+    dy = parseFloat(dy)
+
+    # get the inner bounds
+    if bound1y < bound1y + dy
+      bound2y = bound1y + dy
+    else
+      bound2y = bound1y
+      bound1y = bound1y + dy
+
+    # get the anchors within this range
+    anchors = _.filter @paper.anchors, (anchor) ->
+      return bound1x <= anchor.x <= bound2x and bound1y <= anchor.y <= bound2y
+
+    _.each anchors, (anchor) ->
+      anchor.element.addClass('selectedElement')
+
   dragEnd: =>
     @removeSelectionRect()
 
