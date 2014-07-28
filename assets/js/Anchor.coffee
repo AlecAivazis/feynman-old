@@ -104,10 +104,13 @@ class Anchor
     if @element.hasClass('selectedElement') and Snap.selectAll('.selectedElement').length > 1
       # flag this move as a group
       @moveAsGroup = true
+      # set the origin for each anchor
       _.each Snap.selectAll('.selectedElement'), (anchor) ->
         anchor.anchor.originX = anchor.anchor.x
         anchor.anchor.originY = anchor.anchor.y
+    # otherwise we are moving a single anchor
     else
+      # so select it
       $(document).trigger 'selectedElement', [this, 'anchor']
 
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
