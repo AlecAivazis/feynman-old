@@ -10,6 +10,7 @@ class FeynmanCanvas
     # create the snap object around the specified selector
     @paper = Snap(selector)
     @paper.anchors = [] 
+    @paper.canvas = this
 
     # add the event handlers
 
@@ -25,7 +26,7 @@ class FeynmanCanvas
 
   mouseDown: () =>
     @removeSelectionRect()
-    @clearSelectedElements()
+    $(document).trigger('clearSelection')
 
 
   dragStart: (x, y, event) =>
@@ -40,12 +41,8 @@ class FeynmanCanvas
       x: event.offsetX
       y: event.offsetY
 
-  clearSelectedElements: () =>
-    _.each Snap.selectAll('.selectedElement'), (element) ->
-      element.removeClass('selectedElement')
-
   dragMove: (dx, dy, x_cursor, y_cursor) =>
-    @clearSelectedElements()
+    $(document).trigger('clearSelection')
 
     # if there hasnt been a  selection rectangle drawn
     if not @selectionRect_element

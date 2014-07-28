@@ -6,9 +6,17 @@
 app = angular.module 'feynman', ['colorpicker.module', 'uiSlider']
 # define the controller for the properties menu
 app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
+
+  $(document).on 'clearSelection', ->
+    $scope.clearSelection()
+  
   # when an element is selected in snap the event gets propagated through jquery
   $(document).on 'selectedElement', (event, element, type) ->
 
+    # clear the current selection
+    $(document).trigger('clearSelection')
+
+    # load the type of element
     $scope.type = type
 
     switch type
@@ -20,6 +28,21 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     $scope.color = element.color
     $scope.selectedElement = element
     # apply the change since this is technically done in the jquery environment
+    $scope.$apply()
+
+    element.element.addClass('selectedElement')
+
+  $scope.clearSelection = ->
+
+    console.log 'clearing selection'
+    
+    # find every selected element
+    _.each Snap.selectAll('.selectedElement'), (element) ->
+      # and deselect it
+      element.removeClass('selectedElement')
+      
+    # clear the angular selection
+    $scope.selectedElement = false
     $scope.$apply()
 
   # update the properties of the appropriate element when we change the selectedElements 
