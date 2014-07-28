@@ -27,7 +27,6 @@ class Anchor
     if @element
       # and im selected
       if @element.hasClass('selectedElement')
-        if not @fixed
           isSelected = true
 
       # remove it
@@ -39,10 +38,10 @@ class Anchor
 
     @element.anchor = this
 
-    if isSelected
-      @element.addClass('selectedElement')
     if @fixed
       @element.addClass('fixed')
+    if isSelected
+      @element.addClass('selectedElement')
 
     @element.drag @onMove, @dragStart, @dragEnd
 
@@ -172,6 +171,10 @@ class Anchor
     @paper.anchors =  _.without @paper.anchors, this
 
   handleMove: (x, y) =>
+    console.log 'moving... fixed: ', @fixed
+
+    if @fixed
+      return
 
     # check that newX falls within the page
     if @radius <= x <= $(@paper.node).width() - @radius
