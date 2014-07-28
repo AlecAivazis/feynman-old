@@ -54,6 +54,9 @@ class Anchor
       line.drawLabel()
 
   dragStart: (x, y, event) =>
+
+    event.stopPropagation()
+
     # if the user is holding alt
     if event.altKey
       # then create a new anchor attached to this one
@@ -70,6 +73,8 @@ class Anchor
     @origin_y = @y
 
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
+
+    event.stopPropagation()
 
     # compute the new location
     x = @origin_x + dx

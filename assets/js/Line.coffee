@@ -213,8 +213,17 @@ class Line
       stroke: @stroke
       strokeWidth: @width
       fill: 'none'
-      
+
+
+    # on drag move
+    @element.drag (x, y, dx, dy, event) =>
+      event.stopPropagation()
+    # on drag start
+    , (x, y, event) =>
+      event.stopPropagation()
 
     # add the click event handler
-    @element.node.onclick = =>
+    @element.node.onclick = (x, y)=>
+      console.log event
+      event.stopPropagation()
       $(document).trigger 'selectedLine', [this]
