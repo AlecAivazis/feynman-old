@@ -9,6 +9,9 @@ class Anchor
     @lines = []
     @paper.anchors.push this
 
+    # default values
+    @color = 'black'
+
   # add a line to the list of connected elements
   addLine: (element) =>
     @lines.push element
@@ -21,11 +24,15 @@ class Anchor
       @element.remove()
 
     # add the circle at the appropriate location with the on move event handler
-    @element = @paper.circle(@x, @y, @radius).drag @onMove, @dragStart, @dragEnd
+    @element = @paper.circle(@x, @y, @radius).attr
+      fill: if @color then @color else 'black'
+
+    @element.drag @onMove, @dragStart, @dragEnd
 
     # when you click on the circle
-    @element.node.onclick = (event) ->
+    @element.node.onclick = =>
       event.stopPropagation()
+      $(document).trigger 'selectedElement', [this, 'anchor']
 
     # update the associated lines
     _.each @lines, (line) ->

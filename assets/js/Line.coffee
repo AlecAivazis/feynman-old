@@ -11,7 +11,7 @@ class Line
     # default values
     @labelPosition = 'top'
     @width = 3.6
-    @stroke = 'black'
+    @color = 'black'
     @loopDirection = 1
 
   # safely remove any elements on the DOM associated with this line
@@ -82,14 +82,14 @@ class Line
         labely = midy + r
 
     # create the label at the appropriate location
-    @createLabel labelx, labely
+    @createLabel(labelx, labely)
 
   # render the label in and add it in the right place
   createLabel: (x, y) =>
     # remove the previous label
     @removeLabel()
     # make the new label
-    @labelEle = paper.image "http://latex.codecogs.com/svg.latex?" + @label, x, y
+    @labelEle = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
 
   # align an element along the line connecting the two anchors
   # assumes the element is horizontal before align for the purposes for scaling
@@ -210,7 +210,7 @@ class Line
 
     # apply the correct styling
     @element.attr
-      stroke: @stroke
+      stroke: @color
       strokeWidth: @width
       fill: 'none'
 
@@ -224,6 +224,5 @@ class Line
 
     # add the click event handler
     @element.node.onclick = (x, y)=>
-      console.log event
       event.stopPropagation()
-      $(document).trigger 'selectedLine', [this]
+      $(document).trigger 'selectedElement', [this, 'line']
