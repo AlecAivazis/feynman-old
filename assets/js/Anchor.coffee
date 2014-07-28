@@ -20,12 +20,12 @@ class Anchor
   # update the anchor element on the user interface
   draw: =>
 
+    # default status is not selected
     isSelected = false
-
     
-    # if a element was previous defined
+    # if a element was previously defined
     if @element
-      # if im selected
+      # and im selected
       if @element.hasClass('selectedElement')
         if not @fixed
           isSelected = true
@@ -81,6 +81,8 @@ class Anchor
     # check if there are multiple selected
     event.stopPropagation()
 
+    # select this event
+
     # record the location before the drag
     @origin_x = @x
     @origin_y = @y
@@ -105,6 +107,8 @@ class Anchor
       _.each Snap.selectAll('.selectedElement'), (anchor) ->
         anchor.anchor.originX = anchor.anchor.x
         anchor.anchor.originY = anchor.anchor.y
+    else
+      $(document).trigger 'selectedElement', [this, 'anchor']
 
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
 
