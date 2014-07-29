@@ -107,7 +107,7 @@ class Line
     # figure out the angle that this line needs to take
     angle = Math.atan(dy/dx) * 180/Math.PI
     # we might need to flip the angle
-    if dx > 0
+    if dx >= 0
       angle += 180
 
     # create the alignment matrix by scaling it to match the width
