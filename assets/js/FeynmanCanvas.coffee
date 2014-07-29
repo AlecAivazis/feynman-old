@@ -53,7 +53,7 @@ class FeynmanCanvas
     grid = @paper.group().addClass('grid')
 
     # make a vertical line nVertical times
-    for x in [1 ... nVertical]
+    for x in [1 .. nVertical]
       line = @paper.line().attr
         x1: x * @gridSize
         x2: x * @gridSize
@@ -76,13 +76,11 @@ class FeynmanCanvas
 
       grid.add(line)
     
-    console.log nVertical, nHorizontal
 
   hideGrid: () =>
     grid = Snap.select('.grid')
     if grid
       grid.remove()
-    console.log "hiding grid..."
 
   # refresh the pages representation on the DOM
   draw: () =>
@@ -107,7 +105,6 @@ class FeynmanCanvas
     if @selectionRect_element
       # if we have then remove it from the dom
       @selectionRect_element.remove()
-    console.log event
 
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
