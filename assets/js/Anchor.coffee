@@ -27,9 +27,9 @@ class Anchor
     
     # if a element was previously defined
     if @element
-      # and im selected
+      # and its selected
       if @element.hasClass('selectedElement')
-          isSelected = true
+        isSelected = true
 
       # remove it
       @element.remove()
@@ -38,10 +38,13 @@ class Anchor
     fcanvas = $(document).attr 'canvas'
     # if they want to snap everything to a grid
     if fcanvas.snapToGrid
-      @x = Math.round(@x_raw/fcanvas.gridSize)*fcanvas.gridSize
-      @y = Math.round(@y_raw/fcanvas.gridSize)*fcanvas.gridSize
-      
+      gridSize = fcanvas.gridSize
+      # find the nearest point on the grid
+      @x = Math.round(@x_raw/gridSize)*gridSize
+      @y = Math.round(@y_raw/gridSize)*gridSize
+    # were not snapping to the grid
     else
+      # use the raw coordinates
       @x = @x_raw
       @y = @y_raw
 
@@ -51,11 +54,15 @@ class Anchor
 
     @element.anchor = this
 
+    # add the fixed class if necessary
     if @fixed
       @element.addClass('fixed')
+    # if it was previously selected
     if isSelected
+      # add the appropriate class
       @element.addClass('selectedElement')
 
+    # set the drag handlers
     @element.drag @onMove, @dragStart, @dragEnd
 
     # when you click on the circle

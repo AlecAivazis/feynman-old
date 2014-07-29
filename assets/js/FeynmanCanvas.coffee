@@ -37,7 +37,66 @@ class FeynmanCanvas
     @removeSelectionRect()
     $(document).trigger('clearSelection')
 
+  drawGrid: () =>
+
+    # hide the previous grid
+    @hideGrid()
+
+    # grab the width and height off of the canvas
+    width = $(@paper.node).width() 
+    height = $(@paper.node).height()
+
+    # get the number of vertical grids lines to make
+    nVertical =  Math.round(width/@gridSize)
+    nHorizontal = Math.round(height/@gridSize)
+
+    grid = @paper.group().addClass('grid')
+
+    # make a vertical line nVertical times
+    for x in [1 ... nVertical]
+      line = @paper.line().attr
+        x1: x * @gridSize
+        x2: x * @gridSize
+        y1: 0
+        y2: height
+
+      line.addClass('gridLine') 
+
+      grid.add(line)
+
+    # make a horizontal line nHorizontal times
+    for x in [1 ... nHorizontal]
+      line = @paper.line().attr
+        x1: 0
+        x2: width
+        y1: x * @gridSize
+        y2: x * @gridSize
+
+      line.addClass('gridLine') 
+
+      grid.add(line)
+    
+    console.log nVertical, nHorizontal
+
+  hideGrid: () =>
+    grid = Snap.select('.grid')
+    if grid
+      grid.remove()
+    console.log "hiding grid..."
+
+  # refresh the pages representation on the DOM
   draw: () =>
+
+    # if they are fixing the anchors to the grid
+    if @snapToGrid
+      # show them the grid
+      @drawGrid()
+    # otherwise
+    else
+      # hide it
+      @hideGrid()
+    
+    # draw each of the anchors
     _.each @paper.anchors, (anchor) ->
       anchor.draw()
 
@@ -48,12 +107,17 @@ class FeynmanCanvas
     if @selectionRect_element
       # if we have then remove it from the dom
       @selectionRect_element.remove()
+    console.log event
 
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
+      # use the offset coordinates if they exists
+      # otherwise compute them 
       x: if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
       y: if event.offsetY then event.offsetY else event.clientY - $(event.target).offset().top
 
+  # handle drags on the paper
+  # should draw a selection rectangle
   dragMove: (dx, dy, x_cursor, y_cursor) =>
     $(document).trigger('clearSelection')
 
