@@ -5,13 +5,16 @@ class Anchor
 
   element = null
   
-  constructor: (@paper, @x, @y, @radius = 10, @snapRange = 21) ->
+  constructor: (@paper, @x_raw, @y_raw, @radius = 10, @snapRange = 21) ->
     @lines = []
     @paper.anchors.push this
 
     # default values
     @color = 'black'
     @fixed = false
+    @x = @x_raw
+    @y = @y_raw
+    
 
   # add a line to the list of connected elements
   addLine: (element) =>
@@ -19,7 +22,6 @@ class Anchor
 
   # update the anchor element on the user interface
   draw: =>
-
     # default status is not selected
     isSelected = false
     
@@ -31,6 +33,17 @@ class Anchor
 
       # remove it
       @element.remove()
+
+    # grab the document's feynman canvas
+    fcanvas = $(document).attr 'canvas'
+    # if they want to snap everything to a grid
+    if fcanvas.snapToGrid
+      @x = Math.round(@x_raw/fcanvas.gridSize)*fcanvas.gridSize
+      @y = Math.round(@y_raw/fcanvas.gridSize)*fcanvas.gridSize
+      
+    else
+      @x = @x_raw
+      @y = @y_raw
 
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).attr
@@ -179,10 +192,10 @@ class Anchor
 
     # check that newX falls within the page
     if @radius <= x <= $(@paper.node).width() - @radius
-      @x = x
+      @x_raw = x
     # check that newY falls within the page
     if @radius <= y <= $(@paper.node).height() - @radius
-      @y = y
+      @y_raw = y
     # update the ui element
     @draw()
 

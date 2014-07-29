@@ -38,8 +38,8 @@ class FeynmanCanvas
     $(document).trigger('clearSelection')
 
   draw: () =>
-    console.log @snapToGrid
-    console.log @gridSize
+    _.each @paper.anchors, (anchor) ->
+      anchor.draw()
 
 
   dragStart: (x, y, event) =>
@@ -49,8 +49,6 @@ class FeynmanCanvas
       # if we have then remove it from the dom
       @selectionRect_element.remove()
 
-    console.log event
-  
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
       x: if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
@@ -134,12 +132,9 @@ class FeynmanCanvas
       l = new Line(@paper, c, b, 'gluon')
       m = new Line(@paper, b, d, 'em')
 
-      a.draw()
-      b.draw()
-      c.draw()
-      d.draw()
-
-
+    # draw the anchors
+    @draw()
+  
   removeSelectionRect: =>
     if @selectionRect_element
       @selectionRect_element.remove()
