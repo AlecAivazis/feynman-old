@@ -89,7 +89,8 @@ class Line
     # remove the previous label
     @removeLabel()
     # make the new label
-    @labelEle = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
+    if @label
+      @labelEle = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
 
   # align an element along the line connecting the two anchors
   # assumes the element is horizontal before align for the purposes for scaling
@@ -230,6 +231,6 @@ class Line
       event.stopPropagation()
 
     # add the click event handler
-    @element.node.onclick = (x, y)=>
+    @element.node.onclick = (event)=>
       event.stopPropagation()
       $(document).trigger 'selectedElement', [this, 'line']

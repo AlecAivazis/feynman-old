@@ -19,85 +19,106 @@ append css
 
 block content
   body(ng-app="feynman")
-    h1 #{title}! 
+    h1 {{title}}! 
 
     svg#canvas
 
-    span(ng-hide="selectedElement == false" ng-controller="elementProperties" )
-      // anchor properties menu
-      table.propertiesMenu(ng-show="type == 'anchor'")
+    span#sidebar(ng-controller="diagramProperties")
+      // diagram properties
+      table.propertiesMenu(ng-show="showDiagramProperties == true")
         tr.headerRow
           th(colspan=2)
-            | Properties for selected anchor
-        tr.property
-          td.label
-            | fill color:
-          td.value
-            input(colorpicker="rgb" type="text" ng-model="color" name="color"
-              style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
-        tr.property
-          td.label
-            | fixed:
-          td.value
-            input(type="checkbox" ng-model="selectedElement.fixed")
-  
-  
-      // line properties menu
-      table.propertiesMenu(ng-show="type == 'line'")
+            | Properties for diagram
         tr.headerRow
-          th(colspan=2)
-            | Properties for 
-            img(src="http://latex.codecogs.com/svg.latex?{{selectedElement.label}}", 
-              ng-show="selectedElement.label")
+          td.label
+            | Title:
+          td.value
+            input(type="text" ng-model="$parent.title" name="label")
         tr.property
           td.label
-            | label:
+            | Snap to grid
           td.value
-            input(type="text" ng-model="selectedElement.label" name="label")
-        tr.property
+            input(type="checkbox" ng-model="snapToGrid")
+        tr.property(ng-show="snapToGrid")
           td.label
-            | label position:
+            | Grid Size:
           td.value
-            input(type="radio" ng-model="selectedElement.labelPosition" value="top")
-            |  above
-            br
-            input(type="radio" ng-model="selectedElement.labelPosition" value="bottom")
-            |  below
-        tr.property
-          td.label
-            | color:
-          td.value
-            input(colorpicker="rgb" type="text" ng-model="color" name="color"
-              style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
-        tr.property
-          td.label
-            | stroke width:
-          td.value
-            | {{selectedElement.width}}
-            slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
+            | {{gridSize}}
+            slider(floor="5" ceiling="50" step="5" precision="1"  ng-model="gridSize" 
                    style="width: 70%")
-        tr.property
-          td.label
-            | line style:
-          td.value
-            select(ng-model="selectedElement.style")
-              option(value = 'line')
-                | line
-              option(value = 'dashed')
-                | dashed
-              option(value = 'gluon')
-                | gluon
-              option(value = 'em')
-                | em
-        tr.property(ng-show="selectedElement.style == 'gluon'")
-          td.label
-            | loop direction:
-          td.value
-            select(ng-model="selectedElement.loopDirection")
-              option(value="1")
-                | up
-              option(value="-1")
-                | down
-          
-              
-        
+
+      span(ng-hide="selectedElement == false")
+        // anchor properties menu
+        table.propertiesMenu(ng-show="type == 'anchor'")
+          tr.headerRow
+            th(colspan=2)
+              | Properties for selected anchor
+          tr.property
+            td.label
+              | fill color:
+            td.value
+              input(colorpicker="rgb" type="text" ng-model="color" name="color"
+                style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+          tr.property
+            td.label
+              | fixed:
+            td.value
+              input(type="checkbox" ng-model="selectedElement.fixed")
+    
+    
+        // line properties menu
+        table.propertiesMenu(ng-show="type == 'line'")
+          tr.headerRow
+            th(colspan=2)
+              | Properties for 
+              img(src="http://latex.codecogs.com/svg.latex?{{selectedElement.label}}", 
+                ng-show="selectedElement.label")
+          tr.property
+            td.label
+              | label:
+            td.value
+              input(type="text" ng-model="selectedElement.label" name="label")
+          tr.property
+            td.label
+              | label position:
+            td.value
+              input(type="radio" ng-model="selectedElement.labelPosition" value="top")
+              |  above
+              br
+              input(type="radio" ng-model="selectedElement.labelPosition" value="bottom")
+              |  below
+          tr.property
+            td.label
+              | color:
+            td.value
+              input(colorpicker="rgb" type="text" ng-model="color" name="color"
+                style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+          tr.property
+            td.label
+              | stroke width:
+            td.value
+              | {{selectedElement.width}}
+              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
+                     style="width: 70%")
+          tr.property
+            td.label
+              | line style:
+            td.value
+              select(ng-model="selectedElement.style")
+                option(value = 'line')
+                  | line
+                option(value = 'dashed')
+                  | dashed
+                option(value = 'gluon')
+                  | gluon
+                option(value = 'em')
+                  | em
+          tr.property(ng-show="selectedElement.style == 'gluon'")
+            td.label
+              | loop direction:
+            td.value
+              select(ng-model="selectedElement.loopDirection")
+                option(value="1")
+                  | up
+                option(value="-1")
+                  | down

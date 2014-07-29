@@ -5,11 +5,47 @@
 # create the angular module 
 app = angular.module 'feynman', ['colorpicker.module', 'uiSlider']
 # define the controller for the properties menu
-app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
+app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
 
   $(document).on 'clearSelection', ->
     $scope.clearSelection()
+
+  $(document).on 'doneWithInit', ->
+    canvas = $(document).attr 'canvas'
+    $scope.gridSize = canvas.gridSize
+    $scope.snapToGrid = canvas.snapToGrid
+    # show the UI element for the diagram properties
+    $scope.showDiagramProperties = true
+
+    $rootScope.title = canvas.title
   
+
+  # if they change the diagram title then update it on the object
+  $rootScope.$watch 'title', (newVal, oldVal) ->
+    if $(document).attr 'canvas'
+      $(document).attr('canvas').title = newVal
+
+  # if they changes the snapToGrid boolean
+  $scope.$watch 'snapToGrid', (newVal, oldVal) ->
+    # grab the canvas
+    canvas = $(document).attr 'canvas'
+    # if it exists
+    if $(document).attr 'canvas'
+      # change the value of the object
+      $(document).attr('canvas')['snapToGrid'] = newVal
+      # redraw the canvas
+      $(document).attr('canvas').draw()
+
+  $scope.$watch 'gridSize', (newVal, oldVal) ->
+    # grab the canvas
+    canvas = $(document).attr 'canvas'
+    # if it exists
+    if $(document).attr 'canvas'
+      # change the value of the object
+      $(document).attr('canvas')['gridSize'] = newVal
+      # redraw the canvas
+      $(document).attr('canvas').draw()
+    
   # when an element is selected in snap the event gets propagated through jquery
   $(document).on 'selectedElement', (event, element, type) ->
 
@@ -33,7 +69,7 @@ app.controller 'elementProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     element.element.addClass('selectedElement')
 
   $scope.clearSelection = ->
-
+  
     # find every selected element
     _.each Snap.selectAll('.selectedElement'), (element) ->
       # only for anchors (ignore lines)

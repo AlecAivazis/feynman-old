@@ -10,7 +10,14 @@ class FeynmanCanvas
     # create the snap object around the specified selector
     @paper = Snap(selector)
     @paper.anchors = [] 
-    @paper.canvas = this
+
+    # default values
+    @snapToGrid = false
+    @gridSize = 15
+    @title = "An Example Feynman Diagram"
+
+    # register the canvas on the document
+    $(document).attr('canvas', this)
 
     # add the event handlers
 
@@ -24,9 +31,15 @@ class FeynmanCanvas
     # draw the starting pattern
     @drawPattern(startingPattern)
 
+    $(document).trigger 'doneWithInit'
+
   mouseDown: () =>
     @removeSelectionRect()
     $(document).trigger('clearSelection')
+
+  draw: () =>
+    console.log @snapToGrid
+    console.log @gridSize
 
 
   dragStart: (x, y, event) =>
@@ -36,10 +49,12 @@ class FeynmanCanvas
       # if we have then remove it from the dom
       @selectionRect_element.remove()
 
+    console.log event
+  
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
-      x: event.offsetX
-      y: event.offsetY
+      x: if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
+      y: if event.offsetY then event.offsetY else event.clientY - $(event.target).offset().top
 
   dragMove: (dx, dy, x_cursor, y_cursor) =>
     $(document).trigger('clearSelection')
@@ -131,9 +146,7 @@ class FeynmanCanvas
     @selectionRect_x = null
     @selectionRect_y = null
 
-
-
 $(document).ready ->
+  new FeynmanCanvas("#canvas") 
 
-  canvas = new FeynmanCanvas("#canvas") 
 

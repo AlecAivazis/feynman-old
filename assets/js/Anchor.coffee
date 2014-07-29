@@ -171,9 +171,10 @@ class Anchor
     @paper.anchors =  _.without @paper.anchors, this
 
   handleMove: (x, y) =>
-    console.log 'moving... fixed: ', @fixed
 
+    # if its fixed
     if @fixed
+      # dont do anything
       return
 
     # check that newX falls within the page
