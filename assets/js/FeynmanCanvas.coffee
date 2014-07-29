@@ -77,6 +77,7 @@ class FeynmanCanvas
       grid.add(line)
     
 
+  # remove the grid if it exists
   hideGrid: () =>
     grid = Snap.select('.grid')
     if grid
@@ -84,15 +85,14 @@ class FeynmanCanvas
 
   # refresh the pages representation on the DOM
   draw: () =>
-
     # if they are fixing the anchors to the grid
-    if @snapToGrid
-      # show them the grid
-      @drawGrid()
-    # otherwise
-    else
+    if @gridSize < 1
       # hide it
       @hideGrid()
+    # otherwise
+    else
+      # show them the grid
+      @drawGrid()
     
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->

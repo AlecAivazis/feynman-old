@@ -35,10 +35,9 @@ class Anchor
       @element.remove()
 
     # grab the document's feynman canvas
-    fcanvas = $(document).attr 'canvas'
+    gridSize = $(document).attr('canvas').gridSize
     # if they want to snap everything to a grid
-    if fcanvas.snapToGrid
-      gridSize = fcanvas.gridSize
+    if gridSize > 0
       # find the nearest point on the grid
       @x = Math.round(@x_raw/gridSize)*gridSize
       @y = Math.round(@y_raw/gridSize)*gridSize
