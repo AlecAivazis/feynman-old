@@ -12,8 +12,8 @@ class FeynmanCanvas
     @paper.anchors = [] 
 
     # default values
-    @snapToGrid = false
-    @gridSize = 15
+    @snapToGrid = true
+    @gridSize = 75
     @title = "An Example Feynman Diagram"
 
     # register the canvas on the document
@@ -65,7 +65,7 @@ class FeynmanCanvas
       grid.add(line)
 
     # make a horizontal line nHorizontal times
-    for x in [1 ... nHorizontal]
+    for x in [1 .. nHorizontal]
       line = @paper.line().attr
         x1: 0
         x2: width
@@ -175,18 +175,22 @@ class FeynmanCanvas
     _.each anchors, (anchor) ->
       anchor.element.addClass('selectedElement')
 
+  # after the drag
   dragEnd: =>
+    # if theres only one selected event
+    if Snap.selectAll('.selectedElement').length == 1
+      $(document).trigger 'selectedElement', [Snap.select('.selectedElement').anchor , 'anchor']
+    
     @removeSelectionRect()
-
    
   drawPattern: (pattern) =>
     # if they asked for the particle / antiparticle pattern
     if pattern == 'pap'
       # define the anchors for the particle, anti particle patterns
-      a = new Anchor(@paper, 50, 25)
-      b = new Anchor(@paper, 150, 100)
-      c = new Anchor(@paper, 50, 175)
-      d = new Anchor(@paper, 300, 100)
+      a = new Anchor(@paper, 75, 75)
+      b = new Anchor(@paper, 150, 150)
+      c = new Anchor(@paper, 75, 225)
+      d = new Anchor(@paper, 300, 150)
   
       # and the lines connecting them
       k = new Line(@paper, a, b)
