@@ -187,10 +187,10 @@ class FeynmanCanvas
     # if they asked for the particle / antiparticle pattern
     if pattern == 'pap'
       # define the anchors for the particle, anti particle patterns
-      a = new Anchor(@paper, 75, 75)
-      b = new Anchor(@paper, 150, 150)
-      c = new Anchor(@paper, 75, 225)
-      d = new Anchor(@paper, 300, 150)
+      a = new Anchor(@paper, 150, 75)
+      b = new Anchor(@paper, 225, 150)
+      c = new Anchor(@paper, 150, 225)
+      d = new Anchor(@paper, 375, 150)
   
       # and the lines connecting them
       k = new Line(@paper, a, b)
