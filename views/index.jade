@@ -30,7 +30,7 @@ block content
       #undoHistory(ng-controller="undoCtrl")
         .historyTitle
           | History:
-        .historyItem(ng-repeat="event in queue" ng-click="goTo(event.id)" )
+        .historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)" )
           span.id
             | {{event.id}} : 
           span.title

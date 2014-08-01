@@ -67,9 +67,9 @@ class FeynmanCanvas
         x2: x * @gridSize
         y1: 0
         y2: height
-
+      # give it the proper class
       line.addClass('gridLine') 
-
+      # and add it to the grid
       grid.add(line)
 
     # make a horizontal line nHorizontal times
@@ -79,9 +79,9 @@ class FeynmanCanvas
         x2: width
         y1: x * @gridSize
         y2: x * @gridSize
-
+      # give it the proper class
       line.addClass('gridLine') 
-
+      # and add it to the grid
       grid.add(line)
     
 

@@ -3,6 +3,11 @@
 # create the angular module
 undo = angular.module 'undo', []
 
+# add a custom angular filter to reverse the order of a list
+undo.filter 'reverse', ->
+  (items) ->
+    items.slice().reverse()
+
 undo.controller 'undoCtrl', [ '$scope', ($scope) ->
 
   # start with an empty queue
