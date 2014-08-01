@@ -28,8 +28,16 @@ class FeynmanCanvas
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
 
-    # draw the starting pattern
-    @drawPattern(startingPattern)
+    # draw the starting pattern with an undo to start off the list
+    title = "rendered canvas with '" + startingPattern + "' pattern"
+    $(document).trigger 'addEventToUndo', [title, true, [this, startingPattern], 
+      # the forward action is to draw the starting pattern
+      ->
+        @data[0].drawPattern(@data[1])
+      # the backwards action is to not implemented since this is the first thing done
+      , ->
+        console.log 'this is the beginning. there is no before me!'
+    ]
 
     $(document).trigger 'doneWithInit'
 
@@ -184,6 +192,10 @@ class FeynmanCanvas
     @removeSelectionRect()
    
   drawPattern: (pattern) =>
+
+    # store the current set of anchors for the history
+    old = @paper.anchors
+    
     # if they asked for the particle / antiparticle pattern
     if pattern == 'pap'
       # define the anchors for the particle, anti particle patterns
@@ -197,6 +209,7 @@ class FeynmanCanvas
       l = new Line(@paper, c, b, 'gluon')
       m = new Line(@paper, b, d, 'em')
 
+    
     # draw the anchors
     @draw()
   
