@@ -88,9 +88,6 @@ class Anchor
           # if it is then merge the two
           compare.merge anchor
 
-    console.log 'setting target to', @x, ',', @y
-    console.log 'setting return to', @origin_x, ',', @origin_y
-
     # register the move with the undo stack
     title = 'moved anchor to ' + @x + ',' + @y 
     $(document).trigger 'addEventToUndo', [title, true, [this, @x, @y, @origin_x, @origin_y], 
@@ -205,8 +202,6 @@ class Anchor
 
   handleMove: (x, y) =>
 
-    console.log 'moving to ', x, ',' , y
-    
     # if its fixed
     if @fixed
       # dont do anything

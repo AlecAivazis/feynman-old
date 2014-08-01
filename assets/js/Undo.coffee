@@ -39,12 +39,8 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
   # perform the necessary steps to go to a specific event
   $scope.goTo = (id) ->
 
-    console.log 'going to ' , id
-    console.log 'current: ', $scope.current
-
     # check that were actually doing something
     if id == $scope.current
-      console.log 'you have no where to go'
       return
     
     # if we want to go forwards in time
@@ -55,25 +51,18 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
         $scope.current++
         # grab the entry
         entry = $scope.queue[$scope.current]
-        # apply the forward function
+        # apply the forward function bringing the DOM up to date with the current number
         entry.forward.apply(data: entry.data)
-        console.log $scope.current
     # otherwise we want to go backwards in time
     else
       # go every step in between the current one and the guy before our target
       while $scope.current > id
         # grab the undo entry
         entry = $scope.queue[$scope.current]
-        # apply the backwards function
+        # apply the backwards function putting the DOM one step behind the counter
         entry.backward.apply(data: entry.data)
         # decrement the counter
         $scope.current--
-        console.log $scope.current
       
-
-
   
 ]
-
-handleMove = ->
-  console.log 'okay'
