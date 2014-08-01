@@ -40,7 +40,7 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
   $scope.goTo = (id) ->
 
     # check that were actually doing something
-    if id == $scope.current
+    if id == $scope.current or id < 0
       return
     
     # if we want to go forwards in time

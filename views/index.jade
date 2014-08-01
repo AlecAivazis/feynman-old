@@ -27,9 +27,14 @@ block content
 
     span#sidebar
 
-      span#undoHistory(ng-controller="undoCtrl")
+      #undoHistory(ng-controller="undoCtrl")
+        .historyTitle
+          | History:
         .historyItem(ng-repeat="event in queue" ng-click="goTo(event.id)" )
-          | {{event.id}}: {{event.title}}
+          span.id
+            | {{event.id}} : 
+          span.title
+            | {{event.title}}
 
       span#diagramProperties(ng-controller="diagramProperties")
         // diagram properties

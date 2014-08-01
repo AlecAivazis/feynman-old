@@ -89,8 +89,8 @@ class Anchor
           compare.merge anchor
 
     # register the move with the undo stack
-    title = 'moved anchor to ' + @x + ',' + @y 
-    $(document).trigger 'addEventToUndo', [title, true, [this, @x, @y, @origin_x, @origin_y], 
+    title = 'moved anchor to ' + @x + ', ' + @y 
+    $(document).trigger 'addEventToUndo', [title, false, [this, @x, @y, @origin_x, @origin_y], 
       # the forward action is to move to the current location
       ->
         @data[0].handleMove(@data[1], @data[2])
