@@ -93,6 +93,11 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
       if $scope.type =='anchor'
         $scope.selectedElement.element.attr 'fill', newVal 
 
+  $scope.$watch 'radius', (newVal, oldVal) ->
+    if $scope.selectedElement and $scope.type == 'anchor'
+      $scope.selectedElement.radius = newVal
+      $scope.selectedElement.draw()
+
   $scope.$watch 'width', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.width = newVal
