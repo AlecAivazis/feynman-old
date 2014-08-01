@@ -88,17 +88,20 @@ class Anchor
           # if it is then merge the two
           compare.merge anchor
 
+    console.log 'setting target to', @x, ',', @y
+    console.log 'setting return to', @origin_x, ',', @origin_y
+
     # register the move with the undo stack
     title = 'moved anchor to ' + @x + ',' + @y 
-
-    console.log 'triggering the addition of undo event'
-    $(document).trigger 'addEventToUndo', [title, [this], 
+    $(document).trigger 'addEventToUndo', [title, true, [this, @x, @y, @origin_x, @origin_y], 
       # the forward action is to move to the current location
       ->
-        @data[0].handleMove(@x, @y)
+        @data[0].handleMove(@data[1], @data[2])
       # the backwards action is to move to the origin as defined when the drag started
       , ->
-        @data[0].handleMove(@origin_x, @origin_y)
+        @data[0].handleMove(@data[3], @data[4])
+        @data[0].origin_x = @data[1]
+        @data[0].origin_y = @data[2]
     ]
 
     # clear the target ancho
@@ -203,6 +206,9 @@ class Anchor
     @paper.anchors =  _.without @paper.anchors, this
 
   handleMove: (x, y) =>
+
+    console.log 'moving to ', x, ',' , y
+    
     # if its fixed
     if @fixed
       # dont do anything

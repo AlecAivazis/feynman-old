@@ -11,7 +11,7 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
   $scope.current = -1
   
   # listen to the dom for events to add to the que
-  $(document).on 'addEventToUndo', ( event, title, data, transparent = true,
+  $(document).on 'addEventToUndo', ( event, title, transparent = true, data,
                                      forward, backward ) ->  
     # increment the counter
     $scope.current++ 
@@ -23,8 +23,9 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
     $scope.queue.push
       id: $scope.current
       title: title
+      data: data
       forward: forward
-      background: backward
+      backward: backward
 
     # tell angular to refresh 
     $scope.$apply()
@@ -33,6 +34,40 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
     if transparent
       # call the forward action with the provided data
       forward.apply(data: data)
+
+
+  # perform the necessary steps to go to a specific event
+  $scope.goTo = (id) ->
+
+    # check that were actually doing something
+    if id == $scope.current
+      console.log 'you have no where to go'
+      return
+    
+    # if we want to go forwards in time
+    if id > $scope.current
+      $scope.current++
+      # for every step in between me and the target
+      for i in [$scope.current .. id]
+        # grab the entry
+        entry = $scope.queue[i]
+        # apply the forward function
+        entry.forward.apply(data: entry.data)
+        # increment the counter
+        console.log $scope.current
+    # otherwise we want to go backwards in time
+    else
+      # go every step in between the current one and the guy before our target
+      for i in [id+1 .. $scope.current].reverse()
+        # grab the undo entry
+        entry = $scope.queue[i]
+        # apply the backwards function
+        entry.backward.apply(data: entry.data)
+        # decrement the counter
+        $scope.current--
+        console.log $scope.current
+      
+
 
   
 ]
