@@ -100,8 +100,6 @@ class Anchor
       # the backwards action is to move to the origin as defined when the drag started
       , ->
         @data[0].handleMove(@data[3], @data[4])
-        @data[0].origin_x = @data[1]
-        @data[0].origin_y = @data[2]
     ]
 
     # clear the target ancho
