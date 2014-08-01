@@ -13,7 +13,7 @@ class FeynmanCanvas
 
     # default values
     @snapToGrid = true
-    @gridSize = 75
+    @gridSize = 50
     @title = "An Example Feynman Diagram"
 
     # register the canvas on the document
