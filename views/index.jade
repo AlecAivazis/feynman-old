@@ -28,13 +28,21 @@ block content
     span#sidebar
 
       #undoHistory(ng-controller="undoCtrl")
-        .historyTitle
-          | History:
-        .historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)" )
-          span.id
-            | {{event.id}} : 
-          span.title
-            | {{event.title}}
+        table(width="100%")
+          tr
+            td.historyTitle(colspan=2 ng-init="showHistory = false")
+              | History
+              span(ng-show="showHistory == true" ng-click="showHistory = false" style="float: right;")
+                | hide history
+              span(ng-show="showHistory == false" ng-click="showHistory = true" style="float: right;")
+                | show history
+          tr.historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
+                         ng-class="{current : event.id == current, disabled: event.id > current}"
+                         ng-show="showHistory == true")
+            td.id
+              | {{event.id}} : 
+            td.title
+              | {{event.title}}
 
       span#diagramProperties(ng-controller="diagramProperties")
         // diagram properties
