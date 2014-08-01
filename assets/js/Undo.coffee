@@ -46,9 +46,9 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
     
     # if we want to go forwards in time
     if id > $scope.current
-      $scope.current++
       # for every step in between me and the target
       for i in [$scope.current .. id]
+        $scope.current++
         # grab the entry
         entry = $scope.queue[i]
         # apply the forward function

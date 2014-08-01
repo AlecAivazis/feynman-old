@@ -140,8 +140,8 @@ class Anchor
       @moveAsGroup = true
       # set the origin for each anchor
       _.each Snap.selectAll('.selectedElement'), (anchor) ->
-        anchor.anchor.originX = anchor.anchor.x
-        anchor.anchor.originY = anchor.anchor.y
+        anchor.anchor.origin_x = anchor.anchor.x
+        anchor.anchor.origin_y = anchor.anchor.y
     # otherwise we are moving a single anchor
     else
       # so select it
@@ -154,7 +154,7 @@ class Anchor
     if @moveAsGroup
       _.each Snap.selectAll('.selectedElement'), (element) ->
         anchor = element.anchor
-        anchor.handleMove anchor.originX + dx, anchor.originY + dy
+        anchor.handleMove anchor.origin_x + dx, anchor.origin_y + dy
 
       return
 
