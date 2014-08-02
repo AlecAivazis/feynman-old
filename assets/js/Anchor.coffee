@@ -1,24 +1,20 @@
 # this file describes the anchor class as needed by the online feynman diagram tool
 # the anchor acts as the main structural element by providing two ends to connect
 
-id = 1
-
-class Anchor
+class Anchor extends Base
 
   element = null
   
   constructor: (@paper, @x_raw, @y_raw, @radius = 5, @snapRange = 21) ->
+    super()
     @lines = []
     @paper.anchors.push this
-    @id = id
-    id++
 
     # default values
     @color = 'black'
     @fixed = false
     @x = @x_raw
     @y = @y_raw
-    
 
   # add a line to the list of connected elements
   addLine: (element) =>

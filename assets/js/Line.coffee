@@ -1,10 +1,11 @@
 # this file describes a line object that is drawn between two Anchors
 
-class Line
+class Line extends Base
 
   element = null
 
   constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
+    super()
     @anchor1.addLine this
     @anchor2.addLine this
 
