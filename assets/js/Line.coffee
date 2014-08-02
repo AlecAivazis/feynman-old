@@ -5,8 +5,6 @@ class Line extends Base
   element = null
 
   constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
-    super()
-    console.log @id
     @anchor1.addLine this
     @anchor2.addLine this
 
