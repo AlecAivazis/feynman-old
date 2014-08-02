@@ -10,7 +10,7 @@ class Line
 
     # default values
     @labelPosition = 'top'
-    @width = 3.6
+    @width = 2
     @color = 'black'
     @loopDirection = 1
 

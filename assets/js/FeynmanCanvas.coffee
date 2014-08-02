@@ -12,7 +12,6 @@ class FeynmanCanvas
     @paper.anchors = [] 
 
     # default values
-    @snapToGrid = true
     @gridSize = 50
     @title = "An Example Feynman Diagram"
 

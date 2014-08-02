@@ -88,16 +88,52 @@ class Anchor
           # if it is then merge the two
           compare.merge anchor
 
-    # register the move with the undo stack
-    title = 'moved anchor to ' + @x + ', ' + @y 
-    $(document).trigger 'addEventToUndo', [title, false, [this, @x, @y, @origin_x, @origin_y], 
-      # the forward action is to move to the current location
-      ->
-        @data[0].handleMove(@data[1], @data[2])
-      # the backwards action is to move to the origin as defined when the drag started
-      , ->
-        @data[0].handleMove(@data[3], @data[4])
-    ]
+    selected = Snap.selectAll('.selectedElement')
+
+    # make sure there is an element selected
+    if selected.length == 0
+      return
+
+    # if there is only one anchor selected
+    if selected.length == 1
+      # register the move with the undo stack
+      title = 'moved anchor to ' + @x + ', ' + @y 
+      $(document).trigger 'addEventToUndo', [title, false, [this, @x, @y, @origin_x, @origin_y], 
+        # the forward action is to move to the current location
+        ->
+          @data[0].handleMove(@data[1], @data[2])
+        # the backwards action is to move to the origin as defined when the drag started
+        , ->
+          @data[0].handleMove(@data[3], @data[4])
+      ]
+    # there is more than one selected element
+    else
+      # build the position data for the group of elements
+      anchor_data = []
+      # go over every selected element
+      for element in selected
+        # grab its anchor
+        anchor = element.anchor
+        # save the important data
+        anchor_data.push
+          anchor: anchor
+          x: anchor.x
+          y: anchor.y
+          origin_x: anchor.origin_x
+          origin_y: anchor.origin_y
+
+      # register the move with the undo stack
+      title = 'moved group of anchors'
+      $(document).trigger 'addEventToUndo', [title, true, [anchor_data], 
+        # the forward action is to move to the location saved 
+        ->
+          _.each @data[0], (element) ->
+            element.anchor.handleMove element.x, element.y
+        # the backwards action is to move to the origin as defined when the drag started
+        , ->
+          _.each @data[0], (element) ->
+            element.anchor.handleMove element.origin_x, element.origin_y
+      ]
 
     # clear the target ancho
     @targetAnchor = undefined
