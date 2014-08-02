@@ -27,16 +27,16 @@ class FeynmanCanvas
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
 
-    # draw the starting pattern with an undo to start off the list
-    title = "rendered canvas with '" + startingPattern + "' pattern"
-    $(document).trigger 'addEventToUndo', [title, true, [this, startingPattern], 
-      # the forward action is to draw the starting pattern
-      ->
+    # render the canvas with the starting pattern and register it as item 0 in the history
+    new UndoEntry true,
+      title: "rendered canvas with '" + startingPattern + "' pattern"
+      data: [this, startingPattern]
+      # the forward action is to move to the current location
+      forwards: ->
         @data[0].drawPattern(@data[1])
-      # the backwards action is to not implemented since this is the first thing done
-      , ->
+      # the backwards action is to move to the origin as defined when the drag started
+      backwards: ->
         console.log 'this is the beginning. there is no before me!'
-    ]
 
     $(document).trigger 'doneWithInit'
 

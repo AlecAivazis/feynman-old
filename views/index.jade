@@ -11,6 +11,7 @@ append js
   != js('FeynmanCanvas')
   != js('Line')
 
+  != js('UndoEntry')
   != js('undo')
   != js('app')
   
@@ -26,8 +27,8 @@ block content
     svg#canvas
 
     span#sidebar
-
-      #undoHistory(ng-controller="undoCtrl")
+      // careful: this id can't change without reflecting it in the javascript
+      #undoHistory(ng-controller="undoCtrl" current="{{current}}")
         table(width="100%")
           tr
             td.historyTitle(colspan=2 ng-init="showHistory = false")

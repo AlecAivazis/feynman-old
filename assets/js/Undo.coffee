@@ -16,8 +16,8 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
   $scope.current = -1
   
   # listen to the dom for events to add to the que
-  $(document).on 'addEventToUndo', ( event, title, transparent = true, data,
-                                     forward, backward ) ->  
+  #$(document).on 'addEntryToUndo', ( event, title, transparent = true, data,
+  $(document).on 'addEntryToUndo', ( event, transparent, entry ) ->  
     # increment the counter
     $scope.current++ 
 
@@ -25,20 +25,14 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
     $scope.queue = $scope.queue.splice(0, $scope.current)
 
     # add the event to the queue
-    $scope.queue.push
-      id: $scope.current
-      title: title
-      data: data
-      forward: forward
-      backward: backward
-
+    $scope.queue.push entry
     # tell angular to refresh 
     $scope.$apply()
 
     # if they want this to be a wrapper around the intial call the forward
     if transparent
       # call the forward action with the provided data
-      forward.apply(data: data)
+      entry.forwards()
 
 
   # perform the necessary steps to go to a specific event
@@ -57,7 +51,7 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
         # grab the entry
         entry = $scope.queue[$scope.current]
         # apply the forward function bringing the DOM up to date with the current number
-        entry.forward.apply(data: entry.data)
+        entry.forwards()
     # otherwise we want to go backwards in time
     else
       # go every step in between the current one and the guy before our target
@@ -65,7 +59,7 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
         # grab the undo entry
         entry = $scope.queue[$scope.current]
         # apply the backwards function putting the DOM one step behind the counter
-        entry.backward.apply(data: entry.data)
+        entry.backwards()
         # decrement the counter
         $scope.current--
 
