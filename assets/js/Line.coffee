@@ -1,6 +1,6 @@
 # this file describes a line object that is drawn between two Anchors
 
-class Line extends Base
+class Line
 
   element = null
 
