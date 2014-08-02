@@ -188,8 +188,14 @@ class Anchor
     if selected.length == 0
       return
 
+
     # if there is only one anchor selected
     if selected.length == 1
+
+      # check that we actually moved it
+      if @x == @origin_x and @y == @origin_y
+        return
+        
       # register the move with the undo stack but do not waste the time performing it again
       new UndoEntry false,
         title: 'moved vertex to ' + @x + ', ' + @y 
@@ -209,6 +215,11 @@ class Anchor
       for element in selected
         # grab its anchor
         anchor = element.anchor
+
+        # check that we actually went somewhere
+        if anchor.x == anchor.origin_x and anchor.y == anchor.origin_y
+          return
+
         # save the important data
         anchor_data.push
           anchor: anchor
