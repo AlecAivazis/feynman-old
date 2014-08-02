@@ -165,13 +165,13 @@ class Anchor extends Base
       # register the move with the undo stack but do not waste the time performing it again
       new UndoEntry false,
         title: 'moved anchor to ' + @x + ', ' + @y 
-        data: [this, @x, @y, @origin_x, @origin_y]
+        data: [@paper, @id, @x, @y, @origin_x, @origin_y]
         # the forward action is to move to the current location
         forwards: ->
-          @data[0].handleMove(@data[1], @data[2])
+          _.findWhere(@data[0].anchors, id: @data[1]).handleMove(@data[2], @data[3])
         # the backwards action is to move to the origin as defined when the drag started
         backwards: ->
-          @data[0].handleMove(@data[3], @data[4])
+          _.findWhere(@data[0].anchors, id: @data[1]).handleMove(@data[4], @data[5])
         
     # there is more than one selected element
     else
