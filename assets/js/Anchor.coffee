@@ -185,7 +185,8 @@ class Anchor
       # register the move with the undo stack but do not waste the time performing it again
       new UndoEntry false,
         title: 'moved vertex to ' + @x + ', ' + @y 
-        data: [@paper, targetAnchor, @x, @y, @origin_x, @origin_y]
+        data: [@paper, targetAnchor, targetAnchor.x, targetAnchor.y,
+                                     targetAnchor.origin_x, targetAnchor.origin_y]
         # the forward action is to move to the current location
         forwards: ->
           @data[1].handleMove(@data[2], @data[3])
