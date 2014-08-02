@@ -13,6 +13,7 @@ class Line
     @width = 2
     @color = 'black'
     @loopDirection = 1
+    @labelDistance = 30
 
 
   ressurect: =>
@@ -61,7 +62,7 @@ class Line
       return
 
     # the distance to be from the line
-    r = 30
+    r = @labelDistance
       
     # calculate the midpoint
     midx = (@anchor1.x + @anchor2.x ) / 2

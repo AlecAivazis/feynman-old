@@ -58,6 +58,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     switch type
       when 'line'
         $scope.width = element.width
+        $scope.labelDistance = element.labelDistance
       when 'anchor'
         $scope.radius = element.radius
 
@@ -121,6 +122,11 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
   # if they change the line style
   $scope.$watch 'selectedElement.labelPosition', (newVal, oldVal) ->
     if $scope.selectedElement and $scope.type == 'line'
+      $scope.selectedElement.drawLabel()
+
+  $scope.$watch 'labelDistance', (newVal, oldVal) ->
+    if $scope.selectedElement and $scope.type == 'line'
+      $scope.selectedElement.labelDistance = newVal
       $scope.selectedElement.drawLabel()
 
   $scope.$watch 'selectedElement.fixed', (newVal, oldVal) ->
