@@ -14,38 +14,9 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     canvas = $(document).attr 'canvas'
     $scope.gridSize = canvas.gridSize
     $scope.snapToGrid = canvas.snapToGrid
-    # show the UI element for the diagram properties
     $scope.showDiagramProperties = true
-
     $rootScope.title = canvas.title
   
-
-  # if they change the diagram title then update it on the object
-  $rootScope.$watch 'title', (newVal, oldVal) ->
-    if $(document).attr 'canvas'
-      $(document).attr('canvas').title = newVal
-
-  # if they changes the snapToGrid boolean
-  $scope.$watch 'snapToGrid', (newVal, oldVal) ->
-    # grab the canvas
-    canvas = $(document).attr 'canvas'
-    # if it exists
-    if $(document).attr 'canvas'
-      # change the value of the object
-      $(document).attr('canvas')['snapToGrid'] = newVal
-      # redraw the canvas
-      $(document).attr('canvas').draw()
-
-  $scope.$watch 'gridSize', (newVal, oldVal) ->
-    # grab the canvas
-    canvas = $(document).attr 'canvas'
-    # if it exists
-    if $(document).attr 'canvas'
-      # change the value of the object
-      $(document).attr('canvas')['gridSize'] = newVal
-      # redraw the canvas
-      $(document).attr('canvas').draw()
-    
   # when an element is selected in snap the event gets propagated through jquery
   $(document).on 'selectedElement', (event, element, type) ->
 
@@ -86,6 +57,31 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
   # update the properties of the appropriate element when we change the selectedElements 
   # the only reason to do this is because snap attributes are not settable with foo.bar = 2
+
+  $rootScope.$watch 'title', (newVal, oldVal) ->
+    if $(document).attr 'canvas'
+      $(document).attr('canvas').title = newVal
+
+  $scope.$watch 'snapToGrid', (newVal, oldVal) ->
+    # grab the canvas
+    canvas = $(document).attr 'canvas'
+    # if it exists
+    if $(document).attr 'canvas'
+      # change the value of the object
+      $(document).attr('canvas')['snapToGrid'] = newVal
+      # redraw the canvas
+      $(document).attr('canvas').draw()
+
+  $scope.$watch 'gridSize', (newVal, oldVal) ->
+    # grab the canvas
+    canvas = $(document).attr 'canvas'
+    # if it exists
+    if $(document).attr 'canvas'
+      # change the value of the object
+      $(document).attr('canvas')['gridSize'] = newVal
+      # redraw the canvas
+      $(document).attr('canvas').draw()
+    
   $scope.$watch 'color', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.color = newVal
@@ -104,13 +100,11 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
       $scope.selectedElement.width = newVal
       $scope.selectedElement.draw()
 
-  # if they set the label
   $scope.$watch 'selectedElement.label', (newVal, oldVal) ->
     # we need to tell the element to redraw by hand to incorporate the new label 
     if $scope.selectedElement
       $scope.selectedElement.drawLabel()
 
-  # if they change the line style
   $scope.$watch 'selectedElement.style', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.draw()
@@ -119,7 +113,6 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     if $scope.selectedElement
       $scope.selectedElement.draw()
 
-  # if they change the line style
   $scope.$watch 'selectedElement.labelPosition', (newVal, oldVal) ->
     if $scope.selectedElement and $scope.type == 'line'
       $scope.selectedElement.drawLabel()
