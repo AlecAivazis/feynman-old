@@ -68,6 +68,5 @@ undo.controller 'undoCtrl', [ '$scope', ($scope) ->
         entry.backward.apply(data: entry.data)
         # decrement the counter
         $scope.current--
-      
-  
+
 ]

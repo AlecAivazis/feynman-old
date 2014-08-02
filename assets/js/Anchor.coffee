@@ -1,6 +1,8 @@
 # this file describes the anchor class as needed by the online feynman diagram tool
 # the anchor acts as the main structural element by providing two ends to connect
 
+id = 1
+
 class Anchor
 
   element = null
@@ -8,6 +10,8 @@ class Anchor
   constructor: (@paper, @x_raw, @y_raw, @radius = 5, @snapRange = 21) ->
     @lines = []
     @paper.anchors.push this
+    @id = id
+    id++
 
     # default values
     @color = 'black'
@@ -75,18 +79,45 @@ class Anchor
       
   # at the end of the drag
   dragEnd: (x, y, event) =>
+
+    if @newAnchor
+      console.log 'created new element only?'
+    
     # for each anchor
     _.each @paper.anchors, (anchor) =>
       # check if there is any anchor that it within snapRange of me
       _.each @paper.anchors, (compare) =>
+        # make sure we dont compare us with ourselves
+        if compare == anchor
+          return
+
         # compute the distance between me and the other anchor
         dx = anchor.x - compare.x
         dy = anchor.y - compare.y
-  
+
         # check if the other anchor is within snap range
         if @snapRange * @snapRange > dx*dx + dy*dy
           # if it is then merge the two
           compare.merge anchor
+          # if the newAnchor is defined and we're merging it
+          if @newAnchor and compare == @newAnchor
+            console.log 'merged new anchor ' + @newAnchor.id
+            # register the move with the undo stack
+            title = 'created propagator'
+            $(document).trigger 'addEventToUndo', [title, false,
+              # the data passed to the handlers
+              [@paper,anchor.x, anchor.y, compare.x, compare.y], 
+              # the forward action is to create a line between the two anchors
+              ->
+                console.log 'create propagator'
+              # the backwards action is to remove the line created
+              , ->
+                console.log 'remove propagator'
+            ]
+
+
+            # take away the newAnchor definition
+            @newAnchor = undefined
 
     selected = Snap.selectAll('.selectedElement')
 
@@ -135,8 +166,8 @@ class Anchor
             element.anchor.handleMove element.origin_x, element.origin_y
       ]
 
-    # clear the target ancho
-    @targetAnchor = undefined
+    # clear the target anchor
+    @newAnchor = undefined
 
     # draw any labels that need to be
     _.each _.compact(@lines), (line)->
@@ -155,7 +186,7 @@ class Anchor
     # if the user is holding alt
     if event.altKey
       # then create a new anchor attached to this one
-      @targetAnchor = @split true
+      @newAnchor = @split true
       # and do nothing ele
       return
       
@@ -196,11 +227,11 @@ class Anchor
     # if they are holding down the alt key
     if event.altKey
       # if a new anchor was created at the beginning
-      if @targetAnchor
-        @targetAnchor.handleMove x, y
+      if @newAnchor
+        @newAnchor.handleMove x, y
       # the user pressed alt in the middle of the drag
       else
-        @targetAnchor = @split true
+        @newAnchor = @split true
       
     # default case
     else
