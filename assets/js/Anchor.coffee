@@ -86,24 +86,24 @@ class Anchor extends Base
 
       # check if the other anchor is within snap range
       if @snapRange * @snapRange > dx*dx + dy*dy
-        console.log 'merging'
+        # grab the line before we merge
+        line = targetAnchor.lines[0]
         # if it is then merge the two
         targetAnchor.merge compare
         # if the newAnchor is defined and we're merging it
         if @newAnchor
           # grab the line that we just created
-          line = targetAnchor.lines[0]
       
           new UndoEntry false,
             title: 'added internal propagator'
             data: [@paper, this, compare, line], 
             forwards: ->
-              @line = new Line(@data[0], @data[1], @data[2])
+              @line.ressurect()
               @data[1].draw()
             backwards: ->
               if not @line
                 @line = @data[3]
-              @line.delete()
+              @line.remove()
 
           # take away the newAnchor definition
           @newAnchor = undefined
@@ -121,6 +121,9 @@ class Anchor extends Base
       targetAnchor = this
 
     # check for merges around the targetAnchor that will look to create elements from me
+    # grab the line before we potentially remove it
+    line = targetAnchor.lines[0]
+    console.log line
     # this is a check for internal lines 
     if @checkForMerges(targetAnchor)
       return
@@ -128,16 +131,15 @@ class Anchor extends Base
     # if i am supposed to be a new anchor
     if @newAnchor == targetAnchor
       console.log 'making new anchor'
-      line = targetAnchor.lines[0]
       # add the entry in the undo stack
       new UndoEntry false,
         title: 'created anchor at ' + targetAnchor.x + ',' +  targetAnchor.y
         data: [@paper, this, targetAnchor, line]
         forwards: ->
           # set and create the anchor
-          @anchor = new Anchor(@data[0], @data[2].x, @data[2].y)
+          @anchor.ressurect()
           # set and create the line
-          @line = new Line(@data[0], @data[1], @anchor)
+          @line.ressurect()
           # draw the anchor/line
           @anchor.draw()
           
@@ -221,6 +223,8 @@ class Anchor extends Base
 
     # if the user is holding alt
     if event.altKey
+      # clear the selection so we can eventually select the new anchor
+      $(document).trigger 'clearSelection', ->
       # then create a new anchor attached to this one
       @newAnchor = @split true
       # and do nothing ele
@@ -302,6 +306,10 @@ class Anchor extends Base
     @element.remove()
     # remove this element from the papers list
     @paper.anchors =  _.without @paper.anchors, this
+    @lines = []
+
+  ressurect: =>
+    @paper.anchors.push this
 
   removeLine: (line) =>
     @lines =  _.without @lines, line

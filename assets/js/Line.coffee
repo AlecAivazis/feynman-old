@@ -17,8 +17,20 @@ class Line extends Base
     @loopDirection = 1
 
 
-  # safely remove any elements on the DOM associated with this line
+  ressurect: =>
+    @anchor1.addLine this
+    @anchor2.addLine this
+
+  # remove all references to this element
   remove: =>
+    # hide this element
+    @hide()
+    # remove both of the references
+    @anchor1.removeLine this
+    @anchor2.removeLine this
+
+  # safely remove any elements on the DOM associated with this line
+  hide: =>
     # if this line has already been drawn
     if @element
       # remove it
@@ -211,7 +223,7 @@ class Line extends Base
       isSelected = true
 
     # clear any previous DOM elements
-    @remove()
+    @hide()
     # what is drawn changes on the style
     switch @style
       when "line"
