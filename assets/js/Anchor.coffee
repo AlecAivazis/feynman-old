@@ -82,42 +82,43 @@ class Anchor
 
     if @newAnchor
       console.log 'created new element only?'
+      targetAnchor = @newAnchor
+    else
+      targetAnchor = this
     
-    # for each anchor
-    _.each @paper.anchors, (anchor) =>
-      # check if there is any anchor that it within snapRange of me
-      _.each @paper.anchors, (compare) =>
-        # make sure we dont compare us with ourselves
-        if compare == anchor
-          return
+    # check if there is any anchor that it within snapRange of me
+    _.each @paper.anchors, (compare) =>
+      # make sure we dont compare us with ourselves
+      if compare == targetAnchor
+        return
 
-        # compute the distance between me and the other anchor
-        dx = anchor.x - compare.x
-        dy = anchor.y - compare.y
+      # compute the distance between me and the other anchor
+      dx = targetAnchor.x - compare.x
+      dy = targetAnchor.y - compare.y
 
-        # check if the other anchor is within snap range
-        if @snapRange * @snapRange > dx*dx + dy*dy
-          # if it is then merge the two
-          compare.merge anchor
-          # if the newAnchor is defined and we're merging it
-          if @newAnchor and compare == @newAnchor
-            console.log 'merged new anchor ' + @newAnchor.id
-            # register the move with the undo stack
-            title = 'created propagator'
-            $(document).trigger 'addEventToUndo', [title, false,
-              # the data passed to the handlers
-              [@paper,anchor.x, anchor.y, compare.x, compare.y], 
-              # the forward action is to create a line between the two anchors
-              ->
-                console.log 'create propagator'
-              # the backwards action is to remove the line created
-              , ->
-                console.log 'remove propagator'
-            ]
+      # check if the other anchor is within snap range
+      if @snapRange * @snapRange > dx*dx + dy*dy
+        console.log 'merging'
+        # if it is then merge the two
+        targetAnchor.merge compare
+        # if the newAnchor is defined and we're merging it
+        if @newAnchor
+          # grab the line that we just created
+          line = targetAnchor.lines[0]
+      
+          new UndoEntry false,
+            title: 'added internal propagator'
+            data: [@paper, this, compare, line], 
+            forwards: ->
+              @line = new Line(@data[0], @data[1], @data[2])
+              @data[1].draw()
+            backwards: ->
+              if not @line
+                @line = @data[3]
+              @line.delete()
 
-
-            # take away the newAnchor definition
-            @newAnchor = undefined
+          # take away the newAnchor definition
+          @newAnchor = undefined
 
     selected = Snap.selectAll('.selectedElement')
 
@@ -245,28 +246,33 @@ class Anchor
       return
 
     # go over all of the lines of the anchor
-    _.each other.lines, (line) =>
+    _.each @lines, (line) =>
       # if the replaced anchor was anchor1 for this line
-      if line.anchor1 == other
+      if line.anchor1 == this
         # become anchor1
-        line.anchor1 = this
+        line.anchor1 = other
       # if the replaced anchor was anchor2
-      if line.anchor2 == other
+      if line.anchor2 == this
         # assume the position
-        line.anchor2 = this
+        line.anchor2 = other
 
-      # add the line to my list
-      @addLine line
+      # add the line to their list
+      other.addLine line
 
-    # remove the other anchor from the DOM
-    other.remove()
-    # update all of my lines
-    @draw()
+    # remove me from the DOM 
+    @remove()
+    # update all of their lines
+    other.draw()
 
   remove: =>
     @element.remove()
     # remove this element from the papers list
     @paper.anchors =  _.without @paper.anchors, this
+
+  removeLine: (line) =>
+    @lines =  _.without @lines, line
+
+  delete: =>
 
   handleMove: (x, y) =>
 

@@ -14,6 +14,7 @@ class Line
     @color = 'black'
     @loopDirection = 1
 
+
   # safely remove any elements on the DOM associated with this line
   remove: =>
     # if this line has already been drawn
@@ -23,10 +24,18 @@ class Line
     # remove the label
     @removeLabel
 
+  # remove this lines label from the DOM
   removeLabel: =>
     # if this line has a label
     if @labelEle
       @labelEle.remove()
+
+  # delete all references to this object
+  delete: =>
+    @anchor1.removeLine this
+    @anchor2.removeLine this
+    @remove()
+
 
   # calculate the location for the label and then draw it
   drawLabel: =>
