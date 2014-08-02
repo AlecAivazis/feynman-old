@@ -139,6 +139,12 @@ class Line
     # apply the transform and return the element
     element.transform(alignment)
 
+  replaceAnchor: (replaced, replaces) =>
+    if @anchor1 == replaced
+      @anchor1 = replaces
+    else if @anchor2 == replaced
+      @anchor2 = replaces
+
   drawAsLine: =>
     # add the line to the dom
     @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
