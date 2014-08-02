@@ -119,8 +119,8 @@ class Anchor
                 # change the anchor assignment back to targetAnchor
                 line.replaceAnchor(@data[1], @data[0])
 
-              # move the anchor back to its original place
-              @data[0].handleMove(@data[3], @data[4])
+              # move the anchor back to its original place (ignoring the grid)
+              @data[0].handleMove(@data[3], @data[4], false)
 
               
 
@@ -344,7 +344,7 @@ class Anchor
       @lines =  _.without @lines, lines
 
 
-  handleMove: (x, y) =>
+  handleMove: (x, y, useGrid = true) =>
 
     # if its fixed
     if @fixed
@@ -354,8 +354,7 @@ class Anchor
     # grab the document's feynman canvas
     gridSize = $(document).attr('canvas').gridSize
     # if they want to snap everything to a grid
-    if gridSize > 0
-      console.log 'handling move with non zero grid'
+    if gridSize > 0 and useGrid
       # find the nearest point on the grid
       x = Math.round(x/gridSize)*gridSize
       y = Math.round(y/gridSize)*gridSize
