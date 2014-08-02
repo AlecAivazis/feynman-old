@@ -1,4 +1,6 @@
 # this file describes a line object that is drawn between two Anchors
+#
+# author: alec aivazis
 
 class Line
 

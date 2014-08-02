@@ -1,5 +1,6 @@
 # this file handles the instantiation of the default elements as well as the paper based
 # event handlers like group selection,
+#
 # author: alec aivazis
 
 class FeynmanCanvas
@@ -186,6 +187,7 @@ class FeynmanCanvas
   dragEnd: =>
     # if theres only one selected event
     if Snap.selectAll('.selectedElement').length == 1
+      # then select it
       $(document).trigger 'selectedElement', [Snap.select('.selectedElement').anchor , 'anchor']
     
     @removeSelectionRect()

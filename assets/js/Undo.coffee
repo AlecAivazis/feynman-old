@@ -1,4 +1,6 @@
 # this file describes the implementation of a general undo stack in angular
+#
+# author: alec aivazis
 
 # create the angular module
 undo = angular.module 'undo', []

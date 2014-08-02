@@ -1,5 +1,7 @@
 # this file describes the anchor class as needed by the online feynman diagram tool
 # the anchor acts as the main structural element by providing two ends to connect
+#
+# author: alec aivazis
 
 class Anchor
 

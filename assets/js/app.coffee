@@ -1,5 +1,6 @@
 # this file describes the angular app the runs alongside the snap.svg application
 # to draw feynman diagrams
+#
 # author: alec aivazis
 
 # create the angular module 
@@ -7,21 +8,13 @@ app = angular.module 'feynman', ['colorpicker.module', 'uiSlider', 'undo']
 # define the controller for the properties menu
 app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
 
-  $(document).on 'clearSelection', ->
-    $scope.clearSelection()
-
-  $(document).on 'doneWithInit', ->
-    canvas = $(document).attr 'canvas'
-    $scope.gridSize = canvas.gridSize
-    $scope.snapToGrid = canvas.snapToGrid
-    $scope.showDiagramProperties = true
-    $rootScope.title = canvas.title
-  
   # when an element is selected in snap the event gets propagated through jquery
   $(document).on 'selectedElement', (event, element, type) ->
 
-    # clear the current selection
+    # clear the previous selection
     $(document).trigger('clearSelection')
+    # and add the class to the selected element
+    element.element.addClass('selectedElement')
 
     # load the type of element
     $scope.type = type
@@ -38,8 +31,17 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     # apply the change since this is technically done in the jquery environment
     $scope.$apply()
 
-    element.element.addClass('selectedElement')
 
+  $(document).on 'clearSelection', ->
+    $scope.clearSelection()
+
+  $(document).on 'doneWithInit', ->
+    canvas = $(document).attr 'canvas'
+    $scope.gridSize = canvas.gridSize
+    $scope.snapToGrid = canvas.snapToGrid
+    $scope.showDiagramProperties = true
+    $rootScope.title = canvas.title
+  
   $scope.clearSelection = ->
   
     # find every selected element
