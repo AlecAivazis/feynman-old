@@ -76,16 +76,8 @@ class Anchor
     # update the associated lines
     _.each @lines, (line) ->
       line.draw()
-      
-  # at the end of the drag
-  dragEnd: (x, y, event) =>
 
-    if @newAnchor
-      console.log 'created new element only?'
-      targetAnchor = @newAnchor
-    else
-      targetAnchor = this
-    
+  checkForMerges: (targetAnchor = this)=>
     # check if there is any anchor that it within snapRange of me
     _.each @paper.anchors, (compare) =>
       # make sure we dont compare us with ourselves
@@ -119,7 +111,53 @@ class Anchor
 
           # take away the newAnchor definition
           @newAnchor = undefined
+          # now that the we are gone we are done
+          return true
+    return false
+      
+  # at the end of the drag
+  dragEnd: (x, y, event) =>
 
+    if @newAnchor
+      console.log 'created new element only?'
+      targetAnchor = @newAnchor
+    else
+      targetAnchor = this
+
+    # check for merges around the targetAnchor that will look to create elements from me
+    # this is a check for internal lines 
+    if @checkForMerges(targetAnchor)
+      return
+
+    # if i am supposed to be a new anchor
+    if @newAnchor == targetAnchor
+      console.log 'making new anchor'
+      line = targetAnchor.lines[0]
+      # add the entry in the undo stack
+      new UndoEntry false,
+        title: 'created anchor at ' + targetAnchor.x + ',' +  targetAnchor.y
+        data: [@paper, this, targetAnchor, line]
+        forwards: ->
+          # set and create the anchor
+          @anchor = new Anchor(@data[0], @data[2].x, @data[2].y)
+          # set and create the line
+          @line = new Line(@data[0], @data[1], @anchor)
+          # draw the anchor/line
+          @anchor.draw()
+          
+        backwards: ->
+          # if this is the first time we've gone back
+          if not @anchor
+            # set the anchor variable
+            @anchor = @data[2]
+          # remove the anchor 
+          @anchor.remove()
+          # same for line
+          if not @line
+            @line = @data[3]
+          @line.remove()
+          
+  
     selected = Snap.selectAll('.selectedElement')
 
     # make sure there is an element selected
@@ -272,7 +310,6 @@ class Anchor
   removeLine: (line) =>
     @lines =  _.without @lines, line
 
-  delete: =>
 
   handleMove: (x, y) =>
 
