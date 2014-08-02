@@ -5,15 +5,13 @@ class Anchor
 
   element = null
   
-  constructor: (@paper, @x_raw, @y_raw, @radius = 5, @snapRange = 21) ->
+  constructor: (@paper, @x, @y, @radius = 5, @snapRange = 21) ->
     @lines = []
     @paper.anchors.push this
 
     # default values
     @color = 'black'
     @fixed = false
-    @x = @x_raw
-    @y = @y_raw
 
   # add a line to the list of connected elements
   addLine: (lines) =>
@@ -38,18 +36,6 @@ class Anchor
       # remove it
       @element.remove()
 
-    # grab the document's feynman canvas
-    gridSize = $(document).attr('canvas').gridSize
-    # if they want to snap everything to a grid
-    if gridSize > 0
-      # find the nearest point on the grid
-      @x = Math.round(@x_raw/gridSize)*gridSize
-      @y = Math.round(@y_raw/gridSize)*gridSize
-    # were not snapping to the grid
-    else
-      # use the raw coordinates
-      @x = @x_raw
-      @y = @y_raw
 
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).attr
@@ -364,13 +350,22 @@ class Anchor
     if @fixed
       # dont do anything
       return
+       
+    # grab the document's feynman canvas
+    gridSize = $(document).attr('canvas').gridSize
+    # if they want to snap everything to a grid
+    if gridSize > 0
+      console.log 'handling move with non zero grid'
+      # find the nearest point on the grid
+      x = Math.round(x/gridSize)*gridSize
+      y = Math.round(y/gridSize)*gridSize
 
     # check that newX falls within the page
     if @radius <= x <= $(@paper.node).width() - @radius
-      @x_raw = x
+      @x = x
     # check that newY falls within the page
     if @radius <= y <= $(@paper.node).height() - @radius
-      @y_raw = y
+      @y = y
     # update the ui element
     @draw()
 
