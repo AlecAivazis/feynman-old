@@ -67,7 +67,7 @@ block content
               slider(floor="0" ceiling="100" step="25" precision="1"  ng-model="gridSize" 
                      style="width: 70%")
 
-        span(ng-hide="selectedGroup == false")
+        span(ng-hide="selectedGroup == false" ng-init="selectedGroup = false")
           // anchor properties menu
           table.propertiesMenu(ng-show="type == 'anchor'")
             tr.headerRow
@@ -87,14 +87,14 @@ block content
                   | {{groupRadius}}
                 slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
                        style="width: 70%")
-           .groupTools
-             .tool
-               span.label
-                 | align:
-               span.button(ng-click="alignGroup('vertical')")
-                 | vertical
-               span.button(ng-click="alignGroup('horizontal')")
-                 | horizontal
+            tr.groupTools(ng-show="selectedGroup != false")
+              td.tool(colspan=2)
+                span.label
+                  | align:
+                span.button(ng-click="alignGroup('vertical')")
+                  | vertical
+                span.button(ng-click="alignGroup('horizontal')")
+                  | horizontal
   
         span(ng-hide="selectedElement == false")
           // anchor properties menu
