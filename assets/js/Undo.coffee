@@ -5,7 +5,7 @@
 # create the angular module
 undo = angular.module 'undo', []
 
-# add a custom angular filter to reverse the order of a list
+# add a filter to reverse the order of a list
 undo.filter 'reverse', ->
   (items) ->
     items.slice().reverse()

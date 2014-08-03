@@ -185,10 +185,13 @@ class FeynmanCanvas
 
   # after the drag
   dragEnd: =>
+    selected = Snap.selectAll('.selectedElement')
     # if theres only one selected event
-    if Snap.selectAll('.selectedElement').length == 1
+    if selected.length == 1
       # then select it
       $(document).trigger 'selectedElement', [Snap.select('.selectedElement').anchor , 'anchor']
+    else if selected.length > 1
+      $(document).trigger 'selectedGroup', [item.anchor for item in selected.items, 'anchor']
     
     @removeSelectionRect()
    

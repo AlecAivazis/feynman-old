@@ -66,6 +66,28 @@ block content
                 | none
               slider(floor="0" ceiling="100" step="25" precision="1"  ng-model="gridSize" 
                      style="width: 70%")
+
+        span(ng-hide="selectedGroup == false")
+          // anchor properties menu
+          table.propertiesMenu(ng-show="type == 'anchor'")
+            tr.headerRow
+              th(colspan=2)
+                | Properties for selected group of anchors
+            tr.property
+              td.label
+                | fill color:
+              td.value
+                input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
+                  style="background: {{displayColor}}; color: {{displayColor}}; border: 1px solid {{groupColor}}; color: {{displayColor}};")
+            tr.property
+              td.label
+                | radius: 
+              td.value
+                span(ng-show="groupRadius > 0")
+                  | {{groupRadius}}
+                slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
+                       style="width: 70%")
+      
   
         span(ng-hide="selectedElement == false")
           // anchor properties menu

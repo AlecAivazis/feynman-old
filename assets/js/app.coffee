@@ -8,7 +8,7 @@ app = angular.module 'feynman', ['colorpicker.module', 'uiSlider', 'undo']
 # define the controller for the properties menu
 app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
 
-  # when an element is selected in snap the event gets propagated through jquery
+  # add event handler for element selection
   $(document).on 'selectedElement', (event, element, type) ->
 
     # clear the previous selection
@@ -18,23 +18,40 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
     # load the type of element
     $scope.type = type
-
+    # load type specific attributes
     switch type
       when 'line'
         $scope.width = element.width
         $scope.labelDistance = element.labelDistance
       when 'anchor'
         $scope.radius = element.radius
-
+    # load the type independent attributes
     $scope.color = element.color
     $scope.selectedElement = element
     # apply the change since this is technically done in the jquery environment
     $scope.$apply()
 
+  # add event handler for group selection
+  $(document).on 'selectedGroup', (event, elements, type) ->
+    console.log 'selected group'
+    # set the type so we get the right properties menu
+    $scope.type = type
+    # grab the type specific attributes for the group
+    switch type
+      when 'anchor'
+        $scope.groupRadius = -1
+        $scope.groupColor = -1
+        $scope.displayColor = "white"
 
+    $scope.selectedGroup = elements
+    $scope.listen = true
+    $scope.$apply()
+
+  # add event handle for clear selection
   $(document).on 'clearSelection', ->
     $scope.clearSelection()
 
+  # load the canvas atrributes when snap is done loading
   $(document).on 'doneWithInit', ->
     canvas = $(document).attr 'canvas'
     $scope.gridSize = canvas.gridSize
@@ -42,6 +59,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     $scope.showDiagramProperties = true
     $rootScope.title = canvas.title
   
+  # clear the selection
   $scope.clearSelection = ->
   
     # find every selected element
@@ -55,6 +73,8 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
       
     # clear the angular selection
     $scope.selectedElement = false
+    $scope.selectedGroup = false
+    $scope.listen = false
     $scope.$apply()
 
   # update the properties of the appropriate element when we change the selectedElements 
@@ -92,10 +112,35 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
       if $scope.type =='anchor'
         $scope.selectedElement.element.attr 'fill', newVal 
 
+  $scope.$watch 'groupColor', (newVal, oldVal) ->
+    console.log newVal
+    if $scope.selectedGroup
+      # if its the default value
+      if parseInt(newVal) == -1
+        return
+
+      $scope.displayColor = newVal
+
+      console.log 'chaging color'
+      _.each $scope.selectedGroup, (element) ->
+        if $scope.type == 'anchor'
+          element.color = newVal
+        element.draw()
+        
   $scope.$watch 'radius', (newVal, oldVal) ->
     if $scope.selectedElement and $scope.type == 'anchor'
       $scope.selectedElement.radius = newVal
       $scope.selectedElement.draw()
+
+  $scope.$watch 'groupRadius', (newVal, oldVal) ->
+
+    if parseFloat(newVal) < 0 or isNaN newVal
+      return
+
+    if $scope.selectedGroup and $scope.type == 'anchor'
+      _.each $scope.selectedGroup, (sAnchor) ->
+        sAnchor.radius = newVal
+        sAnchor.draw()
 
   $scope.$watch 'width', (newVal, oldVal) ->
     if $scope.selectedElement
