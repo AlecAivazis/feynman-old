@@ -231,7 +231,6 @@ class Anchor
             element.anchor.handleMove element.origin_x, element.origin_y
 
     @newAnchor = undefined
-    console.log 'we are setting newAnchor to be undefined'
 
     # draw any labels that need to be
     _.each _.compact(@lines), (line)->

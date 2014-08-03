@@ -361,9 +361,6 @@ class Line
           @data[4].addLine @data[5]
           @data[4].draw()
           
-      
-      console.log 'we created a new anchor this drag'
-    
     @newAnchor = undefined
 
 
