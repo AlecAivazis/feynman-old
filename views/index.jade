@@ -27,17 +27,15 @@ block content
     svg#canvas
 
     span#sidebar(ng-controller="diagramProperties")
-      // careful: this id can't change without reflecting it in the javascript
       
-      span#diagramProperties
-        // diagram properties
+      #diagramProperties
         table.propertiesMenu(ng-show="showDiagramProperties == true")
           thead
             tr.headerRow
               th(colspan=2)
                 | Properties for diagram
           tbody
-            tr.headerRow
+            tr.property
               td.label
                 | Title:
               td.value
@@ -53,11 +51,12 @@ block content
                 slider(floor="0" ceiling="100" step="25" precision="1"  ng-model="gridSize" 
                        style="width: 70%")
 
+      // WARNING: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}" style="margin-top: 10px")
         table(width="100%")
           thead
-            tr
-              td.historyTitle(colspan=2 ng-init="showHistory = false")
+            tr.headerRow.historyTitle
+              th(colspan=2 ng-init="showHistory = false")
                 | History
                 span(ng-show="showHistory == true" ng-click="showHistory = false" 
                      style="float: right; cursor: pointer;")
