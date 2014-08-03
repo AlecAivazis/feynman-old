@@ -26,28 +26,10 @@ block content
 
     svg#canvas
 
-    span#sidebar
+    span#sidebar(ng-controller="diagramProperties")
       // careful: this id can't change without reflecting it in the javascript
-      #undoHistory(ng-controller="undoCtrl" current="{{current}}")
-        table(width="100%")
-          thead
-            tr
-              td.historyTitle(colspan=2 ng-init="showHistory = false")
-                | History
-                span(ng-show="showHistory == true" ng-click="showHistory = false" style="float: right;")
-                  | hide history
-                span(ng-show="showHistory == false" ng-click="showHistory = true" style="float: right;")
-                  | show history
-          tbody
-            tr.historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
-                           ng-class="{current : event.id == current, disabled: event.id > current}"
-                           ng-show="showHistory == true")
-              td.id
-                | {{event.id}}: 
-              td.title
-                | {{event.title}}
-
-      span#diagramProperties(ng-controller="diagramProperties")
+      
+      span#diagramProperties
         // diagram properties
         table.propertiesMenu(ng-show="showDiagramProperties == true")
           thead
@@ -70,129 +52,152 @@ block content
                   | none
                 slider(floor="0" ceiling="100" step="25" precision="1"  ng-model="gridSize" 
                        style="width: 70%")
+
+      #undoHistory(ng-controller="undoCtrl" current="{{current}}" style="margin-top: 10px")
+        table(width="100%")
+          thead
+            tr
+              td.historyTitle(colspan=2 ng-init="showHistory = false")
+                | History
+                span(ng-show="showHistory == true" ng-click="showHistory = false" 
+                     style="float: right; cursor: pointer;")
+                  | hide history
+                span(ng-show="showHistory == false" ng-click="showHistory = true" 
+                     style="float: right; cursor: pointer;")
+                  | show history
+          tbody
+            tr.historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
+                           ng-class="{current : event.id == current, disabled: event.id > current}"
+                           ng-show="showHistory == true")
+              td.id
+                | {{event.id}}: 
+              td.title
+                | {{event.title}}
   
-        span(ng-hide="selectedGroup == false" ng-init="selectedGroup = false")
-          // anchor properties menu
-          table.propertiesMenu(ng-show="type == 'anchor'")
-            thead
-              tr.headerRow
-                th(colspan=2)
-                  | Properties for selected group of anchors
-            tbody
-              tr.property
-                td.label
-                  | fill color:
-                td.value
-                  input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
-                                          style="background: {{displayColor}}; color: {{displayColor}}; border: 1px solid {{groupColor}}; color: {{displayColor}};")
-              tr.property
-                td.label
-                  | radius: 
-                td.value
-                  span(ng-show="groupRadius > 0")
-                    | {{groupRadius}}
-                  slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
-                         style="width: 70%")
-              tr.groupTools(ng-show="selectedGroup != false")
+      #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false" 
+                       style="margin-top: 10px")
+        // anchor properties menu
+        table.propertiesMenu(ng-show="type == 'anchor'")
+          thead
+            tr.headerRow
+              th(colspan=2)
+                | Properties for selected group of anchors
+          tbody
+            tr.property
+              td.label
+                | fill color:
+              td.value
+                input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
+                      style="background: {{displayColor}}; color: {{displayColor}}; border: 1px solid {{groupColor}}; color: {{displayColor}};")
+            tr.property
+              td.label
+                | radius: 
+              td.value
+                span(ng-show="groupRadius > 0")
+                  | {{groupRadius}}
+                slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
+                       style="width: 70%")
+            tr.groupTools(ng-show="selectedGroup != false")
               td.tool(colspan=2)
-                  span.label
-                    | align:
-                  span.button(ng-click="alignGroup('vertical')")
-                    | vertical
-                  span.button(ng-click="alignGroup('horizontal')")
-                    | horizontal
+                span.label
+                  | align:
+                span.button(ng-click="alignGroup('vertical')")
+                  | vertical
+                span.button(ng-click="alignGroup('horizontal')")
+                  | horizontal
   
-        span(ng-hide="selectedElement == false")
-          // anchor properties menu
-          table.propertiesMenu(ng-show="type == 'anchor'")
-            thead
-              tr.headerRow
-                th(colspan=2)
-                  | Properties for selected anchor
-            tbody
-              tr.property
-                td.label
-                  | fill color:
-                td.value
-                  input(colorpicker="rgb" type="text" ng-model="color" name="color"
-                    style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
-              tr.property
-                td.label
-                  | radius: 
-                td.value
-                  | {{radius}}
-                  slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
-                         style="width: 70%")
-              tr.property
-                td.label
-                  | fixed:
-                td.value
-                  input(type="checkbox" ng-model="selectedElement.fixed")
-        
-        
-          // line properties menu
-          table.propertiesMenu(ng-show="type == 'line'")
-            thead
-              tr.headerRow
-                th(colspan=2)
-                  | Properties for 
-                  img(src="http://latex.codecogs.com/svg.latex?{{selectedElement.label}}", 
-                  ng-show="selectedElement.label")
-            tbody
-              tr.property
-                td.label
-                  | label:
-                td.value
-                  input(type="text" ng-model="selectedElement.label" name="label")
-              tr.property
-                td.label
-                  | label position:
-                td.value
-                  input(type="radio" ng-model="selectedElement.labelPosition" value="top")
-                  |  above
-                  br
-                  input(type="radio" ng-model="selectedElement.labelPosition" value="bottom")
-                  |  below
-              tr.property
-                td.label
-                  | label distance:
-                td.value
-                  | {{labelDistance}}
-                  slider(floor="10" ceiling="50" step="2" precision="1" style="width: 70%"
-                         ng-model="labelDistance" )
-              tr.property
-                td.label
-                  | color:
-                td.value
-                  input(colorpicker="rgb" type="text" ng-model="color" name="color"
-                    style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
-              tr.property
-                td.label
-                  | stroke width:
-                td.value
-                  | {{selectedElement.width}}
-                  slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
-                         style="width: 70%")
-              tr.property
-                td.label
-                  | line style:
-                td.value
-                  select(ng-model="selectedElement.style")
-                    option(value = 'line')
-                      | line
-                    option(value = 'dashed')
-                      | dashed
-                    option(value = 'gluon')
-                      | gluon
-                    option(value = 'em')
-                      | em
-              tr.property(ng-show="selectedElement.style == 'gluon'")
-                td.label
-                  | loop direction:
-                td.value
-                  select(ng-model="selectedElement.loopDirection")
-                    option(value="1")
-                      | up
-                    option(value="-1")
-                      | down
-        
+      span(ng-hide="selectedElement == false")
+        // anchor properties menu
+        table.propertiesMenu(ng-show="type == 'anchor'" style="margin-top: 10px")
+          thead
+            tr.headerRow
+              th(colspan=2)
+                | Properties for selected anchor
+          tbody
+            tr.property
+              td.label
+                | fill color:
+              td.value
+                input(colorpicker="rgb" type="text" ng-model="color" name="color"
+                  style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+            tr.property
+              td.label
+                | radius: 
+              td.value
+                | {{radius}}
+                slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
+                       style="width: 70%")
+            tr.property
+              td.label
+                | fixed:
+              td.value
+                input(type="checkbox" ng-model="selectedElement.fixed")
+    
+  
+        // line properties menu
+        table.propertiesMenu(ng-show="type == 'line'" style="margin-top: 10px")
+          thead
+            tr.headerRow
+              th(colspan=2)
+                | Properties for 
+                img(src="http://latex.codecogs.com/svg.latex?{{selectedElement.label}}", 
+                    ng-show="selectedElement.label")
+          tbody
+            tr.property
+              td.label
+                | label:
+              td.value
+                input(type="text" ng-model="selectedElement.label" name="label")
+            tr.property
+              td.label
+                | label position:
+              td.value
+                input(type="radio" ng-model="selectedElement.labelPosition" value="top")
+                |  above
+                br
+                input(type="radio" ng-model="selectedElement.labelPosition" value="bottom")
+                |  below
+            tr.property
+              td.label
+                | label distance:
+              td.value
+                | {{labelDistance}}
+                slider(floor="10" ceiling="50" step="2" precision="1" style="width: 70%"
+                       ng-model="labelDistance" )
+            tr.property
+              td.label
+                | color:
+              td.value
+                input(colorpicker="rgb" type="text" ng-model="color" name="color"
+                  style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+            tr.property
+              td.label
+                | stroke width:
+              td.value
+                | {{selectedElement.width}}
+                slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
+                       style="width: 70%")
+            tr.property
+              td.label
+                | line style:
+              td.value
+                select(ng-model="selectedElement.style")
+                  option(value = 'line')
+                    | line
+                  option(value = 'dashed')
+                    | dashed
+                  option(value = 'gluon')
+                    | gluon
+                  option(value = 'em')
+                    | em
+            tr.property(ng-show="selectedElement.style == 'gluon'")
+              td.label
+                | loop direction:
+              td.value
+                select(ng-model="selectedElement.loopDirection")
+                  option(value="1")
+                    | up
+                  option(value="-1")
+                    | down
+      
+                      
