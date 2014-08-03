@@ -362,6 +362,9 @@ class Line
           @data[4].draw()
     # a new anchor was not created during this drag
     else
+      # only continue if it was an actual move
+      if @anchor1.x == @anchor1.origin_x
+        return
       # register the move on the undo stack
       new UndoEntry false,
         title: 'moved propagator'
