@@ -254,13 +254,27 @@ class Line
 
 
     # on drag move
-    @element.drag (x, y, dx, dy, event) =>
-      event.stopPropagation()
-    # on drag start
-    , (x, y, event) =>
-      event.stopPropagation()
+    @element.drag @onDrag, @dragStart
 
     # add the click event handler
     @element.node.onclick = (event)=>
       event.stopPropagation()
       $(document).trigger 'selectedElement', [this, 'line']
+
+  # when you start dragging a line
+  dragStart: (x , y, event) =>
+    event.stopPropagation()
+    # go set the origins for both anchors
+    @anchor1.origin_x = @anchor1.x
+    @anchor1.origin_y = @anchor1.y
+
+    @anchor2.origin_x = @anchor2.x
+    @anchor2.origin_y = @anchor2.y
+    console.log 'starting drag on line'
+    $(document).trigger 'selectedElement', [this, 'line']
+
+  onDrag: (dx, dy, x, y, event) =>
+    event.stopPropagation()
+    @anchor1.handleMove(@anchor1.origin_x + dx, @anchor1.origin_y + dy)
+    @anchor2.handleMove(@anchor2.origin_x + dx, @anchor2.origin_y + dy)
+    console.log 'dragging line'
