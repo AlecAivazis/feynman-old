@@ -360,7 +360,25 @@ class Line
           @data[5].replaceAnchor @data[2], @data[4]
           @data[4].addLine @data[5]
           @data[4].draw()
+    # a new anchor was not created during this drag
+    else
+      # register the move on the undo stack
+      new UndoEntry false,
+        title: 'moved propagator'
+        data: [@anchor1, @anchor1.x, @anchor1.origin_x, @anchor1.y, @anchor1.origin_y, 
+               @anchor2, @anchor2.x, @anchor2.origin_x, @anchor2.y, @anchor2.origin_y]
+        # the forwards action is to move both anchors to the stored location
+        forwards: ->
+          @data[0].handleMove(@data[1], @data[3])
+          @data[5].handleMove(@data[6], @data[8])
+        backwards: ->
+          @data[0].handleMove(@data[2], @data[4])
+          @data[5].handleMove(@data[7], @data[9])
           
+        
+               
+      
+             
     @newAnchor = undefined
 
 
