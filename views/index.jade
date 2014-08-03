@@ -30,20 +30,22 @@ block content
       // careful: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}")
         table(width="100%")
-          tr
-            td.historyTitle(colspan=2 ng-init="showHistory = false")
-              | History
-              span(ng-show="showHistory == true" ng-click="showHistory = false" style="float: right;")
-                | hide history
-              span(ng-show="showHistory == false" ng-click="showHistory = true" style="float: right;")
-                | show history
-          tr.historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
-                         ng-class="{current : event.id == current, disabled: event.id > current}"
-                         ng-show="showHistory == true")
-            td.id
-              | {{event.id}} : 
-            td.title
-              | {{event.title}}
+          thead
+            tr
+              td.historyTitle(colspan=2 ng-init="showHistory = false")
+                | History
+                span(ng-show="showHistory == true" ng-click="showHistory = false" style="float: right;")
+                  | hide history
+                span(ng-show="showHistory == false" ng-click="showHistory = true" style="float: right;")
+                  | show history
+          tbody
+            tr.historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
+                           ng-class="{current : event.id == current, disabled: event.id > current}"
+                           ng-show="showHistory == true")
+              td.id
+                | {{event.id}}: 
+              td.title
+                | {{event.title}}
 
       span#diagramProperties(ng-controller="diagramProperties")
         // diagram properties
