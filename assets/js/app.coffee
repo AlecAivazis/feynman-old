@@ -103,7 +103,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
 
     $timeout ->
       new UndoEntry true,
-        title: 'aligned group ' + direction + 'ly'
+        title: 'aligned vertices ' + direction + 'ly'
         data: [translate_data, attr, avg]
         forwards: ->
           _.each @data[0], (anchor) =>

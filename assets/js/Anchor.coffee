@@ -219,7 +219,7 @@ class Anchor
 
       # register the move with the undo stack but do not waste the time performing it again
       new UndoEntry false,
-        title: 'moved group of anchors'
+        title: 'moved vertices as a group'
         data: [anchor_data]
         # the forward action is to move the group to its current location
         forwards: ->
