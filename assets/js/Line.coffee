@@ -21,6 +21,7 @@ class Line
   ressurect: =>
     @anchor1.addLine this
     @anchor2.addLine this
+    return this
 
   # remove all references to this element
   remove: =>
@@ -147,6 +148,7 @@ class Line
       @anchor1 = replaces
     else if @anchor2 == replaced
       @anchor2 = replaces
+    
 
   drawAsLine: =>
     # add the line to the dom
@@ -299,17 +301,70 @@ class Line
     event.stopPropagation()
     # if we made a new anchor with this mode
     if @newAnchor
-      console.log 'new anchor is defined'
       @newAnchor.handleMove(@newAnchor.origin_x + dx, @newAnchor.origin_y + dy)
       return
 
     @anchor1.handleMove(@anchor1.origin_x + dx, @anchor1.origin_y + dy)
     @anchor2.handleMove(@anchor2.origin_x + dx, @anchor2.origin_y + dy)
 
-  dragEnd: ->
-    console.log 'drag ended'
+  dragEnd: =>
+    # check if we made a new anchor this drag
+    if @newAnchor
+      # find the old anchors for the undo stack
+
+      # since the anchor we created only has one line
+      newLine = @newAnchor.lines[0]
+      # we can figure out the split anchor
+      splitAnch = if newLine == @newAnchor then newLine.anchor2 else newLine.anchor1
+      # the other line is the only line left if you remove me from the lines of the split anchor
+      otherLine = _.without(splitAnch.lines, this)[0]
+      # get the anchor from otherLine that isn't the splitAnch
+      otherAnch = if otherLine.anchor1 == splitAnch then otherLine.anchor2 else otherLine.anchor1
+      # get the anchor that is connected to this
+      thisAnch = if this.anchor1 == splitAnch then this.anchor2 else this.anchor1
+
+      # regsiter the creation of the branch with the undo stack
+      new UndoEntry false,
+        title: 'added branch to propagator'
+        data: [@newAnchor, newLine, splitAnch, otherLine, otherAnch, this, thisAnch]
+        # the forwards action is to fake the branch by bringing back the old elements
+        forwards: ->
+          # remove this from the other anchor
+          @data[4].removeLine @data[5]
+          # ressurect the newAnchor
+          @data[0].ressurect()
+          # ressurect the splitAnchor
+          @data[2].ressurect()
+          # while were at it replace other anchor with split anch in me
+          @data[5].replaceAnchor @data[4], @data[2]
+          # ressurect the newLine
+          @data[1].ressurect()
+          # ressurect this
+          @data[5].ressurect()
+          # ressurect the other anchorr
+          @data[4].ressurect()
+          # ressurect the other line
+          @data[3].ressurect()
+          # draw the anchors
+          @data[0].draw()
+          @data[2].draw()
+          @data[4].draw()
+        # the backwards removes everything and makes this back to what it was
+        backwards: ->
+          # remove the intermediate elements
+          @data[0].remove()
+          @data[1].remove()
+          @data[2].remove()
+          @data[3].remove()
+          # before removing the midAnch, lets replace it with the otherAnch
+          @data[5].replaceAnchor @data[2], @data[4]
+          @data[4].addLine @data[5]
+          @data[4].draw()
+          
+      
+      console.log 'we created a new anchor this drag'
+    
     @newAnchor = undefined
-    console.log @newAnchor
 
 
   # create an anchor at the given coordinates and 
@@ -333,3 +388,4 @@ class Line
 
     
     
+  
