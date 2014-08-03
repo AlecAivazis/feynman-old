@@ -6,7 +6,7 @@
 # create the angular module 
 app = angular.module 'feynman', ['colorpicker.module', 'uiSlider', 'undo']
 # define the controller for the properties menu
-app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScope) ->
+app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout) ->
 
   # add event handler for element selection
   $(document).on 'selectedElement', (event, element, type) ->
@@ -33,7 +33,6 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
   # add event handler for group selection
   $(document).on 'selectedGroup', (event, elements, type) ->
-    console.log 'selected group'
     # set the type so we get the right properties menu
     $scope.type = type
     # grab the type specific attributes for the group
@@ -44,7 +43,6 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
         $scope.displayColor = "white"
 
     $scope.selectedGroup = elements
-    $scope.listen = true
     $scope.$apply()
 
   # add event handle for clear selection
@@ -74,8 +72,50 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
     # clear the angular selection
     $scope.selectedElement = false
     $scope.selectedGroup = false
-    $scope.listen = false
     $scope.$apply()
+
+  # align event element in the selected group align the given direction
+  $scope.alignGroup = (direction) ->
+    # grab the selected anchors
+    selected = (element.anchor for element in Snap.selectAll('.selectedElement').items)
+    # get the appropraite attribute given the direction
+    if direction == 'vertical'
+      attr = 'x'
+    else if direction == 'horizontal'
+      attr = 'y'
+
+    # compute the sum over the appropriate attribute and its average
+    sum = _.reduce selected, (runningTotal, element) ->
+      return runningTotal + parseFloat(element[attr])
+    , 0
+    avg = sum / selected.length
+
+    # store the origin so we can move back
+    translate_data = []
+    for element in selected
+      translate_data.push
+        element: element
+        x: element.x
+        y: element.y
+    
+    _.each selected, (element) ->
+      element.translate attr, avg, false
+
+    $timeout ->
+      new UndoEntry true,
+        title: 'aligned group ' + direction + 'ly'
+        data: [translate_data, attr, avg]
+        forwards: ->
+          _.each @data[0], (anchor) =>
+            anchor.element.translate(@data[1], @data[2], false)
+        backwards: ->
+          _.each @data[0], (anchor) =>
+            anchor.element.handleMove(anchor.x, anchor.y, false)
+          
+      $rootScope.$apply
+
+    , 0
+
 
   # update the properties of the appropriate element when we change the selectedElements 
   # the only reason to do this is because snap attributes are not settable with foo.bar = 2
@@ -113,7 +153,6 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
         $scope.selectedElement.element.attr 'fill', newVal 
 
   $scope.$watch 'groupColor', (newVal, oldVal) ->
-    console.log newVal
     if $scope.selectedGroup
       # if its the default value
       if parseInt(newVal) == -1
@@ -121,7 +160,6 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', ($scope, $rootScop
 
       $scope.displayColor = newVal
 
-      console.log 'chaging color'
       _.each $scope.selectedGroup, (element) ->
         if $scope.type == 'anchor'
           element.color = newVal

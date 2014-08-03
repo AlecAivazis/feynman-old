@@ -10,7 +10,7 @@ undo.filter 'reverse', ->
   (items) ->
     items.slice().reverse()
 
-undo.controller 'undoCtrl', [ '$scope', ($scope) ->
+undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope) ->
 
   # start with an empty queue
   $scope.queue = []

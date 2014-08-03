@@ -346,6 +346,12 @@ class Anchor
     else
       @lines =  _.without @lines, lines
 
+  # move in a single direction
+  translate:  (attr, value, useGrid = true) =>
+    if attr == 'x'
+      @handleMove(value, @y, useGrid) 
+    else if attr == 'y'
+      @handleMove(@x, value, useGrid) 
 
   handleMove: (x, y, useGrid = true) =>
 
