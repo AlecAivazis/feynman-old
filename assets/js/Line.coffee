@@ -254,7 +254,7 @@ class Line
 
 
     # on drag move
-    @element.drag @onDrag, @dragStart
+    @element.drag @onDrag, @dragStart, @dragEnd
 
     # add the click event handler
     @element.node.onclick = (event)=>
@@ -264,17 +264,72 @@ class Line
   # when you start dragging a line
   dragStart: (x , y, event) =>
     event.stopPropagation()
+    # deselect the previous selection
+    $(document).trigger 'clearSelection'
+
+    # not sure why you need this, should investigate
+    @newAnchor = undefined
+
+    # check if the alt key is being pressed
+    if event.altKey
+
+      # split the line at those coordinates
+      splitx = if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
+      splity = if event.offsetY then event.offsetY else event.clientY - $(event.target).offset().top
+
+      # if we haven't already made a new one this drag
+      # create a node off of this one
+      @newAnchor = @split(splitx, splity, true)
+      @newAnchor.origin_x = splitx
+      @newAnchor.origin_y = splity
+
+      # do nothing else
+      return
+
     # go set the origins for both anchors
     @anchor1.origin_x = @anchor1.x
     @anchor1.origin_y = @anchor1.y
-
     @anchor2.origin_x = @anchor2.x
     @anchor2.origin_y = @anchor2.y
-    console.log 'starting drag on line'
+
+    # select this element
     $(document).trigger 'selectedElement', [this, 'line']
 
   onDrag: (dx, dy, x, y, event) =>
     event.stopPropagation()
+    # if we made a new anchor with this mode
+    if @newAnchor
+      console.log 'new anchor is defined'
+      @newAnchor.handleMove(@newAnchor.origin_x + dx, @newAnchor.origin_y + dy)
+      return
+
     @anchor1.handleMove(@anchor1.origin_x + dx, @anchor1.origin_y + dy)
     @anchor2.handleMove(@anchor2.origin_x + dx, @anchor2.origin_y + dy)
-    console.log 'dragging line'
+
+  dragEnd: ->
+    console.log 'drag ended'
+    @newAnchor = undefined
+    console.log @newAnchor
+
+
+  # create an anchor at the given coordinates and 
+  split: (x, y, createNode = false) =>
+    # create the new elements
+    anch = new Anchor(@paper, x, y)
+    # arbitrarily set my anchor1 so we need a line from anchor1 to the new anchor
+    l = new Line(@paper, anch, @anchor1)
+    # arbitrarily set my anchor1 to the new anchor
+    @anchor1.removeLine this
+    @anchor1.draw()
+    @anchor1 = anch
+    anch.addLine this
+    # redraw me and the new anchor
+    anch.draw()
+    @draw()
+    # if they told us to create a node off of the new one
+    if createNode
+      # split the created node with a line between
+      return anch.split(true)
+
+    
+    
