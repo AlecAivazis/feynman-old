@@ -23,6 +23,7 @@ class Line
     @anchor2.addLine this
     return this
 
+
   # remove all references to this element
   remove: =>
     # hide this element
@@ -30,6 +31,7 @@ class Line
     # remove both of the references
     @anchor1.removeLine this
     @anchor2.removeLine this
+
 
   # safely remove any elements on the DOM associated with this line
   hide: =>
@@ -40,11 +42,13 @@ class Line
     # remove the label
     @removeLabel
 
+
   # remove this lines label from the DOM
   removeLabel: =>
     # if this line has a label
     if @labelEle
       @labelEle.remove()
+
 
   # delete all references to this object
   delete: =>
@@ -109,6 +113,7 @@ class Line
     # create the label at the appropriate location
     @createLabel(labelx, labely)
 
+
   # render the label in and add it in the right place
   createLabel: (x, y) =>
     # remove the previous label
@@ -116,6 +121,7 @@ class Line
     # make the new label
     if @label
       @labelEle = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
+
 
   # align an element along the line connecting the two anchors
   # assumes the element is horizontal before align for the purposes for scaling
@@ -143,6 +149,7 @@ class Line
     # apply the transform and return the element
     element.transform(alignment)
 
+
   replaceAnchor: (replaced, replaces) =>
     if @anchor1 == replaced
       @anchor1 = replaces
@@ -154,10 +161,12 @@ class Line
     # add the line to the dom
     @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
 
+
   # draw  
   drawAsDashedLine: =>
     @drawAsLine().attr
       strokeDasharray: '10 '
+
 
   drawAsGluon: =>
     # the width of one gluon loop
@@ -224,6 +233,7 @@ class Line
     # align along the line created by the anchors
     @align(group)
 
+
   # draw the line on the DOM
   draw: =>
 
@@ -244,7 +254,6 @@ class Line
       when "em"
         @element = @drawAsSine()
 
-
     # apply the correct styling
     @element.attr
       stroke: @color
@@ -264,6 +273,7 @@ class Line
     @element.node.onclick = (event)=>
       event.stopPropagation()
       $(document).trigger 'selectedElement', [this, 'line']
+
 
   # when you start dragging a line
   dragStart: (x , y, event) =>
@@ -299,15 +309,20 @@ class Line
     # select this element
     $(document).trigger 'selectedElement', [this, 'line']
 
+
   onDrag: (dx, dy, x, y, event) =>
     event.stopPropagation()
     # if we made a new anchor with this mode
     if @newAnchor
+      # move it
       @newAnchor.handleMove(@newAnchor.origin_x + dx, @newAnchor.origin_y + dy)
+      # do nothing else
       return
-
+    # we did not make a new anchor this drag
+    # move the two anchors associated with this line
     @anchor1.handleMove(@anchor1.origin_x + dx, @anchor1.origin_y + dy)
     @anchor2.handleMove(@anchor2.origin_x + dx, @anchor2.origin_y + dy)
+
 
   dragEnd: =>
     # check if we made a new anchor this drag

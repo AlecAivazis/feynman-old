@@ -15,6 +15,7 @@ class Anchor
     @color = 'black'
     @fixed = false
 
+
   # add a line to the list of connected elements
   addLine: (lines) =>
     # if they gave us an array
@@ -23,6 +24,7 @@ class Anchor
         @lines.push line
     else
       @lines.push lines
+
 
   # update the anchor element on the user interface
   draw: =>
@@ -37,7 +39,6 @@ class Anchor
 
       # remove it
       @element.remove()
-
 
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).attr
@@ -64,6 +65,7 @@ class Anchor
     # update the associated lines
     _.each @lines, (line) ->
       line.draw()
+
 
   checkForMerges: (targetAnchor = this)=>
     # check if there is any anchor that it within snapRange of me
@@ -124,11 +126,10 @@ class Anchor
               # move the anchor back to its original place (ignoring the grid)
               @data[0].handleMove(@data[3], @data[4], false)
 
-              
-
         # return that we merged elements
         return true
     return false
+
       
   # at the end of the drag
   dragEnd: (x, y, event) =>
@@ -162,20 +163,19 @@ class Anchor
           # draw the anchor/line
           @data[2].draw()
           @data[3].draw()
-          
+        # backwards action is to remove the anchor and the line
         backwards: ->
           # remove the anchor
           @data[2].remove()
           # remove the line
           @data[3].remove()
-          
-  
+
+    # grab the selected elements  
     selected = Snap.selectAll('.selectedElement')
 
     # make sure there is an element selected
     if selected.length == 0
       return
-
 
     # if there is only one anchor selected
     if selected.length == 1
@@ -236,11 +236,10 @@ class Anchor
     _.each _.compact(@lines), (line)->
       line.drawLabel()
 
+
   dragStart: (x, y, event) =>
     # check if there are multiple selected
     event.stopPropagation()
-
-    # select this event
 
     # record the location before the drag
     @origin_x = @x
@@ -274,10 +273,10 @@ class Anchor
       # so select it
       $(document).trigger 'selectedElement', [this, 'anchor']
 
+
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
-
     event.stopPropagation()
-
+    # check for the flag set on drag start  
     if @moveAsGroup
       _.each Snap.selectAll('.selectedElement'), (element) ->
         anchor = element.anchor
@@ -301,6 +300,7 @@ class Anchor
     # default case
     else
       @handleMove x, y
+
 
   # merge with another anchor by replacing all of my references with other
   merge: (other) =>
@@ -327,24 +327,30 @@ class Anchor
     # update all of their lines
     other.draw()
 
+
   remove: =>
     @element.remove()
     # remove this element from the papers list
     @paper.anchors =  _.without @paper.anchors, this
-    @lines = []
+    # @lines = []
+
 
   ressurect: =>
     @paper.anchors.push this
-    @lines = []
+    # @lines = []
     return this
+
 
   removeLine: (lines) =>
     # if they gave us a list
     if lines.length
+      # go over every element in it
       for line in lines
+        # and remove the line from the list
         @lines =  _.without @lines, line
     else
       @lines =  _.without @lines, lines
+
 
   # move in a single direction
   translate:  (attr, value, useGrid = true) =>
@@ -352,6 +358,7 @@ class Anchor
       @handleMove(value, @y, useGrid) 
     else if attr == 'y'
       @handleMove(@x, value, useGrid) 
+
 
   handleMove: (x, y, useGrid = true) =>
 
