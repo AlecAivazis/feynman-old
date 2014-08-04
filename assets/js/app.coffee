@@ -97,10 +97,8 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
         element: element
         x: element.x
         y: element.y
-    
-    _.each selected, (element) ->
-      element.translate attr, avg, false
 
+    # perform the alignment in its own apply block
     $timeout ->
       new UndoEntry true,
         title: 'aligned vertices ' + direction + 'ly'
@@ -111,14 +109,27 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
         backwards: ->
           _.each @data[0], (anchor) =>
             anchor.element.handleMove(anchor.x, anchor.y, false)
-          
-      $rootScope.$apply
+    , 0
 
+  # assuming the selected element is a line, delete it and register it with the undo stack
+  $scope.deleteSelectedLine = () ->
+    # get the selected line
+    element = Snap.select('.selectedElement')
+    # remove the line and register it with the undo stack
+    $timeout ->
+      new UndoEntry true,
+        title: 'removed line'
+        data: [element.line]
+        forwards: ->
+          @data[0].remove()
+        backwards: ->
+          @data[0].ressurect().draw()
     , 0
 
 
   # update the properties of the appropriate element when we change the selectedElements 
-  # the only reason to do this is because snap attributes are not settable with foo.bar = 2
+  # the only reason to do this is because some attributes are not settable with foo.bar = 2
+  # or we need to call the appropriate draw after the variable is reset
 
   $rootScope.$watch 'title', (newVal, oldVal) ->
     if $(document).attr 'canvas'

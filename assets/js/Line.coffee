@@ -251,9 +251,11 @@ class Line
       strokeWidth: @width
       fill: 'none'
 
+    # save a reference to the FC Line class wrapping it
+    @element.line = this
+
     if isSelected
       @element.addClass('selectedElement')
-
 
     # on drag move
     @element.drag @onDrag, @dragStart, @dragEnd
