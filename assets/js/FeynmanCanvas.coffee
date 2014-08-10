@@ -7,7 +7,7 @@ class FeynmanCanvas
 
   
   # when a canvas is created
-  constructor: (selector, startingPattern = 'pap') ->
+  constructor: (@selector, startingPattern = 'pap') ->
     # create the snap object around the specified selector
     @paper = Snap(selector)
     @paper.anchors = [] 
@@ -16,7 +16,7 @@ class FeynmanCanvas
     # default values
     @gridSize = 50
     @title = "An Example Feynman Diagram"
-    @minZoom = .2
+    @minZoom = .5
     @maxZoom = 2
     @deltaZoom = .1
 
@@ -39,13 +39,12 @@ class FeynmanCanvas
       # if we scrolled up
       if event.originalEvent.wheelDelta / 120 > 0
         # so zoom in
-        @zoomIn()
+        #@zoomIn()
       # otherwise we scrolled down
       else
         # so zoom out
-        @zoomOut()
+        #@zoomOut()
       
-
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
 
@@ -60,6 +59,7 @@ class FeynmanCanvas
       backwards: ->
         console.log 'this is the beginning. there is no before me!'
 
+    # tell the angular app to load the canvas properties
     $(document).trigger 'doneWithInit'
 
   drawGrid: () =>
@@ -67,9 +67,9 @@ class FeynmanCanvas
     # hide the previous grid
     @hideGrid()
 
-    # grab the width and height off of the canvas
-    width = $(@paper.node).width() 
-    height = $(@paper.node).height()
+    # scale the width and height off of the canvas so there is still canvas when you zoom
+    width = $(@paper.node).width()*10
+    height = $(@paper.node).height()*10
 
     # get the number of vertical grids lines to make
     nVertical =  Math.round(width/@gridSize)
@@ -126,7 +126,6 @@ class FeynmanCanvas
 
 
   dragStart: (x, y, event) =>
-
     # check if weve already created an element for the rectangle
     if @selectionRect_element
       # if we have then remove it from the dom
@@ -138,6 +137,7 @@ class FeynmanCanvas
       # otherwise compute them 
       x: if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
       y: if event.offsetY then event.offsetY else event.clientY - $(event.target).offset().top
+
 
   # handle drags on the paper
   # should draw a selection rectangle
@@ -274,8 +274,14 @@ class FeynmanCanvas
     width = $(@paper.node).width()
     height = $(@paper.node).height()
     # scale using the svg viewBox attribute
-    @paper.attr
-      viewBox: '0 0 ' + (@zoomLevel * width) + ' ' + (@zoomLevel * height)
+    #@paper.attr
+    #  viewBox: '0 0 ' + (@zoomLevel * width) + ' ' + (@zoomLevel * height)
+    scale = new Snap.Matrix().scale @zoomLevel
+    children = $(@selector).children()
+    children.each (i) ->
+      child = children[i] 
+      console.log 'looking at child ', child
+      Snap(child).transform(scale)
 
 
 # when the document is loaded

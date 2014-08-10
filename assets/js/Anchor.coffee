@@ -367,7 +367,6 @@ class Anchor
 
 
   handleMove: (x, y, useGrid = true) =>
-
     # if its fixed
     if @fixed
       # dont do anything
