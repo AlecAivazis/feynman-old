@@ -402,8 +402,6 @@ class Line
             @data[5].replaceAnchor @data[4], @data[2]
             # ressurect the newLine
             @data[1].ressurect()
-            # ressurect this
-            @data[5].ressurect()
             # ressurect the other anchorr
             @data[4].ressurect()
             # ressurect the other line

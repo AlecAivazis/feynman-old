@@ -11,10 +11,14 @@ class FeynmanCanvas
     # create the snap object around the specified selector
     @paper = Snap(selector)
     @paper.anchors = [] 
+    @zoomLevel = 1
 
     # default values
     @gridSize = 50
     @title = "An Example Feynman Diagram"
+    @minZoom = .2
+    @maxZoom = 2
+    @deltaZoom = .1
 
     # register the canvas on the document
     $(document).attr('canvas', this)
@@ -23,7 +27,24 @@ class FeynmanCanvas
 
     # whenever they click before they can drag
     @paper.mousedown =>
-      @mouseDown()
+      # clear the selection rectangle
+      @removeSelectionRect()
+      # and clear the selection
+      $(document).trigger('clearSelection')
+
+    # whenever the scroll over the paper
+    $(@paper.node).on 'mousewheel', (event) =>
+      # prevent the browser from scrolling
+      event.preventDefault()
+      # if we scrolled up
+      if event.originalEvent.wheelDelta / 120 > 0
+        # so zoom in
+        @zoomIn()
+      # otherwise we scrolled down
+      else
+        # so zoom out
+        @zoomOut()
+      
 
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
@@ -40,10 +61,6 @@ class FeynmanCanvas
         console.log 'this is the beginning. there is no before me!'
 
     $(document).trigger 'doneWithInit'
-
-  mouseDown: () =>
-    @removeSelectionRect()
-    $(document).trigger('clearSelection')
 
   drawGrid: () =>
 
@@ -73,12 +90,12 @@ class FeynmanCanvas
       grid.add(line)
 
     # make a horizontal line nHorizontal times
-    for x in [1 .. nHorizontal]
+    for y in [1 .. nHorizontal]
       line = @paper.line().attr
         x1: 0
         x2: width
-        y1: x * @gridSize
-        y2: x * @gridSize
+        y1: y * @gridSize
+        y2: y * @gridSize
       # give it the proper class
       line.addClass('gridLine') 
       # and add it to the grid
@@ -90,6 +107,7 @@ class FeynmanCanvas
     grid = Snap.select('.grid')
     if grid
       grid.remove()
+
 
   # refresh the pages representation on the DOM
   draw: () =>
@@ -174,14 +192,18 @@ class FeynmanCanvas
       bound2y = bound1y
       bound1y = bound1y + dy
 
-    # get the anchors within this range
+    # get the anchors
     anchors = _.filter @paper.anchors, (anchor) ->
+      # within this range
       return bound1x <= anchor.x <= bound2x and
              bound1y <= anchor.y <= bound2y and
+             # ignore the fixed anchors
              not anchor.fixed
 
+    # add the selectedElement class to each anchor
     _.each anchors, (anchor) ->
       anchor.element.addClass('selectedElement')
+
 
   # after the drag
   dragEnd: =>
@@ -190,11 +212,16 @@ class FeynmanCanvas
     if selected.length == 1
       # then select it
       $(document).trigger 'selectedElement', [Snap.select('.selectedElement').anchor , 'anchor']
+    # there is more than one selected element
     else if selected.length > 1
+      # select each element in the group
       $(document).trigger 'selectedGroup', [item.anchor for item in selected.items, 'anchor']
-    
+
+    # clear the selection rectangle
     @removeSelectionRect()
+
    
+  # draw the sepecified pattern
   drawPattern: (pattern) =>
 
     # store the current set of anchors for the history
@@ -212,10 +239,10 @@ class FeynmanCanvas
       k = new Line(@paper, a, b)
       l = new Line(@paper, c, b, 'gluon')
       m = new Line(@paper, b, d, 'em')
-
     
     # draw the anchors
     @draw()
+
   
   removeSelectionRect: =>
     if @selectionRect_element
@@ -223,7 +250,37 @@ class FeynmanCanvas
     @selectionRect_x = null
     @selectionRect_y = null
 
+
+  zoomIn: =>
+    # if your not below the min
+    if @zoomLevel <= @maxZoom
+      # increment the zoom level
+      @zoomLevel += @deltaZoom
+      # apply the zoom level
+      @applyZoom()
+
+
+  zoomOut: =>
+    # if your not below the min
+    if @zoomLevel >= @minZoom
+      # increment the zoom level
+      @zoomLevel -= @deltaZoom
+      # apply the zoom level
+      @applyZoom()
+
+
+  applyZoom: =>
+    # grab the current dimensions
+    width = $(@paper.node).width()
+    height = $(@paper.node).height()
+    # scale using the svg viewBox attribute
+    @paper.attr
+      viewBox: '0 0 ' + (@zoomLevel * width) + ' ' + (@zoomLevel * height)
+
+
+# when the document is loaded
 $(document).ready ->
+  # create a canvas out of the appropriate DOM element
   new FeynmanCanvas("#canvas") 
 
 
