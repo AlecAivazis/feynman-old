@@ -7,7 +7,7 @@ class Anchor
 
   element = null
   
-  constructor: (@paper, @x, @y, @radius = 5, @snapRange = 21) ->
+  constructor: (@paper, @x, @y, @radius = 5, @snapRange = 25) ->
     @lines = []
     @paper.anchors.push this
 
