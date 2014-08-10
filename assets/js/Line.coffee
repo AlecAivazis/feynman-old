@@ -327,6 +327,12 @@ class Line
   dragEnd: =>
     # check if we made a new anchor this drag
     if @newAnchor
+
+      # check if the new anchor can be merged
+      if @newAnchor.checkForMerges()
+        return
+
+      # the new anchor was not merged
       # find the old anchors for the undo stack
 
       # since the anchor we created only has one line

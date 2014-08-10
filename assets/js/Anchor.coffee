@@ -68,6 +68,7 @@ class Anchor
 
 
   checkForMerges: (targetAnchor = this)=>
+    merge = false
     # check if there is any anchor that it within snapRange of me
     _.each @paper.anchors, (compare) =>
       # make sure we dont compare us with ourselves
@@ -80,55 +81,17 @@ class Anchor
 
       # check if the other anchor is within snap range
       if @snapRange * @snapRange > dx*dx + dy*dy
-        # grab the line before we merge
-        lines = targetAnchor.lines
         # if it is then merge the two
         targetAnchor.merge compare
-        # if the newAnchor is defined and we're merging it
-        if @newAnchor
-          # regsiter it with the undo stack
-          new UndoEntry false,
-            title: 'added internal propagator'
-            data: [lines[0], this]
-            # the forwards action is to show the line that was created
-            forwards: ->
-              @data[0].ressurect()
-              @data[1].draw()
-            # the backwards action is the hide that line
-            backwards: ->
-              @data[0].remove()
-
-          # take away the newAnchor definition
-          @newAnchor = undefined
-        # there was no new anchor defined 
-        else
-          # we are merging a pre-existing anchor - register it with the undo stack
-          new UndoEntry false,
-            title: 'merged two vertices together'
-            data: [targetAnchor, compare, lines, @origin_x, @origin_y]
-            # the forwards action is to merge target anchor with compare
-            forwards: ->
-              @data[0].merge @data[1]
-            # the backwards action is to remove all of targetAnchors lines from compare
-            # and ressurect targetAnchor
-            backwards: ->
-              @data[1].removeLine(@data[2])
-              
-              # bring back the anchor 
-              @data[0].ressurect()
-              # add the lines back to it
-              @data[0].addLine(@data[2])
-              # go to each line
-              _.each @data[2], (line) =>
-                # change the anchor assignment back to targetAnchor
-                line.replaceAnchor(@data[1], @data[0])
-
-              # move the anchor back to its original place (ignoring the grid)
-              @data[0].handleMove(@data[3], @data[4], false)
-
-        # return that we merged elements
-        return true
-    return false
+        # save the element we merged onto
+        merge = compare
+    # if we performed a merge
+    if merge
+      # return the element
+      return merge
+    # otherwise we did not perform a merge
+    else
+      return false
 
       
   # at the end of the drag
@@ -143,10 +106,53 @@ class Anchor
       targetAnchor = this
 
     # check for merges around the targetAnchor that will look to create elements from me
-    # grab the line before we potentially remove it
-    line = targetAnchor.lines[0]
+    # grab the lines before we potentially remove them by merging
+    lines = targetAnchor.lines
     # this is a check for internal line construction with targetAnchor
-    if @checkForMerges(targetAnchor)
+    merged = @checkForMerges(targetAnchor)
+    if merged
+      # grab the lines associated with the target anchor
+      if @newAnchor
+        # regsiter it with the undo stack
+        new UndoEntry false,
+          title: 'added internal propagator'
+          data: [lines[0], this]
+          # the forwards action is to show the line that was created
+          forwards: ->
+            @data[0].ressurect()
+            @data[1].draw()
+          # the backwards action is the hide that line
+          backwards: ->
+            @data[0].remove()
+
+        # take away the newAnchor definition
+        @newAnchor = undefined
+      # there was no new anchor defined 
+      else
+        console.log merged
+        # we are merging a pre-existing anchor - register it with the undo stack
+        new UndoEntry false,
+          title: 'merged two vertices together'
+          data: [targetAnchor, merged, lines, @origin_x, @origin_y]
+          # the forwards action is to merge target anchor with compare
+          forwards: ->
+            @data[0].merge @data[1]
+          # the backwards action is to remove all of targetAnchors lines from compare
+          # and ressurect targetAnchor
+          backwards: ->
+            @data[1].removeLine(@data[2])
+
+            # bring back the anchor 
+            @data[0].ressurect()
+            # add the lines back to it
+            @data[0].addLine(@data[2])
+            # go to each line
+            _.each @data[2], (line) =>
+              # change the anchor assignment back to targetAnchor
+              line.replaceAnchor(@data[1], @data[0])
+
+            # move the anchor back to its original place (ignoring the grid)
+            @data[0].handleMove(@data[3], @data[4], false)
       return
 
     # if i am supposed to be a new anchor
@@ -154,7 +160,7 @@ class Anchor
       # add the entry in the undo stack
       new UndoEntry false,
         title: 'created vertex at ' + targetAnchor.x + ',' +  targetAnchor.y
-        data: [@paper, this, targetAnchor, line]
+        data: [@paper, this, targetAnchor, lines[0]]
         forwards: ->
           # resurrect the anchor
           @data[2].ressurect()

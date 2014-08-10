@@ -205,7 +205,7 @@ class FeynmanCanvas
       # define the anchors for the particle, anti particle patterns
       a = new Anchor(@paper, 150, 75)
       b = new Anchor(@paper, 225, 150)
-      c = new Anchor(@paper, 150, 225)
+      c = new Anchor(@paper, 150, 250)
       d = new Anchor(@paper, 375, 150)
   
       # and the lines connecting them

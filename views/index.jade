@@ -25,6 +25,11 @@ block content
     h1 {{title}}! 
 
     svg#canvas
+    
+    //#footer
+      // alt dragging moving the window instead: 
+      // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
+      
 
     span#sidebar(ng-controller="diagramProperties")
       
@@ -87,7 +92,8 @@ block content
                 | fill color:
               td.value
                 input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
-                      style="background: {{displayColor}}; color: {{displayColor}}; border: 1px solid {{groupColor}}; color: {{displayColor}};")
+                      style="background: {{displayColor}}; color: {{displayColor}}; \
+                             border: 1px solid {{groupColor}}; color: {{displayColor}};")
             tr.property
               td.label
                 | radius: 
@@ -202,6 +208,8 @@ block content
               td.tool(colspan=2)
                 span.button(ng-click="deleteSelectedLine()")
                   | delete this line
+
+        
               
       
                       
