@@ -59,6 +59,7 @@ class Line
 
   # calculate the location for the label and then draw it
   drawLabel: =>
+    console.log 'drawing label'
 
     # remove the previous label
     @removeLabel()
@@ -308,6 +309,8 @@ class Line
     # select this element
     $(document).trigger 'selectedElement', [this, 'line']
 
+    @removeLabel()
+
 
   onDrag: (dx, dy, x, y, event) =>
     event.stopPropagation()
@@ -324,6 +327,7 @@ class Line
 
 
   dragEnd: =>
+    @drawLabel()
     # check if we made a new anchor this drag
     if @newAnchor
 
@@ -439,9 +443,7 @@ class Line
           @data[0].handleMove(@data[2], @data[4])
           @data[5].handleMove(@data[7], @data[9])
           
-        
-               
-      
+    console.log 'drawing label'
              
     @newAnchor = undefined
 
