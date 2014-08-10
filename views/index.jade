@@ -5,7 +5,7 @@ append js
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
   script(type="text/javascript" 
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
-  script(type="text/javascript" src="/thirdparty/angular-slider/angular-slider.js")
+  script(type="text/javascript" src="/angular-slider/slider.js")
 
   != js('Anchor')
   != js('FeynmanCanvas')
@@ -18,7 +18,7 @@ append js
 
 append css
   link(href="/thirdparty/angular-bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet")
-  != css('slider')
+  link(href="/angular-slider/slider.css" rel="stylesheet")
 
 block content
   body(ng-app="feynman")
@@ -48,7 +48,7 @@ block content
                   | {{gridSize}}
                 span(ng-show="gridSize == 0")
                   | none
-                slider(floor="0" ceiling="100" step="25" precision="1"  ng-model="gridSize" 
+                slider(floor="0" ceiling="100" step="25" precision="0"  ng-model="gridSize" 
                        style="width: 70%")
 
       // WARNING: this id can't change without reflecting it in the javascript

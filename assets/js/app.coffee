@@ -4,7 +4,7 @@
 # author: alec aivazis
 
 # create the angular module 
-app = angular.module 'feynman', ['colorpicker.module', 'uiSlider', 'undo']
+app = angular.module 'feynman', ['colorpicker.module', 'ui.slider', 'undo']
 # define the controller for the properties menu
 app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout) ->
 
