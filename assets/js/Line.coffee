@@ -59,7 +59,6 @@ class Line
 
   # calculate the location for the label and then draw it
   drawLabel: =>
-    console.log 'drawing label'
 
     # remove the previous label
     @removeLabel()
@@ -337,8 +336,6 @@ class Line
       # check if the new anchor can be merged
       merged = @newAnchor.checkForMerges()
       if merged
-        console.log 'created an internal branch'
-
         # we can figure out the split anchor
         splitAnch = if newLine == @newAnchor then newLine.anchor2 else newLine.anchor1
         # the other line is the only line left if you remove me from the lines of the split anchor
@@ -443,8 +440,6 @@ class Line
           @data[0].handleMove(@data[2], @data[4])
           @data[5].handleMove(@data[7], @data[9])
           
-    console.log 'drawing label'
-             
     @newAnchor = undefined
 
 
