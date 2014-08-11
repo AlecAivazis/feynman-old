@@ -34,7 +34,7 @@ class FeynmanCanvas
       $(document).trigger('clearSelection')
 
     # whenever the scroll over the paper
-    $(@paper.node).on 'mousewheel DOMMouseScroll', (event) =>
+    $(@paper.node).on 'mousewheel', (event) =>
       # prevent the browser from scrolling
       event.preventDefault()
       event.stopPropagation()
