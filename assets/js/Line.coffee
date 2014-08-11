@@ -127,12 +127,19 @@ class Line
   # assumes the element is horizontal before align for the purposes for scaling
   align: (element) =>
 
+    # current x loc for path generation
+    zoomLevel = $(document).attr('canvas').zoomLevel
+    x1 = zoomLevel * @anchor1.x
+    y1 = zoomLevel * @anchor1.y 
+    x2 = zoomLevel * @anchor2.x
+    y2 = zoomLevel * @anchor2.y 
+
     # figure out the width of the element
     width = element.getBBox().width
 
     # compute the lengths between the anchors
-    dx = @anchor1.x - @anchor2.x
-    dy = @anchor1.y - @anchor2.y
+    dx = x1 - x2
+    dy = y1 - y2
     length = Math.sqrt(dx*dx + dy*dy)
 
     # figure out the angle that this line needs to take
@@ -143,8 +150,8 @@ class Line
 
     # create the alignment matrix by scaling it to match the width
     # and then rotating it along the line joining the two anchors
-    alignment = new Snap.Matrix().scale(length/width, 1, @anchor1.x, @anchor1.y)
-                                 .rotate(angle, @anchor1.x, @anchor1.y)
+    alignment = new Snap.Matrix().scale(length/width, 1, x1, y1)
+                                 .rotate(angle, x1, y1)
 
     # apply the transform and return the element
     element.transform(alignment)
@@ -159,7 +166,12 @@ class Line
 
   drawAsLine: =>
     # add the line to the dom
-    @paper.path('M' + @anchor1.x + ',' + @anchor1.y + ' L' + @anchor2.x + ',' + @anchor2.y)
+    zoomLevel = $(document).attr('canvas').zoomLevel
+    x1 = zoomLevel * @anchor1.x
+    y1 = zoomLevel * @anchor1.y
+    x2 = zoomLevel * @anchor2.x
+    y2 = zoomLevel * @anchor2.y
+    @paper.path('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2)
 
 
   drawAsDashedLine: =>
@@ -168,23 +180,31 @@ class Line
 
 
   drawAsGluon: =>
+    zoomLevel = $(document).attr('canvas').zoomLevel
     # the width of one gluon loop
-    gluonWidth = 20
+    gluonWidth = zoomLevel * 20
     # the ratio of height to width for the loops
     ratio = 1
     gluonHeight = ratio*gluonWidth * parseInt(@loopDirection)
 
+    # current x loc for path generation
+    x1 = zoomLevel * @anchor1.x
+    y1 = zoomLevel * @anchor1.y 
+    x2 = zoomLevel * @anchor2.x
+    y2 = zoomLevel * @anchor2.y 
+  
+
     # compute the length of the line
-    dx = @anchor1.x - @anchor2.x
-    dy = @anchor1.y - @anchor2.y
+    dx = x1-x2
+    dy = y1-y2
     length = Math.sqrt dx*dx + dy*dy
 
-    # current x loc for path generation
-    x = @anchor1.x
-    y = @anchor1.y 
+    # start the gluon at the first anchor
+    x = x1
+    y = y1
 
     # start the path at the first anchor
-    pathString = 'M' + x + ',' + y
+    pathString = 'M' + x1 + ',' + y1
     # figure out how many gluon loops to draw
     numLoops = Math.round length/gluonWidth
     # make a gluon loop numLoops times
@@ -210,11 +230,19 @@ class Line
     # the height of the pattern
     amplitude = 13
     # compute frequency from period
+   
+    # current x loc for path generation
+    zoomLevel = $(document).attr('canvas').zoomLevel
+    x1 = zoomLevel * @anchor1.x
+    y1 = zoomLevel * @anchor1.y 
+    x2 = zoomLevel * @anchor2.x
+    y2 = zoomLevel * @anchor2.y 
+
     freq = 2 * Math.PI / period
 
     # compute the length of the line
-    dx = @anchor1.x - @anchor2.x
-    dy = @anchor1.y - @anchor2.y
+    dx = x1 - x2
+    dy = y1 - y2
     length = Math.sqrt dx*dx + dy*dy
 
     # find the closest whole number of full periods
@@ -225,10 +253,10 @@ class Line
 
     for i in [0... nCycles * period]
       group.add @paper.line().attr
-        x1: (i-1) + @anchor1.x
-        y1: amplitude * Math.sin(freq * (i - 1 )) + @anchor1.y
-        x2: i + @anchor1.x
-        y2: amplitude * Math.sin(freq * i) + @anchor1.y
+        x1: (i-1) + x1
+        y1: amplitude * Math.sin(freq * (i - 1 )) + y1
+        x2: i + x1
+        y2: amplitude * Math.sin(freq * i) + y1
     # align along the line created by the anchors
     @align(group)
 
@@ -265,7 +293,6 @@ class Line
 
     # save a reference to the FC Line class wrapping it
     @element.line = this
-    $(document).attr('canvas').addToDiagram @element
 
     if isSelected
       @element.addClass('selectedElement')

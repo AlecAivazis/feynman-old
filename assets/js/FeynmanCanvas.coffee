@@ -34,9 +34,10 @@ class FeynmanCanvas
       $(document).trigger('clearSelection')
 
     # whenever the scroll over the paper
-    $(@paper.node).on 'mousewheel', (event) =>
+    $(@paper.node).on 'mousewheel DOMMouseScroll', (event) =>
       # prevent the browser from scrolling
       event.preventDefault()
+      event.stopPropagation()
       # if we scrolled up
       if event.originalEvent.wheelDelta / 120 > 0
         # so zoom in
@@ -138,12 +139,24 @@ class FeynmanCanvas
       # if we have then remove it from the dom
       @selectionRect_element.remove()
 
+    # use the offset coordinates if they exists
+    # otherwise compute them 
+    if event.offSetX
+      x = @zoomLevel * event.offsetX
+    else
+      x = @zoomLevel * ( event.clientX - $(event.target).offset().left ) 
+    if event.offSetY
+      y = @zoomLevel * event.offsetY
+    else
+      y = @zoomLevel * ( event.clientY - $(event.target).offset().top ) 
+
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
-      # use the offset coordinates if they exists
-      # otherwise compute them 
-      x: if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
-      y: if event.offsetY then event.offsetY else event.clientY - $(event.target).offset().top
+      x: x
+      y: y
+
+    # add the rectangle to the diagram
+    @addToDiagram @selectionRect_element
 
 
   # handle drags on the paper
@@ -281,6 +294,8 @@ class FeynmanCanvas
     scale = new Snap.Matrix().scale @zoomLevel
     # apply the transformation
     @diagram_group.transform(scale)
+    # update the digram
+    @draw()
 
 # when the document is loaded
 $(document).ready ->

@@ -40,8 +40,10 @@ class Anchor
       # remove it
       @element.remove()
 
+    zoomLevel = $(document).attr('canvas').zoomLevel
+
     # add the circle at the appropriate location with the on move event handler
-    @element = @paper.circle(@x, @y, @radius).attr
+    @element = @paper.circle(zoomLevel * @x, zoomLevel * @y, @radius).attr
       fill: if @color then @color else 'black'
 
     @element.anchor = this
@@ -53,9 +55,6 @@ class Anchor
     if isSelected
       # add the appropriate class
       @element.addClass('selectedElement')
-
-    console.log 'trying to add element to group'
-    $(document).attr('canvas').addToDiagram @element
 
     # set the drag handlers
     @element.drag @onMove, @dragStart, @dragEnd
