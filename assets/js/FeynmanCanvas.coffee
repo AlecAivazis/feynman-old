@@ -27,11 +27,28 @@ class FeynmanCanvas
     # add the event handlers
 
     # whenever they click before they can drag
-    @paper.mousedown =>
+    @paper.mousedown (event) =>
       # clear the selection rectangle
       @removeSelectionRect()
       # and clear the selection
       $(document).trigger('clearSelection')
+
+    # add event handlers for specific keys (non-modifiers)
+
+    @spacebar_pressed = false
+    # whenever they press a button
+    $(window).keydown (evt) ->
+      # if its spacebar 
+      if evt.which == 32
+        # set the state variable
+        @spacebar_pressed = true
+        console.log 'pressed spacebar ', @spacebar_pressed
+    # whever they release a button
+    $(window).keyup (evt) ->
+      # if they released spacebar
+      if evt.which == 32
+        @spacebar_pressed = false
+        console.log 'release spacebar'
 
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>
@@ -136,6 +153,12 @@ class FeynmanCanvas
 
 
   dragStart: (x, y, event) =>
+
+    console.log 'starting drag ', @spacebar_pressed
+    # if spacebar is being held then we dont need to do anything
+    if @spacebar_pressed
+      console.log 'dragged with spacebar'
+    
     # check if weve already created an element for the rectangle
     if @selectionRect_element
       # if we have then remove it from the dom

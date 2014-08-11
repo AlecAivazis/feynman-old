@@ -287,12 +287,14 @@ class Line
       when "em"
         @element = @drawAsSine()
 
+    # grab the zoom level from the canvas
     zoomLevel = $(document).attr('canvas').zoomLevel
-    # make the path marker
+    # make the snap scaling matrix
     scale = new Snap.Matrix().scale(zoomLevel).scale(.5)
-
+    # make the path marker with the appropriate scale
     arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').transform(scale)
                   .marker(0,0, zoomLevel * 13, zoomLevel * 13, zoomLevel+0.8 , zoomLevel * 3)
+
 
     # apply the correct styling
     @element.attr
