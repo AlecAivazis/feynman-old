@@ -141,14 +141,14 @@ class FeynmanCanvas
 
     # use the offset coordinates if they exists
     # otherwise compute them 
-    if event.offSetX
-      x = @zoomLevel * event.offsetX
+    if event.offsetX
+      x = event.offsetX / @zoomLevel
     else
-      x = @zoomLevel * ( event.clientX - $(event.target).offset().left ) 
-    if event.offSetY
-      y = @zoomLevel * event.offsetY
+      x = ( event.clientX - $(event.target).offset().left ) / @zoomLevel
+    if event.offsetY
+      y = event.offsetY / @zoomLevel
     else
-      y = @zoomLevel * ( event.clientY - $(event.target).offset().top ) 
+      y = ( event.clientY - $(event.target).offset().top ) / @zoomLevel
 
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
@@ -161,8 +161,10 @@ class FeynmanCanvas
 
   # handle drags on the paper
   # should draw a selection rectangle
-  dragMove: (dx, dy, x_cursor, y_cursor) =>
+  dragMove: (deltaX, deltaY, x_cursor, y_cursor) =>
     $(document).trigger('clearSelection')
+    dx = deltaX / @zoomLevel
+    dy = deltaY / @zoomLevel
 
     # if there hasnt been a  selection rectangle drawn
     if not @selectionRect_element
@@ -267,8 +269,6 @@ class FeynmanCanvas
   removeSelectionRect: =>
     if @selectionRect_element
       @selectionRect_element.remove()
-    @selectionRect_x = null
-    @selectionRect_y = null
 
 
   zoomIn: =>
