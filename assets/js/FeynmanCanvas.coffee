@@ -131,6 +131,8 @@ class FeynmanCanvas
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->
       anchor.draw()
+      _.each anchor.lines, (line) ->
+        line.drawLabel()
 
 
   dragStart: (x, y, event) =>

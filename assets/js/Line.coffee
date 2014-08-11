@@ -68,16 +68,22 @@ class Line
       # do nothing
       return
 
+    zoomLevel = $(document).attr('canvas').zoomLevel
+    x1 = zoomLevel * @anchor1.x
+    y1 = zoomLevel * @anchor1.y 
+    x2 = zoomLevel * @anchor2.x
+    y2 = zoomLevel * @anchor2.y 
+
     # the distance to be from the line
     r = @labelDistance
       
     # calculate the midpoint
-    midx = (@anchor1.x + @anchor2.x ) / 2
-    midy = (@anchor1.y + @anchor2.y ) / 2
+    midx = (x1 + x2 ) / 2
+    midy = (y1 + y2 ) / 2
 
     # find the slope of the perpendicular line 
     # m' = -1/m
-    m = -(@anchor1.x - @anchor2.x)/(@anchor1.y - @anchor2.y)
+    m = -(x1 - x2)/(y1 - y2)
 
     # the points that are perpedicular to the line a distance r away satisfy
     # y = mx

@@ -276,8 +276,6 @@ class Anchor
       _.each Snap.selectAll('.selectedElement'), (anchor) ->
         anchor.anchor.origin_x = anchor.anchor.x
         anchor.anchor.origin_y = anchor.anchor.y
-        # hide each label
-        anchor.removeLabel()
     # otherwise we are moving a single anchor
     else
       # so select it
