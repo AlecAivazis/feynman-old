@@ -187,18 +187,12 @@ class Line
 
   drawAsGluon: =>
     zoomLevel = $(document).attr('canvas').zoomLevel
-    # the width of one gluon loop
-    gluonWidth = zoomLevel * 20
-    # the ratio of height to width for the loops
-    ratio = 1
-    gluonHeight = ratio*gluonWidth * parseInt(@loopDirection)
 
     # current x loc for path generation
     x1 = zoomLevel * @anchor1.x
     y1 = zoomLevel * @anchor1.y 
     x2 = zoomLevel * @anchor2.x
     y2 = zoomLevel * @anchor2.y 
-  
 
     # compute the length of the line
     dx = x1-x2
@@ -208,6 +202,12 @@ class Line
     # start the gluon at the first anchor
     x = x1
     y = y1
+
+    # the width of one gluon loop
+    gluonWidth = zoomLevel * 20
+    # the ratio of height to width for the loops
+    ratio = 1
+    gluonHeight = ratio*gluonWidth * parseInt(@loopDirection)
 
     # start the path at the first anchor
     pathString = 'M' + x1 + ',' + y1
@@ -287,8 +287,12 @@ class Line
       when "em"
         @element = @drawAsSine()
 
+    zoomLevel = $(document).attr('canvas').zoomLevel
     # make the path marker
-    arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').marker(0,0, 13,13,2,6)
+    scale = new Snap.Matrix().scale(zoomLevel).scale(.5)
+
+    arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').transform(scale)
+                  .marker(0,0, zoomLevel * 13, zoomLevel * 13, zoomLevel+0.8 , zoomLevel * 3)
 
     # apply the correct styling
     @element.attr
