@@ -54,6 +54,9 @@ class Anchor
       # add the appropriate class
       @element.addClass('selectedElement')
 
+    console.log 'trying to add element to group'
+    $(document).attr('canvas').addToDiagram @element
+
     # set the drag handlers
     @element.drag @onMove, @dragStart, @dragEnd
 

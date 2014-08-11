@@ -10,6 +10,7 @@ class FeynmanCanvas
   constructor: (@selector, startingPattern = 'pap') ->
     # create the snap object around the specified selector
     @paper = Snap(selector)
+    @diagram_group = @paper.g().addClass('diagram')
     @paper.anchors = [] 
     @zoomLevel = 1
 
@@ -39,11 +40,11 @@ class FeynmanCanvas
       # if we scrolled up
       if event.originalEvent.wheelDelta / 120 > 0
         # so zoom in
-        #@zoomIn()
+        @zoomIn()
       # otherwise we scrolled down
       else
         # so zoom out
-        #@zoomOut()
+        @zoomOut()
       
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
@@ -62,6 +63,11 @@ class FeynmanCanvas
     # tell the angular app to load the canvas properties
     $(document).trigger 'doneWithInit'
 
+
+  addToDiagram: (element) ->
+    @diagram_group.add element
+
+
   drawGrid: () =>
 
     # hide the previous grid
@@ -76,6 +82,7 @@ class FeynmanCanvas
     nHorizontal = Math.round(height/@gridSize)
 
     grid = @paper.group().addClass('grid')
+    @diagram_group.add grid
 
     # make a vertical line nVertical times
     for x in [1 .. nVertical]
@@ -270,19 +277,10 @@ class FeynmanCanvas
 
 
   applyZoom: =>
-    # grab the current dimensions
-    width = $(@paper.node).width()
-    height = $(@paper.node).height()
-    # scale using the svg viewBox attribute
-    #@paper.attr
-    #  viewBox: '0 0 ' + (@zoomLevel * width) + ' ' + (@zoomLevel * height)
+    # create the scaling transformation
     scale = new Snap.Matrix().scale @zoomLevel
-    children = $(@selector).children()
-    children.each (i) ->
-      child = children[i] 
-      console.log 'looking at child ', child
-      Snap(child).transform(scale)
-
+    # apply the transformation
+    @diagram_group.transform(scale)
 
 # when the document is loaded
 $(document).ready ->

@@ -253,14 +253,19 @@ class Line
       when "em"
         @element = @drawAsSine()
 
+    # make the path marker
+    arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').marker(0,0, 13,13,2,6)
+
     # apply the correct styling
     @element.attr
       stroke: @color
       strokeWidth: @width
       fill: 'none'
+      'marker-mid': arrow
 
     # save a reference to the FC Line class wrapping it
     @element.line = this
+    $(document).attr('canvas').addToDiagram @element
 
     if isSelected
       @element.addClass('selectedElement')
