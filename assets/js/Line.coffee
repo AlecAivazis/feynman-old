@@ -69,10 +69,10 @@ class Line
       return
 
     zoomLevel = $(document).attr('canvas').zoomLevel
-    x1 = zoomLevel * @anchor1.x
-    y1 = zoomLevel * @anchor1.y 
-    x2 = zoomLevel * @anchor2.x
-    y2 = zoomLevel * @anchor2.y 
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
 
     # the distance to be from the line
     r = @labelDistance
@@ -134,11 +134,10 @@ class Line
   align: (element) =>
 
     # current x loc for path generation
-    zoomLevel = $(document).attr('canvas').zoomLevel
-    x1 = zoomLevel * @anchor1.x
-    y1 = zoomLevel * @anchor1.y 
-    x2 = zoomLevel * @anchor2.x
-    y2 = zoomLevel * @anchor2.y 
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
 
     # figure out the width of the element
     width = element.getBBox().width
@@ -172,27 +171,26 @@ class Line
 
   drawAsLine: =>
     # add the line to the dom
-    zoomLevel = $(document).attr('canvas').zoomLevel
-    x1 = zoomLevel * @anchor1.x
-    y1 = zoomLevel * @anchor1.y
-    x2 = zoomLevel * @anchor2.x
-    y2 = zoomLevel * @anchor2.y
+    x1 = @anchor1.x
+    y1 = @anchor1.y
+    x2 = @anchor2.x
+    y2 = @anchor2.y
     @paper.path('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2)
 
 
   drawAsDashedLine: =>
+    # do the same thing as the solid line
     @drawAsLine().attr
+      # but with a dash array
       strokeDasharray: '10 '
 
 
   drawAsGluon: =>
-    zoomLevel = $(document).attr('canvas').zoomLevel
-
     # current x loc for path generation
-    x1 = zoomLevel * @anchor1.x
-    y1 = zoomLevel * @anchor1.y 
-    x2 = zoomLevel * @anchor2.x
-    y2 = zoomLevel * @anchor2.y 
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
 
     # compute the length of the line
     dx = x1-x2
@@ -204,7 +202,7 @@ class Line
     y = y1
 
     # the width of one gluon loop
-    gluonWidth = zoomLevel * 20
+    gluonWidth = 20
     # the ratio of height to width for the loops
     ratio = 1
     gluonHeight = ratio*gluonWidth * parseInt(@loopDirection)
@@ -239,10 +237,10 @@ class Line
    
     # current x loc for path generation
     zoomLevel = $(document).attr('canvas').zoomLevel
-    x1 = zoomLevel * @anchor1.x
-    y1 = zoomLevel * @anchor1.y 
-    x2 = zoomLevel * @anchor2.x
-    y2 = zoomLevel * @anchor2.y 
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
 
     freq = 2 * Math.PI / period
 
@@ -295,7 +293,6 @@ class Line
     arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').transform(scale)
                   .marker(0,0, zoomLevel * 13, zoomLevel * 13, zoomLevel+0.8 , zoomLevel * 3)
 
-
     # apply the correct styling
     @element.attr
       stroke: @color
@@ -305,6 +302,8 @@ class Line
 
     # save a reference to the FC Line class wrapping it
     @element.line = this
+    # add it to the diagram
+    $(document).attr('canvas').addToDiagram @element
 
     if isSelected
       @element.addClass('selectedElement')

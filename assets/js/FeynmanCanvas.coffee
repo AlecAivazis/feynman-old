@@ -5,7 +5,6 @@
 
 class FeynmanCanvas
 
-  
   # when a canvas is created
   constructor: (@selector, startingPattern = 'pap') ->
     # create the snap object around the specified selector
@@ -37,18 +36,18 @@ class FeynmanCanvas
 
     @spacebar_pressed = false
     # whenever they press a button
-    $(window).keydown (evt) ->
+    $(window).keydown (evt) =>
       # if its spacebar 
       if evt.which == 32
+        evt.preventDefault()
         # set the state variable
         @spacebar_pressed = true
-        console.log 'pressed spacebar ', @spacebar_pressed
     # whever they release a button
-    $(window).keyup (evt) ->
+    $(window).keyup (evt) =>
       # if they released spacebar
       if evt.which == 32
+        # clear the state variable
         @spacebar_pressed = false
-        console.log 'release spacebar'
 
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>
@@ -153,11 +152,6 @@ class FeynmanCanvas
 
 
   dragStart: (x, y, event) =>
-
-    console.log 'starting drag ', @spacebar_pressed
-    # if spacebar is being held then we dont need to do anything
-    if @spacebar_pressed
-      console.log 'dragged with spacebar'
     
     # check if weve already created an element for the rectangle
     if @selectionRect_element
@@ -175,6 +169,12 @@ class FeynmanCanvas
     else
       y = ( event.clientY - $(event.target).offset().top ) / @zoomLevel
 
+    # if spacebar is being held then we dont need to do anything
+    if @spacebar_pressed
+      console.log 'dragged with spacebar starting at ' + x + ',' + y
+      # do nothing else
+      return
+
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
       x: x
@@ -187,6 +187,12 @@ class FeynmanCanvas
   # handle drags on the paper
   # should draw a selection rectangle
   dragMove: (deltaX, deltaY, x_cursor, y_cursor) =>
+    # if they are holding the spacebar
+    if @spacebar_pressed
+      console.log 'moving with spacebar'
+      # dont do anything else
+      return
+    
     $(document).trigger('clearSelection')
     dx = deltaX / @zoomLevel
     dy = deltaY / @zoomLevel
@@ -254,7 +260,14 @@ class FeynmanCanvas
 
   # after the drag
   dragEnd: =>
+    # grab the selection    
     selected = Snap.selectAll('.selectedElement')
+    # clear the selection rectangle
+    @removeSelectionRect()
+    # if i was holding the spacebar
+    if @spacebar_pressed
+      # do nothing else
+      return 
     # if theres only one selected event
     if selected.length == 1
       # then select it
@@ -264,8 +277,6 @@ class FeynmanCanvas
       # select each element in the group
       $(document).trigger 'selectedGroup', [item.anchor for item in selected.items, 'anchor']
 
-    # clear the selection rectangle
-    @removeSelectionRect()
 
    
   # draw the sepecified pattern

@@ -43,7 +43,7 @@ class Anchor
     zoomLevel = $(document).attr('canvas').zoomLevel
 
     # add the circle at the appropriate location with the on move event handler
-    @element = @paper.circle(zoomLevel * @x, zoomLevel * @y, @radius).attr
+    @element = @paper.circle(@x, @y, @radius).attr
       fill: if @color then @color else 'black'
 
     @element.anchor = this
@@ -58,6 +58,8 @@ class Anchor
 
     # set the drag handlers
     @element.drag @onMove, @dragStart, @dragEnd
+
+    $(document).attr('canvas').addToDiagram @element
 
     # when you click on the circle
     @element.node.onclick = =>
