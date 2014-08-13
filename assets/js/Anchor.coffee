@@ -376,17 +376,11 @@ class Anchor
     # grab the document's feynman canvas
     gridSize = $(document).attr('canvas').gridSize
     # if they want to snap everything to a grid
-    if gridSize > 0 and useGrid
+    if gridSize > 0
       # find the nearest point on the grid
-      x = Math.round(x/gridSize)*gridSize
-      y = Math.round(y/gridSize)*gridSize
+      @x = Math.round(x/gridSize)*gridSize
+      @y = Math.round(y/gridSize)*gridSize
 
-    # check that newX falls within the page
-    if @radius <= x <= $(@paper.node).width() - @radius
-      @x = x
-    # check that newY falls within the page
-    if @radius <= y <= $(@paper.node).height() - @radius
-      @y = y
     # update the ui element
     @draw()
 
