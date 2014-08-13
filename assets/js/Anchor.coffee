@@ -40,8 +40,6 @@ class Anchor
       # remove it
       @element.remove()
 
-    zoomLevel = $(document).attr('canvas').zoomLevel
-
     # add the circle at the appropriate location with the on move event handler
     @element = @paper.circle(@x, @y, @radius).attr
       fill: if @color then @color else 'black'
@@ -79,7 +77,7 @@ class Anchor
       if compare == targetAnchor
         return
 
-      # compute the distance between me and the other anchor
+      # compute the distance etween me and the other anchor
       dx = targetAnchor.x - compare.x
       dy = targetAnchor.y - compare.y
 
@@ -133,7 +131,6 @@ class Anchor
         @newAnchor = undefined
       # there was no new anchor defined 
       else
-        console.log merged
         # we are merging a pre-existing anchor - register it with the undo stack
         new UndoEntry false,
           title: 'merged two vertices together'

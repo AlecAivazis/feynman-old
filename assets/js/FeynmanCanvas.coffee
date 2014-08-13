@@ -171,7 +171,8 @@ class FeynmanCanvas
 
     # if spacebar is being held then we dont need to do anything
     if @spacebar_pressed
-      console.log 'dragged with spacebar starting at ' + x + ',' + y
+      # grab the original transformation
+      @originTransform = @diagram_group.transform().globalMatrix
       # do nothing else
       return
 
@@ -189,7 +190,11 @@ class FeynmanCanvas
   dragMove: (deltaX, deltaY, x_cursor, y_cursor) =>
     # if they are holding the spacebar
     if @spacebar_pressed
-      console.log 'moving with spacebar'
+      # create the translation matrix by adding the change in coordinates to the original
+      # translation
+      translate = new Snap.Matrix().translate(deltaX, deltaY).add @originTransform.clone()
+      # apply the transformation
+      @diagram_group.transform(translate)
       # dont do anything else
       return
     

@@ -68,7 +68,6 @@ class Line
       # do nothing
       return
 
-    zoomLevel = $(document).attr('canvas').zoomLevel
     x1 = @anchor1.x
     y1 = @anchor1.y 
     x2 = @anchor2.x
@@ -236,7 +235,6 @@ class Line
     # compute frequency from period
    
     # current x loc for path generation
-    zoomLevel = $(document).attr('canvas').zoomLevel
     x1 = @anchor1.x
     y1 = @anchor1.y 
     x2 = @anchor2.x
@@ -286,12 +284,11 @@ class Line
         @element = @drawAsSine()
 
     # grab the zoom level from the canvas
-    zoomLevel = $(document).attr('canvas').zoomLevel
     # make the snap scaling matrix
-    scale = new Snap.Matrix().scale(zoomLevel).scale(.5)
+    scale = new Snap.Matrix().scale(.5)
     # make the path marker with the appropriate scale
     arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').transform(scale)
-                  .marker(0,0, zoomLevel * 13, zoomLevel * 13, zoomLevel+0.8 , zoomLevel * 3)
+                  .marker(0,0, 13, 13, .8 , 3)
 
     # apply the correct styling
     @element.attr
