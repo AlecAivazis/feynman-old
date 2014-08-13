@@ -104,10 +104,10 @@ class FeynmanCanvas
     # make a vertical line nVertical times
     for x in [1 .. nVertical]
       line = @paper.line().attr
-        x1: x * @gridSize
-        x2: x * @gridSize
-        y1: 0
-        y2: height
+        x1: (x-(nVertical/2)) * @gridSize
+        x2: (x-(nVertical/2)) * @gridSize
+        y1: -nHorizontal/2 * @gridSize
+        y2: nHorizontal/2 * @gridSize
       # give it the proper class
       line.addClass('gridLine') 
       # and add it to the grid
@@ -116,10 +116,10 @@ class FeynmanCanvas
     # make a horizontal line nHorizontal times
     for y in [1 .. nHorizontal]
       line = @paper.line().attr
-        x1: 0
-        x2: width
-        y1: y * @gridSize
-        y2: y * @gridSize
+        x1: -nVertical/2 * @gridSize
+        x2: width + (nVertical/2 * @gridSize)
+        y1: (y - (nHorizontal/2)) * @gridSize
+        y2: (y - (nHorizontal/2)) * @gridSize
       # give it the proper class
       line.addClass('gridLine') 
       # and add it to the grid
