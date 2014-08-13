@@ -331,8 +331,10 @@ class FeynmanCanvas
 
 
   applyZoom: =>
+    # grab the translation part from the current transformation
+    prevInfo = @diagram_group.transform().globalMatrix.split()
     # create the scaling transformation
-    scale = new Snap.Matrix().scale @zoomLevel
+    scale = new Snap.Matrix().scale(@zoomLevel).translate(prevInfo.dx, prevInfo.dy)
     # apply the transformation
     @diagram_group.transform(scale)
     # update the digram
