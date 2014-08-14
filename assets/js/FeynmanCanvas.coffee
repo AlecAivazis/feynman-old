@@ -193,6 +193,8 @@ class FeynmanCanvas
   # handle drags on the paper
   # should draw a selection rectangle
   dragMove: (deltaX, deltaY, x_cursor, y_cursor) =>
+    # clear the selection so we can update it as we go
+    $(document).trigger('clearSelection')
     # if they are holding the spacebar
     if @spacebar_pressed
       # create the translation matrix by adding the change in coordinates to the original
