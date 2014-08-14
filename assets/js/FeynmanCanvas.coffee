@@ -175,16 +175,13 @@ class FeynmanCanvas
     if @spacebar_pressed
       # do nothing else
       return
-
+    # grab the current transformation
     transformInfo = @originTransform.split()
-    console.log transformInfo
+    # apply the transformations to the location we started the drag
+    diagramX = (x - transformInfo.dx) / transformInfo.scalex
+    diagramY = (y - transformInfo.dy) / transformInfo.scaley
 
-
-    diagramX = (x - transformInfo.dx) * transformInfo.scalex
-    diagramY = (y - transformInfo.dy) * transformInfo.scaley
-    console.log 'starting at ', diagramX, ',', diagramY
-
-    # draw a rectangle starting at the x and y with the current transform of the viewport
+    # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
       x: diagramX
       y: diagramY
@@ -205,11 +202,9 @@ class FeynmanCanvas
       @diagram_group.transform(translate)
       # dont do anything else
       return
-
-    currentTransform = @diagram_group.transform().globalMatrix.split()
-    
-    dx = deltaX * @zoomLevel
-    dy = deltaY * @zoomLevel
+    # scale the lengths by the zoom level
+    dx = deltaX / @zoomLevel
+    dy = deltaY / @zoomLevel
 
     # if there hasnt been a  selection rectangle drawn
     if not @selectionRect_element
