@@ -152,7 +152,6 @@ class FeynmanCanvas
 
 
   dragStart: (x, y, event) =>
-    
     # check if weve already created an element for the rectangle
     if @selectionRect_element
       # if we have then remove it from the dom
@@ -161,25 +160,34 @@ class FeynmanCanvas
     # use the offset coordinates if they exists
     # otherwise compute them 
     if event.offsetX
-      x = event.offsetX / @zoomLevel
+      x = event.offsetX
     else
-      x = ( event.clientX - $(event.target).offset().left ) / @zoomLevel
+      x = event.clientX - $(event.target).offset().left
     if event.offsetY
-      y = event.offsetY / @zoomLevel
+      y = event.offsetY
     else
-      y = ( event.clientY - $(event.target).offset().top ) / @zoomLevel
+      y = event.clientY - $(event.target).offset().top
+
+    # store the current transformation on the viewport
+    @originTransform = @diagram_group.transform().globalMatrix
 
     # if spacebar is being held then we dont need to do anything
     if @spacebar_pressed
-      # grab the original transformation
-      @originTransform = @diagram_group.transform().globalMatrix
       # do nothing else
       return
 
-    # draw a rectangle starting at the x and y
+    transformInfo = @originTransform.split()
+    console.log transformInfo
+
+
+    diagramX = (x - transformInfo.dx) * transformInfo.scalex
+    diagramY = (y - transformInfo.dy) * transformInfo.scaley
+    console.log 'starting at ', diagramX, ',', diagramY
+
+    # draw a rectangle starting at the x and y with the current transform of the viewport
     @selectionRect_element =  @paper.rect().attr
-      x: x
-      y: y
+      x: diagramX
+      y: diagramY
 
     # add the rectangle to the diagram
     @addToDiagram @selectionRect_element
@@ -197,10 +205,11 @@ class FeynmanCanvas
       @diagram_group.transform(translate)
       # dont do anything else
       return
+
+    currentTransform = @diagram_group.transform().globalMatrix.split()
     
-    $(document).trigger('clearSelection')
-    dx = deltaX / @zoomLevel
-    dy = deltaY / @zoomLevel
+    dx = deltaX * @zoomLevel
+    dy = deltaY * @zoomLevel
 
     # if there hasnt been a  selection rectangle drawn
     if not @selectionRect_element
@@ -228,6 +237,8 @@ class FeynmanCanvas
       stroke: 'red'
       strokeWidth: 1.5
       fill: 'none'
+
+    $(document).attr('canvas').addToDiagram @selectionRect_element
 
     # turn the strings into floats
     bound1x = parseInt(@selectionRect_element.attr('x'))
