@@ -380,6 +380,10 @@ class Anchor
       # find the nearest point on the grid
       @x = Math.round(x/gridSize)*gridSize
       @y = Math.round(y/gridSize)*gridSize
+    # if there is grid size
+    else
+      @x = x
+      @y = y
 
     # update the ui element
     @draw()

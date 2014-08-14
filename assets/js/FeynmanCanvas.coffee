@@ -192,9 +192,8 @@ class FeynmanCanvas
 
   # handle drags on the paper
   # should draw a selection rectangle
-  dragMove: (deltaX, deltaY, x_cursor, y_cursor) =>
-    # clear the selection so we can update it as we go
-    $(document).trigger('clearSelection')
+  dragMove: (deltaX, deltaY, x_cursor, y_cursor, event) =>
+
     # if they are holding the spacebar
     if @spacebar_pressed
       # create the translation matrix by adding the change in coordinates to the original
@@ -204,6 +203,11 @@ class FeynmanCanvas
       @diagram_group.transform(translate)
       # dont do anything else
       return
+
+    # clear the previous selection
+    $(document).trigger('clearSelection')
+
+
     # scale the lengths by the zoom level
     dx = deltaX / @zoomLevel
     dy = deltaY / @zoomLevel
