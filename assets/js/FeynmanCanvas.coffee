@@ -207,7 +207,6 @@ class FeynmanCanvas
     # clear the previous selection
     $(document).trigger('clearSelection')
 
-
     # scale the lengths by the zoom level
     dx = deltaX / @zoomLevel
     dy = deltaY / @zoomLevel
@@ -345,7 +344,7 @@ class FeynmanCanvas
   applyZoom: =>
     # grab the translation part from the current transformation
     prevInfo = @diagram_group.transform().globalMatrix.split()
-    # create the scaling transformation
+    # create the scaling transformation with any previous translations taken into account
     scale = new Snap.Matrix().scale(@zoomLevel).translate(prevInfo.dx, prevInfo.dy)
     # apply the transformation
     @diagram_group.transform(scale)
