@@ -162,11 +162,11 @@ class FeynmanCanvas
     if event.offsetX
       x = event.offsetX
     else
-      x = event.clientX - $(event.target).offset().left
+      x = event.pageX 
     if event.offsetY
       y = event.offsetY
     else
-      y = event.clientY - $(event.target).offset().top
+      y = event.pageY 
 
     # store the current transformation on the viewport
     @originTransform = @diagram_group.transform().globalMatrix
@@ -350,6 +350,7 @@ class FeynmanCanvas
     @diagram_group.transform(scale)
     # update the digram
     @draw()
+
 
 # when the document is loaded
 $(document).ready ->

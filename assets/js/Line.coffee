@@ -57,6 +57,49 @@ class Line
     @remove()
 
 
+  # remove the arrow decoration
+  removeArrow: =>
+    # if the element exists
+    if @arrow
+      # remove it
+      @arrow.remove()
+
+
+  # draw the arrow decoration
+  drawArrow: =>
+    # remove the previously drawn arrow
+    @removeArrow()
+
+    # coordinates of anchors to align along the line
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
+
+    # compute the lengths between the anchors
+    dx = x1 - x2
+    dy = y1 - y2
+    # calculate the midpoint
+    midx = (x1 + x2 ) / 2
+    midy = (y1 + y2 ) / 2
+
+    # create an svg element for the arrow at the origin
+    @arrow = @paper.polygon([midx,midy, midx,midy+10, midx+10,midy]).addClass('lineDecoration')
+    # add it to the diagram
+    $(document).attr('canvas').addToDiagram @arrow
+
+    # figure out the angle that this line needs to take
+    # compute the alignment angle in degrees
+    angle = Math.atan(dy/dx) * 180/Math.PI 
+    # add a little bit to accomodate the triangle 
+    angle += 135
+    # create a rotation matrix through that angle
+    rotation = new Snap.Matrix().rotate(angle, midx, midy)
+
+    @arrow.transform(rotation)
+    
+
+    
   # calculate the location for the label and then draw it
   drawLabel: =>
 
@@ -109,7 +152,7 @@ class Line
         labely = midy - y
 
     # if we hit an infinity in y
-    if isNaN labely
+    if isNaN(labely)
       if @labelPosition == 'top'
         labely = midy - r
       else
@@ -266,6 +309,8 @@ class Line
   # draw the line on the DOM
   draw: =>
 
+    @drawArrow()
+
     # if this element was previously selected
     if @element and @element.hasClass('selectedElement')
       isSelected = true
@@ -283,19 +328,11 @@ class Line
       when "em"
         @element = @drawAsSine()
 
-    # grab the zoom level from the canvas
-    # make the snap scaling matrix
-    scale = new Snap.Matrix().scale(.5)
-    # make the path marker with the appropriate scale
-    arrow = @paper.path('M2,2 L2,11 L10,6 L2,2').attr(fill: '#000000').transform(scale)
-                  .marker(0,0, 13, 13, .8 , 3)
-
     # apply the correct styling
     @element.attr
       stroke: @color
       strokeWidth: @width
       fill: 'none'
-      'marker-mid': arrow
 
     # save a reference to the FC Line class wrapping it
     @element.line = this
