@@ -16,6 +16,7 @@ class Line
     @color = 'black'
     @loopDirection = 1
     @labelDistance = 30
+    @drawArrow = false
 
 
   ressurect: =>
@@ -66,7 +67,7 @@ class Line
 
 
   # draw the arrow decoration
-  drawArrow: =>
+  drawArrowElement: =>
     # remove the previously drawn arrow
     @removeArrow()
 
@@ -97,7 +98,6 @@ class Line
     rotation = new Snap.Matrix().rotate(angle, midx, midy)
 
     @arrow.transform(rotation)
-    
 
     
   # calculate the location for the label and then draw it
@@ -308,8 +308,15 @@ class Line
 
   # draw the line on the DOM
   draw: =>
-
-    @drawArrow()
+  
+    # if we're supposed to draw the arrow element
+    if @drawArrow
+      # do so
+      @drawArrowElement()
+    # we're not supposed to draw the arrow
+    else
+      @removeArrow()
+    
 
     # if this element was previously selected
     if @element and @element.hasClass('selectedElement')
