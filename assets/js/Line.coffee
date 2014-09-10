@@ -166,9 +166,13 @@ class Line
   createLabel: (x, y) =>
     # remove the previous label
     @removeLabel()
-    # make the new label
+    # if there is a label for this line
     if @label
+      # create the element
       @labelEle = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
+      # add it to the diagram
+      $(document).attr('canvas').addToDiagram @labelEle
+
 
 
   # align an element along the line connecting the two anchors
