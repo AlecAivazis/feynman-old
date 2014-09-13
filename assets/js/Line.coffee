@@ -71,6 +71,9 @@ class Line
     # remove the previously drawn arrow
     @removeArrow()
 
+    # scale factor for the arrow
+    A = 6
+
     # coordinates of anchors to align along the line
     x1 = @anchor1.x
     y1 = @anchor1.y 
@@ -83,20 +86,24 @@ class Line
     # calculate the midpoint
     midx = (x1 + x2 ) / 2
     midy = (y1 + y2 ) / 2
+    # store the common factors in memory
+    lateral = A * Math.sqrt(3) / 2
+    halfBase = 3 * A / 4
 
     # create an svg element for the arrow at the origin
-    @arrow = @paper.polygon([midx,midy, midx,midy+10, midx+10,midy]).addClass('lineDecoration')
+    @arrow = @paper.polygon([midx,midy-lateral, midx+halfBase,midy+lateral, midx-halfBase,midy+lateral])
+      .addClass('lineDecoration')
     # add it to the diagram
     $(document).attr('canvas').addToDiagram @arrow
 
     # figure out the angle that this line needs to take
     # compute the alignment angle in degrees
     angle = Math.atan(dy/dx) * 180/Math.PI 
-    # add a little bit to accomodate the triangle 
-    angle += 135
+    # add a little bit to accomodate the triangle's original orientation 
+    angle += 90
     # create a rotation matrix through that angle
     rotation = new Snap.Matrix().rotate(angle, midx, midy)
-
+    # apply the transformation
     @arrow.transform(rotation)
 
     
