@@ -213,6 +213,10 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
     if $scope.selectedElement and $scope.type == 'line'
       $scope.selectedElement.drawLabel()
 
+  $scope.$watch 'selectedElement.drawArrow', (newVal, oldVal) ->
+    if $scope.selectedElement and $scope.type == 'line'
+      $scope.selectedElement.draw()
+
   $scope.$watch 'labelDistance', (newVal, oldVal) ->
     if $scope.selectedElement and $scope.type == 'line'
       $scope.selectedElement.labelDistance = newVal
