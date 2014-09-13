@@ -87,19 +87,23 @@ class Line
     midx = (x1 + x2 ) / 2
     midy = (y1 + y2 ) / 2
     # store the common geometric factors in memory
-    lateral = A * Math.sqrt(3) / 2
+    halfHeight = A * Math.sqrt(3) / 2
     halfBase = 3 * A / 4
 
     # create an svg element for the arrow at the origin
-    @arrow = @paper.polygon([midx , midy-lateral,
-                             midx+halfBase , midy+lateral,
-                             midx-halfBase , midy+lateral ]).addClass('lineDecoration')
+    @arrow = @paper.polygon([midx , midy-halfHeight,
+                             midx+halfBase , midy+halfHeight,
+                             midx-halfBase , midy+halfHeight ]).addClass('lineDecoration')
     # add it to the diagram
     $(document).attr('canvas').addToDiagram @arrow
 
     # figure out the angle that this line needs to take
     # compute the alignment angle in degrees
     angle = Math.atan(dy/dx) * 180/Math.PI 
+    # check if we need to flip the arrow for consistency
+    if dx > 0
+      # if we do then flip it
+      angle += 180
     # add a little bit to accomodate the triangle's original orientation 
     angle += 90
     # create a rotation matrix through that angle
