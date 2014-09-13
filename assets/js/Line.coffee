@@ -94,7 +94,11 @@ class Line
     # create an svg element for the arrow at the origin
     @arrow = @paper.polygon([midx , midy-halfHeight,
                              midx+halfBase , midy+halfHeight,
-                             midx-halfBase , midy+halfHeight ]).addClass('lineDecoration')
+                             midx-halfBase , midy+halfHeight ])
+    # set the arrow to the same color as the line
+    @arrow.attr
+      fill: @color
+  
     # add it to the diagram
     $(document).attr('canvas').addToDiagram @arrow
 

@@ -24,9 +24,17 @@ block content
   body(ng-app="feynman")
     h1 {{title}}! 
 
-    svg#canvas
-    
-    //#footer
+    #mainContent
+      svg#canvas
+      
+      #footer
+        | click on element to select
+        br 
+        | alt + drag from anchor to create new branch 
+        br
+        | space + drag to pan the canvas
+        br
+        | scroll wheel to zoom
       // alt dragging moving the window instead: 
       // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
       

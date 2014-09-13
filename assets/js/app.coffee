@@ -159,9 +159,9 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
     if $scope.selectedElement
       $scope.selectedElement.color = newVal
       if $scope.type == 'line'
-        $scope.selectedElement.element.attr 'stroke', newVal
+        $scope.selectedElement.draw()
       if $scope.type =='anchor'
-        $scope.selectedElement.element.attr 'fill', newVal 
+        $scope.selectedElement.draw()
 
   $scope.$watch 'groupColor', (newVal, oldVal) ->
     if $scope.selectedGroup
