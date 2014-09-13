@@ -195,13 +195,15 @@ block content
                     | gluon
                   option(value = 'em')
                     | em
-
             tr.property(ng-show="selectedElement.style == 'line'")
               td.label
                 | show arrow
               td.value
                 input(type="checkbox" ng-model="selectedElement.drawArrow")
-
+            tr(ng-show="selectedElement.style == 'line'")
+              td.tool(colspan=2)
+                span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
+                  | flip arrow direction
             tr.property(ng-show="selectedElement.style == 'gluon'")
               td.label
                 | loop direction:

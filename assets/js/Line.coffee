@@ -17,6 +17,7 @@ class Line
     @loopDirection = 1
     @labelDistance = 30
     @drawArrow = false
+    @flipArrow = false
 
 
   ressurect: =>
@@ -106,6 +107,9 @@ class Line
       angle += 180
     # add a little bit to accomodate the triangle's original orientation 
     angle += 90
+    # check if they want the arrow flipped
+    if @flipArrow 
+      angle += 180
     # create a rotation matrix through that angle
     rotation = new Snap.Matrix().rotate(angle, midx, midy)
     # apply the transformation
