@@ -48,8 +48,8 @@ class Line
   # remove this lines label from the DOM
   removeLabel: =>
     # if this line has a label
-    if @labelEle
-      @labelEle.remove()
+    if @labelElement
+      @labelElement.remove()
 
 
   # delete all references to this object
@@ -189,10 +189,9 @@ class Line
     # if there is a label for this line
     if @label
       # create the element
-      @labelEle = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
+      @labelElement = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
       # add it to the diagram
-      $(document).attr('canvas').addToDiagram @labelEle
-
+      $(document).attr('canvas').addToDiagram @labelElement
 
 
   # align an element along the line connecting the two anchors
@@ -228,6 +227,7 @@ class Line
     element.transform(alignment)
 
 
+  # replace instances of one anchor with another
   replaceAnchor: (replaced, replaces) =>
     if @anchor1 == replaced
       @anchor1 = replaces
@@ -463,7 +463,7 @@ class Line
             @data[4].removeLine @data[5]
             # resurrect the split anchor
             @data[2].ressurect()
-            # while were doing it replace the otherAnch with the once with just made
+            # while were doing it replace the otherAnch with the one we just made
             @data[5].replaceAnchor @data[4], @data[2]
             # ressurect the other line
             @data[3].ressurect()

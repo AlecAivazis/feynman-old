@@ -9,12 +9,12 @@ class UndoEntry
 
   # take an object as the argument and uses that for data then automatically
   # submit the entry to the undo stack
-  constructor: (transparent, data = {}) ->
+  constructor: (transparent, info = {}) ->
     # grab the data from the dictionary
-    @backwards = data['backwards'] if data['backwards']?
-    @data = data['data'] if data['data']?
-    @forwards = data['forwards'] if data['forwards']?
-    @title = data['title'] if data['title']?
+    @backwards = info.backwards if info.backwards?
+    @data = info.data if info.data?
+    @forwards = info.forwards if info.forwards?
+    @title = info.title if info.title?
 
     # grab the appropriate id
     @id = parseInt($('#undoHistory').attr('current')) + 1
