@@ -330,6 +330,47 @@ class Line
     @align(group)
 
 
+  drawAsEW: =>
+    # the length of the pattern
+    scale = 30
+    # the height of the pattern
+    amplitude = 3*scale/2
+    # compute frequency from period
+   
+    # current x loc for path generation
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
+
+    # compute the length of the line
+    dx = x1 - x2
+    dy = y1 - y2
+    length = Math.sqrt dx*dx + dy*dy
+
+    # find the closest whole number of full periods
+    loops = Math.round length/scale
+
+    # the current x location
+    cx = x1
+    cy = y1
+    # the upper and lower y coordinates for the anchors
+    ymin = y1 - amplitude
+    ymax = y1 + amplitude
+    # start the path at the first anchor
+    pathString = "M #{ cx } #{ cy }"
+    pathString += " C #{ cx+scale/2 } #{ ymin } #{ cx+scale/2 } #{ ymax } #{ cx+scale } #{ cy }"
+
+    for i in [1...loops]
+        cx += scale
+        pathString += " S #{ cx+scale/2 } #{ ymax } #{ cx+scale } #{ cy }"
+        
+    # create the svg element
+    element = @paper.path(pathString)
+    # align along the line created by the anchors
+    @align(element)
+
+
   # draw the line on the DOM
   draw: =>
   
@@ -357,7 +398,7 @@ class Line
       when "gluon"
         @element = @drawAsGluon()
       when "em"
-        @element = @drawAsSine()
+        @element = @drawAsEW()
 
     # apply the correct styling
     @element.attr
