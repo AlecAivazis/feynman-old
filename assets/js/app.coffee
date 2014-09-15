@@ -151,7 +151,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
     # if it exists
     if $(document).attr 'canvas'
       # change the value of the object
-      $(document).attr('canvas')['gridSize'] = newVal
+      $(document).attr('canvas').gridSize = parseInt(newVal)
       # redraw the canvas
       $(document).attr('canvas').draw()
     

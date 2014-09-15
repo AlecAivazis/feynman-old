@@ -89,17 +89,16 @@ class FeynmanCanvas
 
     # hide the previous grid
     @hideGrid()
-    # start a new one
+    # create a group for the new grid
     grid = @paper.group().addClass('grid')
-
-    # the upper left hand corner of the viewport
+    # grab the current transformations of the diagram 
     xform = @diagramGroup.transform().globalMatrix.split()
     scalex = xform.scalex
     scaley = xform.scaley
     x0 = - xform.dx / scalex
     y0 = - xform.dy / scaley
 
-    # the dimensions of the viewport
+    # get the dimensions of the viewport
     width = $(@paper.node).width() / scalex
     height = $(@paper.node).height() / scaley
 
