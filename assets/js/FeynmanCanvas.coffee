@@ -9,7 +9,7 @@ class FeynmanCanvas
   constructor: (@selector, startingPattern = 'pap') ->
     # create the snap object around the specified selector
     @paper = Snap(selector)
-    @diagram_group = @paper.g().addClass('diagram')
+    @diagramGroup = @paper.g().addClass('diagram')
     @paper.anchors = [] 
     @zoomLevel = 1
 
@@ -34,20 +34,20 @@ class FeynmanCanvas
 
     # add event handlers for specific keys (non-modifiers)
 
-    @spacebar_pressed = false
+    @spacebarPressed = false
     # whenever they press a button
     $(window).keydown (evt) =>
       # if its spacebar 
       if evt.which == 32
         evt.preventDefault()
         # set the state variable
-        @spacebar_pressed = true
+        @spacebarPressed = true
     # whever they release a button
     $(window).keyup (evt) =>
       # if they released spacebar
       if evt.which == 32
         # clear the state variable
-        @spacebar_pressed = false
+        @spacebarPressed = false
 
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>
@@ -82,54 +82,61 @@ class FeynmanCanvas
 
 
   addToDiagram: (element) ->
-    @diagram_group.add element
+    @diagramGroup.add element
 
 
   drawGrid: () =>
 
     # hide the previous grid
     @hideGrid()
-
-    # scale the width and height off of the canvas so there is still canvas when you zoom
-    width = $(@paper.node).width()*10
-    height = $(@paper.node).height()*10
-
-    # get the number of vertical grids lines to make
-    nVertical =  Math.round(width/@gridSize)
-    nHorizontal = Math.round(height/@gridSize)
-
+    # start a new one
     grid = @paper.group().addClass('grid')
-    @diagram_group.add grid
 
-    # make a vertical line nVertical times
-    for x in [1 .. nVertical]
-      line = @paper.line().attr
-        x1: (x-(nVertical/2)) * @gridSize
-        x2: (x-(nVertical/2)) * @gridSize
-        y1: -nHorizontal/2 * @gridSize
-        y2: nHorizontal/2 * @gridSize
-      # give it the proper class
-      line.addClass('gridLine') 
-      # and add it to the grid
-      grid.add(line)
+    # the upper left hand corner of the viewport
+    xform = @diagramGroup.transform().globalMatrix.split()
+    scalex = xform.scalex
+    scaley = xform.scaley
+    x0 = - xform.dx / scalex
+    y0 = - xform.dy / scaley
 
-    # make a horizontal line nHorizontal times
-    for y in [1 .. nHorizontal]
-      line = @paper.line().attr
-        x1: -nVertical/2 * @gridSize
-        x2: width + (nVertical/2 * @gridSize)
-        y1: (y - (nHorizontal/2)) * @gridSize
-        y2: (y - (nHorizontal/2)) * @gridSize
-      # give it the proper class
-      line.addClass('gridLine') 
-      # and add it to the grid
-      grid.add(line)
+    # the dimensions of the viewport
+    width = $(@paper.node).width() / scalex
+    height = $(@paper.node).height() / scaley
+
+    # compute the grid density along the x axis
+    xDensity = @gridSize
+    # compute the grid density along the x axis
+    yDensity = @gridSize
+
+    # the first y-aligned grid line
+    xg0 = xDensity * Math.floor(x0/xDensity)
+    # the first y-aligned grid line
+    yg0 = yDensity * Math.floor(y0/yDensity)
+
+    # go through all visible grid-aligned x coordinates
+    for x in [xg0 .. xg0+width] by xDensity
+      # draw a vertical line
+      grid.add @paper.path("M #{x} #{yg0} L #{x} #{yg0+height}").addClass('gridLine')
+    
+    # go through all visible grid-aligned y coordinates
+    for y in [yg0 .. yg0+height] by yDensity
+      # draw a vertical line
+      grid.add @paper.path("M #{xg0} #{y} L #{xg0+width} #{y}").addClass('gridLine')
+
+    # add the grid to the diagram
+    @diagramGroup.add grid
+    
+    # all done
+    return
     
 
   # remove the grid if it exists
   hideGrid: () =>
+    # look for the svg container of the grid
     grid = Snap.select('.grid')
+    # if there is one
     if grid
+      # get rid of it
       grid.remove()
 
 
@@ -169,10 +176,10 @@ class FeynmanCanvas
       y = event.pageY 
 
     # store the current transformation on the viewport
-    @originTransform = @diagram_group.transform().globalMatrix
+    @originTransform = @diagramGroup.transform().globalMatrix
 
     # if spacebar is being held then we dont need to do anything
-    if @spacebar_pressed
+    if @spacebarPressed
       # do nothing else
       return
     # grab the current transformation
@@ -195,12 +202,14 @@ class FeynmanCanvas
   dragMove: (deltaX, deltaY, x_cursor, y_cursor, event) =>
 
     # if they are holding the spacebar
-    if @spacebar_pressed
+    if @spacebarPressed
       # create the translation matrix by adding the change in coordinates to the original
       # translation
       translate = new Snap.Matrix().translate(deltaX, deltaY).add @originTransform.clone()
       # apply the transformation
-      @diagram_group.transform(translate)
+      @diagramGroup.transform(translate)
+      # refresh the picture
+      @draw()
       # dont do anything else
       return
 
@@ -281,7 +290,7 @@ class FeynmanCanvas
     # clear the selection rectangle
     @removeSelectionRect()
     # if i was holding the spacebar
-    if @spacebar_pressed
+    if @spacebarPressed
       # do nothing else
       return 
     # if theres only one selected event
@@ -303,16 +312,16 @@ class FeynmanCanvas
 
     # if they asked for nothing,
     if pattern == ''
-      # just drop 
-      new Anchor(@paper, 50, 50)
+      # just drop an anchor to get things going
+      new Anchor(@paper, 0, 0)
     
     # if they asked for the particle / antiparticle pattern
     if pattern == 'pap'
       # define the anchors for the particle, anti particle patterns
-      a = new Anchor(@paper, 150, 75)
-      b = new Anchor(@paper, 225, 150)
-      c = new Anchor(@paper, 150, 250)
-      d = new Anchor(@paper, 375, 150)
+      a = new Anchor(@paper, 50, 50)
+      b = new Anchor(@paper, 150, 150)
+      c = new Anchor(@paper, 50, 250)
+      d = new Anchor(@paper, 250, 150)
   
       # and the lines connecting them
       k = new Line(@paper, a, b)
@@ -329,18 +338,18 @@ class FeynmanCanvas
 
 
   zoomIn: =>
-    # if your not below the min
+    # if you are not above maximum zoom level
     if @zoomLevel <= @maxZoom
       # increment the zoom level
       @zoomLevel += @deltaZoom
-      # apply the zoom level
+      # apply
       @applyZoom()
 
 
   zoomOut: =>
-    # if your not below the min
+    # if you are not below the minimum zoom level
     if @zoomLevel >= @minZoom
-      # increment the zoom level
+      # decrement the zoom level
       @zoomLevel -= @deltaZoom
       # apply the zoom level
       @applyZoom()
@@ -348,11 +357,11 @@ class FeynmanCanvas
 
   applyZoom: =>
     # grab the translation part from the current transformation
-    prevInfo = @diagram_group.transform().globalMatrix.split()
+    prevInfo = @diagramGroup.transform().globalMatrix.split()
     # create the scaling transformation with any previous translations taken into account
-    scale = new Snap.Matrix().scale(@zoomLevel).translate(prevInfo.dx, prevInfo.dy)
+    scale = new Snap.Matrix().translate(prevInfo.dx, prevInfo.dy).scale(@zoomLevel)
     # apply the transformation
-    @diagram_group.transform(scale)
+    @diagramGroup.transform(scale)
     # update the digram
     @draw()
 
@@ -363,3 +372,4 @@ $(document).ready ->
   new FeynmanCanvas("#canvas") 
 
 
+# end of file
