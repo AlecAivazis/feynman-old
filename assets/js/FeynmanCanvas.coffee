@@ -107,7 +107,7 @@ class FeynmanCanvas
     # compute the grid density along the x axis
     yDensity = @gridSize
 
-    # the first y-aligned grid line
+    # the first x-aligned grid line
     xg0 = xDensity * Math.floor(x0/xDensity)
     # the first y-aligned grid line
     yg0 = yDensity * Math.floor(y0/yDensity)
