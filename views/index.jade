@@ -59,11 +59,11 @@ block content
               td.label
                 | Grid Size:
               td.value
-                span(ng-show="gridSize > 0")
-                  | {{gridSize}}
-                span(ng-show="gridSize == 0")
-                  | none
-                slider(floor="0" ceiling="100" step="25" precision="0"  ng-model="gridSize" 
+                // span(ng-show="gridSize > 0")
+                // | {{gridSize}}
+                // span(ng-show="gridSize == 0")
+                // | none
+                slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" 
                        style="width: 70%")
 
       // WARNING: this id can't change without reflecting it in the javascript
