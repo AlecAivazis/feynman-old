@@ -114,7 +114,7 @@ class FeynmanCanvas
 
     # go through all visible grid-aligned x coordinates
     for x in [xg0 .. xg0+width] by xDensity
-      # draw a vertical line
+      # draw a horizontal line
       grid.add @paper.path("M #{x} #{yg0} L #{x} #{yg0+height}").addClass('gridLine')
     
     # go through all visible grid-aligned y coordinates
