@@ -300,6 +300,11 @@ class FeynmanCanvas
 
     # store the current set of anchors for the history
     old = @paper.anchors
+
+    # if they asked for nothing,
+    if pattern == ''
+      # just drop 
+      new Anchor(@paper, 50, 50)
     
     # if they asked for the particle / antiparticle pattern
     if pattern == 'pap'

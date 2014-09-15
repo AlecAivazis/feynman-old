@@ -252,97 +252,83 @@ class Line
 
 
   drawAsGluon: =>
-    # current x loc for path generation
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
-
-    # compute the length of the line
-    dx = x1-x2
-    dy = y1-y2
-    length = Math.sqrt dx*dx + dy*dy
-
-    # start the gluon at the first anchor
-    x = x1
-    y = y1
-
-    # the width of one gluon loop
-    gluonWidth = 20
-    # the ratio of height to width for the loops
-    ratio = 1
-    gluonHeight = ratio*gluonWidth * parseInt(@loopDirection)
-
-    # start the path at the first anchor
-    pathString = 'M' + x1 + ',' + y1
-    # figure out how many gluon loops to draw
-    numLoops = Math.round length/gluonWidth
-    # make a gluon loop numLoops times
-    for i in [1..numLoops]
-      # increment x
-      x += gluonWidth
-      #  add the curve
-      pathString += 'C ' + x + ',' + y + ' '
-      pathString +=  x  + ',' + (y - gluonHeight) + ' '
-      pathString += (x - (gluonWidth/2)) + ',' + (y - gluonHeight) + ' '
-      # stop gluonWidth away from where we started and mirror the curve
-      pathString += 'S ' + (x - gluonWidth) + ',' + y + ' ' + x + ',' + y + ' '
-
-    # add the svg element
-    element = @paper.path(pathString)
-    # align along the line created by the anchors
-    @align(element)
-    
-
-  drawAsSine: =>
-    # the length of the pattern
-    period = 30
+    # the width of the pattern
+    scale = 10
     # the height of the pattern
-    amplitude = 13
-    # compute frequency from period
-   
-    # current x loc for path generation
+    amplitude = scale
+
+    # the coordinates of the anchors
     x1 = @anchor1.x
     y1 = @anchor1.y 
     x2 = @anchor2.x
     y2 = @anchor2.y 
-
-    freq = 2 * Math.PI / period
-
     # compute the length of the line
     dx = x1 - x2
     dy = y1 - y2
-    length = Math.sqrt dx*dx + dy*dy
+    length = Math.sqrt(dx*dx + dy*dy)
 
-    # find the closest whole number of full periods
-    nCycles = Math.round length/period
+    # find the closest whole number of full periods; subtract one to accommodate the endcaps 
+    loops = Math.round(length / scale / 2) - 1
+    console.log "loops: #{loops}"
 
-    # create a group that houses all of the line elements
-    group = @paper.g()
+    # the current location
+    cx = x1
+    cy = y1
+    # the top and bottom limits for the pattern
+    ymin = cy - amplitude
+    ymax = cy + amplitude
+    # each segments advances the current location by this much
+    dx = scale
 
-    for i in [0... nCycles * period]
-      group.add @paper.line().attr
-        x1: (i-1) + x1
-        y1: amplitude * Math.sin(freq * (i - 1 )) + y1
-        x2: i + x1
-        y2: amplitude * Math.sin(freq * i) + y1
-    # align along the line created by the anchors
-    @align(group)
+    # start the path at the current x,y location
+    pathString = "M #{cx} #{cy} "
 
+    # the left endcap
+    pathString += "C #{cx+dx} #{cy} #{cx} #{ymin} #{cx+dx} #{ymin} "
+    # update
+    cx += dx
 
+    # the first loop
+    if loops > 0
+        # first half
+        pathString += "C #{cx+2*scale} #{ymin} #{cx+2*scale} #{ymax} #{cx+dx} #{ymax} "
+        # update
+        cx += dx
+        # second half
+        pathString += "S #{cx-scale} #{ymin} #{cx+dx} #{ymin} "
+        # update
+        cx += dx
+
+    # the rest
+    for cycle in [1...loops]
+        # first half
+        pathString += "S #{cx+2*scale} #{ymax} #{cx+dx} #{ymax} "
+        # update
+        cx += dx
+        # second half
+        pathString += "S #{cx-scale} #{ymin} #{cx+dx} #{ymin} "
+        # update
+        cx += dx
+
+    # the right endcap
+    pathString += "C #{cx+dx} #{ymin} #{cx} #{cy} #{cx+dx} #{cy} "
+
+    # create the svg element
+    element = @paper.path(pathString)
+    # align along the line created by the anchors and return it
+    @align(element)
+
+    
   drawAsEW: =>
-    # the length of the pattern
+    # the width of the pattern
     scale = 30
     # the height of the pattern
     amplitude = 3*scale/2
-    # compute frequency from period
-   
-    # current x loc for path generation
+    # the coordinates of the anchors
     x1 = @anchor1.x
     y1 = @anchor1.y 
     x2 = @anchor2.x
     y2 = @anchor2.y 
-
     # compute the length of the line
     dx = x1 - x2
     dy = y1 - y2
@@ -355,15 +341,15 @@ class Line
     cx = x1
     cy = y1
     # the upper and lower y coordinates for the anchors
-    ymin = y1 - amplitude
-    ymax = y1 + amplitude
-    # start the path at the first anchor
-    pathString = "M #{ cx } #{ cy }"
-    pathString += " C #{ cx+scale/2 } #{ ymin } #{ cx+scale/2 } #{ ymax } #{ cx+scale } #{ cy }"
+    ymin = cy - amplitude
+    ymax = cy + amplitude
+    # start the path at the current (x,y) location
+    pathString = "M #{cx} #{cy}"
+    pathString += " C #{cx+scale/2} #{ymin} #{cx+scale/2} #{ymax} #{cx+scale} #{cy}"
 
     for i in [1...loops]
         cx += scale
-        pathString += " S #{ cx+scale/2 } #{ ymax } #{ cx+scale } #{ cy }"
+        pathString += " S #{cx+scale/2} #{ymax} #{cx+scale} #{cy}"
         
     # create the svg element
     element = @paper.path(pathString)
