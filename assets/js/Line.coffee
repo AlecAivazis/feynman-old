@@ -269,7 +269,6 @@ class Line
 
     # find the closest whole number of full periods; subtract one to accommodate the endcaps 
     loops = Math.round(length / scale / 2) - 1
-    console.log "loops: #{loops}"
 
     # the current location
     cx = x1
@@ -321,7 +320,7 @@ class Line
     
   drawAsEW: =>
     # the width of the pattern
-    scale = 30
+    scale = 20
     # the height of the pattern
     amplitude = 3*scale/2
     # the coordinates of the anchors
