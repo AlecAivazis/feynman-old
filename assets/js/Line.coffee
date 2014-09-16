@@ -337,8 +337,8 @@ class Line
     cx = x1
     cy = y1
     # the upper and lower y coordinates for the anchors
-    ymin = cy - amplitude
-    ymax = cy + amplitude
+    ymin = cy - @loopDirection * amplitude
+    ymax = cy + @loopDirection * amplitude
     # start the path at the current (x,y) location
     pathString = "M #{cx} #{cy}"
     pathString += " C #{cx+scale/2} #{ymin} #{cx+scale/2} #{ymax} #{cx+scale} #{cy}"

@@ -214,7 +214,7 @@ block content
               td.tool(colspan=2)
                 span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
                   | flip arrow direction
-            tr.property(ng-show="selectedElement.style == 'gluon'")
+            tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em'")
               td.label
                 | loop direction:
               td.value
