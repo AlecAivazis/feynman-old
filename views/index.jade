@@ -216,18 +216,18 @@ block content
                   | flip arrow direction
             tr.property(ng-show="selectedElement.style == 'gluon'")
               td.label
-                | draw end&nbsp;caps
+                | draw end&nbsp;caps:
               td.value
                 input(type="checkbox" ng-model="selectedElement.drawEndCaps")
             tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em'")
               td.label
                 | loop direction:
               td.value
-                select(ng-model="selectedElement.loopDirection")
-                  option(value="1")
-                    | up
-                  option(value="-1")
-                    | down
+                input(type="radio" ng-model="selectedElement.loopDirection" value="1")
+                | up
+                br
+                input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
+                | down
             tr
               td.tool(colspan=2)
                 span.button(ng-click="deleteSelectedLine()")
