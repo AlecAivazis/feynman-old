@@ -20,6 +20,7 @@ class Line
     @flipArrow = false
 
 
+  # bring this element from the graveyard (undo  delete)
   ressurect: =>
     @anchor1.addLine this
     @anchor2.addLine this
@@ -196,7 +197,7 @@ class Line
 
   # align an element along the line connecting the two anchors
   # assumes the element is horizontal before align for the purposes for scaling
-  align: (element) =>
+  align: (element, width) =>
 
     # current x loc for path generation
     x1 = @anchor1.x
@@ -204,23 +205,17 @@ class Line
     x2 = @anchor2.x
     y2 = @anchor2.y 
 
-    # figure out the width of the element
-    width = element.getBBox().width
-
     # compute the lengths between the anchors
-    dx = x1 - x2
-    dy = y1 - y2
+    dx = x2 - x1
+    dy = y2 - y1
     length = Math.sqrt(dx*dx + dy*dy)
 
     # figure out the angle that this line needs to take
-    angle = Math.atan(dy/dx) * 180/Math.PI
-    # we might need to flip the angle
-    if dx >= 0
-      angle += 180
+    angle = Math.atan2(dy, dx) * 180/Math.PI
 
     # create the alignment matrix by scaling it to match the width
     # and then rotating it along the line joining the two anchors
-    alignment = new Snap.Matrix().scale(length/width, 1, x1, y1)
+    alignment = new Snap.Matrix().scale(length/width, length/width, x1, y1)
                                  .rotate(angle, x1, y1)
 
     # apply the transform and return the element
@@ -268,6 +263,7 @@ class Line
     length = Math.sqrt(dx*dx + dy*dy)
 
     # find the closest whole number of full periods; subtract one to accommodate the endcaps 
+    # do not modify because it is passed to align()
     loops = Math.round(length / scale / 2) - 1
 
     # the current location
@@ -315,7 +311,7 @@ class Line
     # create the svg element
     element = @paper.path(pathString)
     # align along the line created by the anchors and return it
-    @align(element)
+    @align(element, 2 * (loops+1) * scale)
 
     
   drawAsEW: =>
@@ -334,6 +330,7 @@ class Line
     length = Math.sqrt dx*dx + dy*dy
 
     # find the closest whole number of full periods
+    # do not modify because it is passed to align()
     loops = Math.round length/scale
 
     # the current x location
@@ -353,7 +350,7 @@ class Line
     # create the svg element
     element = @paper.path(pathString)
     # align along the line created by the anchors
-    @align(element)
+    @align(element, loops * scale)
 
 
   # draw the line on the DOM
