@@ -270,8 +270,8 @@ class Line
     cx = x1
     cy = y1
     # the top and bottom limits for the pattern
-    ymin = cy - amplitude
-    ymax = cy + amplitude
+    ymin = cy - @loopDirection * amplitude
+    ymax = cy + @loopDirection * amplitude
     # each segments advances the current location by this much
     dx = scale
 
