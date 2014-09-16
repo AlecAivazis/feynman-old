@@ -17,6 +17,7 @@ class Line
     @loopDirection = 1
     @labelDistance = 30
     @drawArrow = false
+    @drawEndCaps = false
     @flipArrow = false
 
 
@@ -262,56 +263,128 @@ class Line
     dy = y1 - y2
     length = Math.sqrt(dx*dx + dy*dy)
 
-    # find the closest whole number of full periods; subtract one to accommodate the endcaps 
-    # do not modify because it is passed to align()
-    loops = Math.round(length / scale / 2) - 1
+    # find the closest whole number of full periods
+    loops = Math.round(length / scale / 2) 
+    # compute the length of the chain
+    # do not modify because its passed to align
+    chainLength = 2 * scale * loops
 
     # the current location
     cx = x1
     cy = y1
     # the top and bottom limits for the pattern
-    ymin = cy - @loopDirection * amplitude
-    ymax = cy + @loopDirection * amplitude
+    ymin = cy 
+    ymax = cy - 2 * @loopDirection * amplitude
     # each segments advances the current location by this much
     dx = scale
 
     # start the path at the current x,y location
     pathString = "M #{cx} #{cy} "
 
-    # the left endcap
+    # if you asked for at least one loop
+    if loops > 0
+        # first half of the loop
+        pathString += "C #{cx+2*scale} #{ymin} #{cx+2*scale} #{ymax} #{cx+dx} #{ymax} "
+        # update the dx counter
+        cx += dx
+        # second half of the loop
+        pathString += "S #{cx-scale} #{ymin} #{cx+dx} #{ymin} "
+        # update the dx counter
+        cx += dx
+    # the distance was too short for a loop
+    else
+      # so draw it as a line instead
+      return @drawAsLine()
+
+    # the rest of the loops
+    for cycle in [1...loops]
+        # first half of the loop
+        pathString += "S #{cx+2*scale} #{ymax} #{cx+dx} #{ymax} "
+        # update the dx counter
+        cx += dx
+        # second half of the loop
+        pathString += "S #{cx-scale} #{ymin} #{cx+dx} #{ymin} "
+        # update the dx counter
+        cx += dx
+
+    # create the svg element
+    element = @paper.path(pathString)
+    # align along the line created by the anchors and return it
+    @align(element, chainLength)
+
+
+  drawAsGluonWithEndCaps: =>
+    # the width of the pattern
+    scale = 10
+    # the height of the pattern
+    amplitude = scale
+
+    # the coordinates of the anchors
+    x1 = @anchor1.x
+    y1 = @anchor1.y 
+    x2 = @anchor2.x
+    y2 = @anchor2.y 
+    # compute the length of the line
+    dx = x1 - x2
+    dy = y1 - y2
+    length = Math.sqrt(dx*dx + dy*dy)
+
+    # find the closest whole number of full periods
+    loops = Math.round(length / scale / 2) - 1
+    # compute the length of the chain
+    # do not modify because its passed to align
+    chainLength = 2 * scale * (loops + 1)
+
+    # the current location
+    cx = x1
+    cy = y1
+    # the top and bottom limits for the pattern
+    ymin = cy + @loopDirection * amplitude
+    ymax = cy - @loopDirection * amplitude
+    # each segments advances the current location by this much
+    dx = scale
+
+    # start the path at the current x,y location
+    pathString = "M #{cx} #{cy} "
+
+    # draw the left endcap
     pathString += "C #{cx+dx} #{cy} #{cx} #{ymin} #{cx+dx} #{ymin} "
-    # update
+    # update the dx counter
     cx += dx
 
-    # the first loop
+    # if you asked for at least one loop
     if loops > 0
-        # first half
+        # first half of the loop
         pathString += "C #{cx+2*scale} #{ymin} #{cx+2*scale} #{ymax} #{cx+dx} #{ymax} "
-        # update
+        # update the dx counter
         cx += dx
-        # second half
+        # second half of the loop
         pathString += "S #{cx-scale} #{ymin} #{cx+dx} #{ymin} "
-        # update
+        # update the dx counter
         cx += dx
+    # the distance was too short for a loop
+    else
+      # so draw it as a line instead
+      return @drawAsLine()
 
-    # the rest
+    # the rest of the loops
     for cycle in [1...loops]
-        # first half
+        # first half of the loop
         pathString += "S #{cx+2*scale} #{ymax} #{cx+dx} #{ymax} "
-        # update
+        # update the dx counter
         cx += dx
-        # second half
+        # second half of the loop
         pathString += "S #{cx-scale} #{ymin} #{cx+dx} #{ymin} "
-        # update
+        # update the dx counter
         cx += dx
 
-    # the right endcap
+    # draw the right endcap
     pathString += "C #{cx+dx} #{ymin} #{cx} #{cy} #{cx+dx} #{cy} "
 
     # create the svg element
     element = @paper.path(pathString)
     # align along the line created by the anchors and return it
-    @align(element, 2 * (loops+1) * scale)
+    @align(element, chainLength)
 
     
   drawAsEW: =>
@@ -378,7 +451,7 @@ class Line
       when "dashed"
         @element = @drawAsDashedLine()
       when "gluon"
-        @element = @drawAsGluon()
+        @element = if @drawEndCaps then @drawAsGluonWithEndCaps() else @drawAsGluon()
       when "em"
         @element = @drawAsEW()
 

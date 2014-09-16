@@ -214,6 +214,11 @@ block content
               td.tool(colspan=2)
                 span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
                   | flip arrow direction
+            tr.property(ng-show="selectedElement.style == 'gluon'")
+              td.label
+                | draw end&nbsp;caps
+              td.value
+                input(type="checkbox" ng-model="selectedElement.drawEndCaps")
             tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em'")
               td.label
                 | loop direction:
