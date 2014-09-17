@@ -226,8 +226,10 @@ block content
               td.value
                 input(type="checkbox" ng-model="selectedElement.drawEndCaps")
             tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em'")
-              td.label
+              td.label(ng-show="selectedElement.style == 'gluon'")
                 | loop direction:
+              td.label(ng-show="selectedElement.style == 'em'")
+                | amplitude direction:
               td.value
                 input(type="radio" ng-model="selectedElement.loopDirection" value="1")
                 | up
