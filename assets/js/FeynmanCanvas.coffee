@@ -27,10 +27,7 @@ class FeynmanCanvas
 
     # whenever they click before they can drag
     @paper.mousedown (event) =>
-      # clear the selection rectangle
-      @removeSelectionRect()
-      # and clear the selection
-      $(document).trigger('clearSelection')
+      @mouseDown(event)
 
     # add event handlers for specific keys (non-modifiers)
 
@@ -163,17 +160,6 @@ class FeynmanCanvas
       # if we have then remove it from the dom
       @selectionRect_element.remove()
 
-    # use the offset coordinates if they exists
-    # otherwise compute them 
-    if event.offsetX
-      x = event.offsetX
-    else
-      x = event.pageX 
-    if event.offsetY
-      y = event.offsetY
-    else
-      y = event.pageY 
-
     # store the current transformation on the viewport
     @originTransform = @diagramGroup.transform().globalMatrix
 
@@ -181,16 +167,14 @@ class FeynmanCanvas
     if @spacebarPressed
       # do nothing else
       return
-    # grab the current transformation
-    transformInfo = @originTransform.split()
-    # apply the transformations to the location we started the drag
-    diagramX = (x - transformInfo.dx) / transformInfo.scalex
-    diagramY = (y - transformInfo.dy) / transformInfo.scaley
+
+    # get the event coordinates
+    coords = @getMouseEventCoordinates(event)
 
     # draw a rectangle starting at the x and y
     @selectionRect_element =  @paper.rect().attr
-      x: diagramX
-      y: diagramY
+      x: coords.x
+      y: coords.y
 
     # add the rectangle to the diagram
     @addToDiagram @selectionRect_element
@@ -218,9 +202,14 @@ class FeynmanCanvas
     # scale the lengths by the zoom level
     dx = deltaX / @zoomLevel
     dy = deltaY / @zoomLevel
+    # if the user was holding the altKey
+    if event.altKey
 
-    # if there hasnt been a  selection rectangle drawn
-    if not @selectionRect_element
+      # don't do anything else
+      return
+
+    # if there hasnt been a  selection rectangle drawn or the user is holding the alt key
+    if not @selectionRect_element or event.altKey
       # dont do anything
       return
 
@@ -301,6 +290,47 @@ class FeynmanCanvas
       # select each element in the group
       $(document).trigger 'selectedGroup', [item.anchor for item in selected.items, 'anchor']
 
+
+  # when the mouse is pressed, regardless of drag or not
+  mouseDown: (event) =>
+    # clear the selection rectangle
+    @removeSelectionRect()
+    # and clear the selection
+    $(document).trigger('clearSelection')
+    # if the user was holding the alt key
+    if event.altKey
+      console.log 'create new anchor'
+      # grab the created anchor
+      coords = @getMouseEventCoordinates(event)
+      # create the anchor at that location
+      @newAnchor = new Anchor(@paper, coords.x, coords.y)
+      # snap it to the grid and draw
+      @newAnchor.snapToGrid()
+
+
+  # compute the event coordinates bsaed on a mouse event
+  getMouseEventCoordinates: (event) =>
+    # compute the coordinates of the event using the offset coordinates if they exists
+    if event.offsetX
+      x = event.offsetX
+    # otherwise compute them 
+    else
+      x = event.pageX 
+    # same for y
+    if event.offsetY
+      y = event.offsetY
+    else
+      y = event.pageY 
+
+    # grab the current transformation
+    transformInfo =  @diagramGroup.transform().globalMatrix.split()
+    # apply the transformations to the location we started the drag
+    diagramX = (x - transformInfo.dx) / transformInfo.scalex
+    diagramY = (y - transformInfo.dy) / transformInfo.scaley
+
+    coords = 
+      x: diagramX
+      y: diagramY
 
    
   # draw the sepecified pattern

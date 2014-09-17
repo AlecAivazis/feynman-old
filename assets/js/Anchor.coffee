@@ -367,6 +367,12 @@ class Anchor
       @handleMove(@x, value, useGrid) 
 
 
+  # snap the anchor to the nearest grid point
+  snapToGrid: =>
+    # move it to its current location using the grid
+    @handleMove(@x, @y)
+
+
   handleMove: (x, y, useGrid = true) =>
     # if its fixed
     if @fixed
