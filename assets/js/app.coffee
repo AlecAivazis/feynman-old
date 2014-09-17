@@ -112,19 +112,43 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
     , 0
 
   # assuming the selected element is a line, delete it and register it with the undo stack
-  $scope.deleteSelectedLine = () ->
+  $scope.deleteSelectedElement = (type) ->
     # get the selected line
     element = Snap.select('.selectedElement')
-    # remove the line and register it with the undo stack
-    $timeout ->
-      new UndoEntry true,
-        title: 'removed line'
-        data: [element.line]
-        forwards: ->
-          @data[0].remove()
-        backwards: ->
-          @data[0].ressurect().draw()
-    , 0
+    # if the element is a line
+    if type == 'line'
+      # remove the line and register it with the undo stack
+      $timeout ->
+        new UndoEntry true,
+          title: 'removed line'
+          data: [element.line]
+          forwards: ->
+            @data[0].remove()
+          backwards: ->
+            @data[0].ressurect().draw()
+      , 0
+    # if they asked for an anchor
+    else if type == 'anchor'
+      # remove the anchor and register it with the undo stack
+      $timeout ->
+        new UndoEntry true,
+          title: 'removed anchor'
+          data: [element.anchor, element.anchor.lines]
+          forwards: ->
+            # remove the anchor
+            @data[0].remove()
+            # and the lines associated with the anchor
+            _.each @data[1], (line) ->
+              line.remove()
+          backwards: ->
+            # ressurect the anchor
+            @data[0].ressurect()
+            # all of the lines
+            _.each @data[1], (line) ->
+              line.ressurect()
+            # draw the anchor
+            @data[0].draw()
+      , 0
 
 
   # update the properties of the appropriate element when we change the selectedElements 

@@ -147,6 +147,10 @@ block content
                 | fixed:
               td.value
                 input(type="checkbox" ng-model="selectedElement.fixed")
+            tr
+              td.tool(colspan=2)
+                span.button(ng-click="deleteSelectedElement('anchor')")
+                  | delete this anchor
     
   
         // line properties menu
@@ -230,7 +234,7 @@ block content
                 | down
             tr
               td.tool(colspan=2)
-                span.button(ng-click="deleteSelectedLine()")
+                span.button(ng-click="deleteSelectedElement('line')")
                   | delete this line
 
         
