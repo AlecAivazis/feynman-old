@@ -430,7 +430,7 @@ class Line
   draw: =>
   
     # if we're supposed to draw the arrow element
-    if @drawArrow
+    if @drawArrow and (@style == 'line'  or @style == 'dashed')
       # do so
       @drawArrowElement()
     # we're not supposed to draw the arrow
