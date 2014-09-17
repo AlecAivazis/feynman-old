@@ -307,10 +307,25 @@ class FeynmanCanvas
       merged = @currentAnchor.checkForMerges()
       # if the newly created anchor was merged
       if merged
-        console.log 'created reverse branch'
+        # register it with the undo stack
+        new UndoEntry false ,
+          title: "created vertex at #{@newAnchor.x}, #{@newAnchor.y}"
+          data: [@newAnchor, @newAnchor.lines[0]]
+          forwards: ->
+            # resurrect the anchor
+            @data[0].ressurect()
+            # ressurect the line
+            @data[1].ressurect()
+            # draw the anchor
+            @data[0].draw()
+          backwards: ->
+            # remove the anchor
+            @data[0].remove()
+            # remove the line
+            @data[1].remove()
+
       # otherwise the newly created anchor was not merged
       else
-        console.log 'created standalone branch'
         # register it with the undo stack
         new UndoEntry false ,
           title: 'created a standalone branch'
@@ -330,7 +345,10 @@ class FeynmanCanvas
             @data[1].remove()
             @data[0].remove()
           
-
+      # clear the anchor references
+      @currentAnchor = undefined
+      @newAnchor = undefined
+       
       # do nothing else
       return
 
