@@ -328,7 +328,7 @@ class FeynmanCanvas
       else
         # register it with the undo stack
         new UndoEntry false ,
-          title: 'created a standalone branch'
+          title: 'created a standalone propagator'
           data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
           forwards: ->
             # ressurect the 2 anchors
