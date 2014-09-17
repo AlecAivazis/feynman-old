@@ -168,6 +168,20 @@ class FeynmanCanvas
       # do nothing else
       return
 
+    # if the user was holding the alt key
+    if event.altKey
+      # grab the created anchor
+      coords = @getMouseEventCoordinates(event)
+      # create the anchor at that location
+      @newAnchor = new Anchor(@paper, coords.x, coords.y)
+      # snap it to the grid and draw
+      @newAnchor.snapToGrid()
+      # create another anchor off of that one
+      @currentAnchor = @newAnchor.split(true)
+      # dont do anything else
+      # ie create a selection rectangle
+      return
+    
     # get the event coordinates
     coords = @getMouseEventCoordinates(event)
 
@@ -178,6 +192,7 @@ class FeynmanCanvas
 
     # add the rectangle to the diagram
     @addToDiagram @selectionRect_element
+
 
 
   # handle drags on the paper
@@ -204,8 +219,11 @@ class FeynmanCanvas
     dy = deltaY / @zoomLevel
     # if the user was holding the altKey
     if event.altKey
-
-      # don't do anything else
+      # get the event coordinates
+      coords = @getMouseEventCoordinates(event)
+      # move the created anchor
+      @currentAnchor.handleMove(coords.x, coords.y)
+      
       return
 
     # if there hasnt been a  selection rectangle drawn or the user is holding the alt key
@@ -272,15 +290,50 @@ class FeynmanCanvas
 
 
   # after the drag
-  dragEnd: =>
+  dragEnd: (event) =>
     # grab the selection    
     selected = Snap.selectAll('.selectedElement')
     # clear the selection rectangle
     @removeSelectionRect()
+
     # if i was holding the spacebar
     if @spacebarPressed
       # do nothing else
       return 
+
+    # if the user was holding the alt key
+    if event.altKey
+      # check for merges for the new 
+      merged = @currentAnchor.checkForMerges()
+      # if the newly created anchor was merged
+      if merged
+        console.log 'created reverse branch'
+      # otherwise the newly created anchor was not merged
+      else
+        console.log 'created standalone branch'
+        # register it with the undo stack
+        new UndoEntry false ,
+          title: 'created a standalone branch'
+          data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
+          forwards: ->
+            # ressurect the 2 anchors
+            @data[0].ressurect()
+            @data[1].ressurect()
+            # and then the line
+            @data[2].ressurect()
+            # draw the 2 anchors
+            @data[0].draw()
+            @data[1].draw()
+          backwards: ->
+            # remove everything
+            @data[2].remove()
+            @data[1].remove()
+            @data[0].remove()
+          
+
+      # do nothing else
+      return
+
     # if theres only one selected event
     if selected.length == 1
       # then select it
@@ -297,16 +350,7 @@ class FeynmanCanvas
     @removeSelectionRect()
     # and clear the selection
     $(document).trigger('clearSelection')
-    # if the user was holding the alt key
-    if event.altKey
-      console.log 'create new anchor'
-      # grab the created anchor
-      coords = @getMouseEventCoordinates(event)
-      # create the anchor at that location
-      @newAnchor = new Anchor(@paper, coords.x, coords.y)
-      # snap it to the grid and draw
-      @newAnchor.snapToGrid()
-
+  
 
   # compute the event coordinates bsaed on a mouse event
   getMouseEventCoordinates: (event) =>
