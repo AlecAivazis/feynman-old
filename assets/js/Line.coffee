@@ -653,6 +653,29 @@ class Line
 
   # return if the given coordiantes fall on the line joining the two anchors
   isLocationBetweenAnchors: (x, y) ->
+    # find the rectangle formed by the anchors as bounds
+    lowerx = 
+    upperx = 
+    lowery = 
+    uppery = 
+    if @anchor1.x > @anchor2.x
+      lowerx = @anchor2.x
+      upperx = @anchor1.x
+    else
+      lowerx = @anchor1.x
+      upperx = @anchor2.x
+    # same for y
+    if @anchor1.y > @anchor2.y
+      lowery = @anchor2.y
+      uppery = @anchor1.y
+    else
+      lowery = @anchor1.y
+      uppery = @anchor2.y
+
+    # check that the coordinates are within the bounds
+    if lowerx > x or upperx < x or lowery > y or upper y > y
+      return false
+
     # the line that joins the two anchors is defined as
     # y - y1 = m ( x - x1) where
     m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)

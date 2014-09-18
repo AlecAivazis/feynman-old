@@ -328,7 +328,7 @@ class FeynmanCanvas
       # otherwise the newly created anchor was not merged
       else
         # check if the anchor was created on a line
-        onLine =  @checkAnchorOnLine(@currentAnchor)
+        onLine =  @isAnchorOnLine(@currentAnchor)
         # if it was
         if onLine
           # split the line at the given point
@@ -378,31 +378,34 @@ class FeynmanCanvas
               # draw the other anchor to update the line
               @data.otherAnchor.draw()
 
-              #
-              
-              
-
-        # otherwise the anchor was not created on a line
+        # otherwise the new anchor was not created on a line
         else
-          # register it with the undo stack
-          new UndoEntry false ,
-            title: 'created a standalone propagator'
-            data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
-            forwards: ->
-              # ressurect the 2 anchors
-              @data[0].ressurect()
-              @data[1].ressurect()
-            # and then the line
-              @data[2].ressurect()
-              # draw the 2 anchors
-              @data[0].draw()
-              @data[1].draw()
-            backwards: ->
-              # remove everything
-              @data[2].remove()
-              @data[1].remove()
-              @data[0].remove()
-          
+          # grab the line that the initial anchor is on
+          onLine = @isAnchorOnLine(@newAnchor)
+          # if such a line exists
+          if onLine
+
+          # neither the initial or the other anchor are on a line
+          else 
+            # register it with the undo stack
+            new UndoEntry false ,
+              title: 'created a standalone propagator'
+              data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
+              forwards: ->
+                # ressurect the 2 anchors
+                @data[0].ressurect()
+                @data[1].ressurect()
+              # and then the line
+                @data[2].ressurect()
+                # draw the 2 anchors
+                @data[0].draw()
+                @data[1].draw()
+              backwards: ->
+                # remove everything
+                @data[2].remove()
+                @data[1].remove()
+                @data[0].remove()
+            
       # clear the anchor references
       @currentAnchor = undefined
       @newAnchor = undefined
@@ -430,7 +433,7 @@ class FeynmanCanvas
 
   # check if a particular anchor falls on any of the lines in the canvas
   # removing any of its children before calculating
-  checkAnchorOnLine: (anchor) =>
+  isAnchorOnLine: (anchor) =>
     # start with all of the papers lines
     lines = @paper.lines
     # and a false response
