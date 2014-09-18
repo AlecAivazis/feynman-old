@@ -11,6 +11,7 @@ class FeynmanCanvas
     @paper = Snap(selector)
     @diagramGroup = @paper.g().addClass('diagram')
     @paper.anchors = [] 
+    @paper.lines = [] 
     @zoomLevel = 1
 
     # default values
@@ -326,24 +327,81 @@ class FeynmanCanvas
 
       # otherwise the newly created anchor was not merged
       else
-        # register it with the undo stack
-        new UndoEntry false ,
-          title: 'created a standalone propagator'
-          data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
-          forwards: ->
-            # ressurect the 2 anchors
-            @data[0].ressurect()
-            @data[1].ressurect()
+        # check if the anchor was created on a line
+        onLine =  @checkAnchorOnLine(@currentAnchor)
+        # if it was
+        if onLine
+          # split the line at the given point
+          split =  onLine.split(@currentAnchor.x, @currentAnchor.y)
+          # merge the anchor with the one created with the split
+          splitAnchor = split.anchor.merge(@currentAnchor)
+          # save the line created during the split
+          splitLine = split.line
+          # save a reference to the other anchor
+          otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
+          # register the backwards split with the undo stack
+          new UndoEntry false, 
+            title: 'added branch to propagator'
+            data: 
+              originalLine: onLine
+              splitAnchor: splitAnchor
+              splitLine: splitLine
+              otherAnchor: otherAnchor
+              newLine: @newAnchor.lines[0]
+              newAnchor: @newAnchor
+            # forwards action is to recreate the branch
+            forwards: ->
+              # remove the original line from other anchor
+              @data.otherAnchor.removeLine @data.originalLine
+              # ressurect the split anchor
+              @data.splitAnchor.ressurect()
+              @data.splitLine.ressurect()
+              # replace otherAnch with split anch in the original line
+              @data.originalLine.replaceAnchor @data.otherAnchor, @data.splitAnchor
+              # ressurect the new anchor
+              @data.newAnchor.ressurect()
+              # and the new line
+              @data.newLine.ressurect()
+              # draw the anchors
+              @data.newAnchor.draw()
+              @data.splitAnchor.draw()
+            # backwards action is to remove the newly created line and anchor
+            backwards: ->
+              # replace the newly created anchor with the other one in the line
+              @data.originalLine.replaceAnchor @data.splitAnchor, otherAnchor
+              @data.otherAnchor.addLine @data.originalLine
+              # remove the elements created in the split
+              @data.splitAnchor.remove()
+              @data.splitLine.remove()
+              @data.newLine.remove()
+              @data.newAnchor.remove()
+              # draw the other anchor to update the line
+              @data.otherAnchor.draw()
+
+              #
+              
+              
+
+        # otherwise the anchor was not created on a line
+        else
+          # register it with the undo stack
+          new UndoEntry false ,
+            title: 'created a standalone propagator'
+            data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
+            forwards: ->
+              # ressurect the 2 anchors
+              @data[0].ressurect()
+              @data[1].ressurect()
             # and then the line
-            @data[2].ressurect()
-            # draw the 2 anchors
-            @data[0].draw()
-            @data[1].draw()
-          backwards: ->
-            # remove everything
-            @data[2].remove()
-            @data[1].remove()
-            @data[0].remove()
+              @data[2].ressurect()
+              # draw the 2 anchors
+              @data[0].draw()
+              @data[1].draw()
+            backwards: ->
+              # remove everything
+              @data[2].remove()
+              @data[1].remove()
+              @data[0].remove()
           
       # clear the anchor references
       @currentAnchor = undefined
@@ -368,7 +426,31 @@ class FeynmanCanvas
     @removeSelectionRect()
     # and clear the selection
     $(document).trigger('clearSelection')
-  
+
+
+  # check if a particular anchor falls on any of the lines in the canvas
+  # removing any of its children before calculating
+  checkAnchorOnLine: (anchor) =>
+    # start with all of the papers lines
+    lines = @paper.lines
+    # and a false response
+    targetLine = false
+
+    # go over all of anchors children
+    _.each anchor.lines, (line) ->
+      # remove the line from the local list
+      lines = _.without lines, line
+
+    # go over each line
+    _.each lines, (line) ->
+      # if the anchor falls on the line
+      if line.isLocationBetweenAnchors(anchor.x, anchor.y)
+        # the anchor is on line so give it to the caller
+        targetLine = line
+
+    # return what was found
+    return targetLine
+
 
   # compute the event coordinates bsaed on a mouse event
   getMouseEventCoordinates: (event) =>

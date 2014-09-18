@@ -333,6 +333,8 @@ class Anchor
     @remove()
     # update all of their lines
     other.draw()
+    # return the merged anchor
+    return other
 
 
   remove: =>

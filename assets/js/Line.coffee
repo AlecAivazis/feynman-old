@@ -9,6 +9,8 @@ class Line
   constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
     @anchor1.addLine this
     @anchor2.addLine this
+    # add this line to the papers list
+    @paper.lines.push this
 
     # default values
     @labelPosition = 'top'
@@ -35,6 +37,8 @@ class Line
     # remove both of the references
     @anchor1.removeLine this
     @anchor2.removeLine this
+    # remove this line from the paper's list
+    @paper.lines =  _.without @paper.lines, this
 
 
   # safely remove any elements on the DOM associated with this line
@@ -437,7 +441,6 @@ class Line
     else
       @removeArrow()
     
-
     # if this element was previously selected
     if @element and @element.hasClass('selectedElement')
       isSelected = true
@@ -537,8 +540,9 @@ class Line
       # grab the line before we merge
       newLine = @newAnchor.lines[0]
 
-      # check if the new anchor can be merged
+      # merge this anchor with 
       merged = @newAnchor.checkForMerges()
+      # check if the new anchor was merged
       if merged
         # we can figure out the split anchor
         splitAnch = if newLine == @newAnchor then newLine.anchor2 else newLine.anchor1
@@ -647,24 +651,40 @@ class Line
     @newAnchor = undefined
 
 
+  # return if the given coordiantes fall on the line joining the two anchors
+  isLocationBetweenAnchors: (x, y) ->
+    # the line that joins the two anchors is defined as
+    # y - y1 = m ( x - x1) where
+    m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
+    # therefore a point is on the line if
+    return y == m * (x - @anchor1.x) + @anchor1.y
+
+
   # create an anchor at the given coordinates and 
-  split: (x, y, createNode = false) =>
+  split: (x, y, createAttachedNode = false) =>
     # create the new elements
     anch = new Anchor(@paper, x, y)
-    # arbitrarily set my anchor1 so we need a line from anchor1 to the new anchor
-    l = new Line(@paper, anch, @anchor1)
-    # arbitrarily set my anchor1 to the new anchor
+    l = new Line(@paper, anch, @anchor1) # anchor1 is arbitrary
+    # remove this line from anchor1
     @anchor1.removeLine this
+    # draw the other anchor to get the new line
     @anchor1.draw()
+    # replace the other anchor with the newly created one
     @anchor1 = anch
+    # add this line to the new anchor
     anch.addLine this
     # redraw me and the new anchor
     anch.draw()
     @draw()
     # if they told us to create a node off of the new one
-    if createNode
+    if createAttachedNode
       # split the created node with a line between
       return anch.split(true)
+    # if they didn't tell use to create a new node
+    else
+      # return the newly created elements
+      anchor: anch
+      line: l
 
     
     
