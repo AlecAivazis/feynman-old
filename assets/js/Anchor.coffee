@@ -54,6 +54,11 @@ class Anchor
       # add the appropriate class
       @element.addClass('selectedElement')
 
+    # if we're supposed to hide the anchors
+    if $(document).attr('canvas').hideAnchors
+      # add the hidden class
+      @element.addClass('hidden')
+
     # set the drag handlers
     @element.drag @onMove, @dragStart, @dragEnd
 

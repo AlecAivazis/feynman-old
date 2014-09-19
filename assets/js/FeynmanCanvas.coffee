@@ -20,6 +20,7 @@ class FeynmanCanvas
     @minZoom = .5
     @maxZoom = 2
     @deltaZoom = .1
+    @hideAnchors = false
 
     # register the canvas on the document
     $(document).attr('canvas', this)

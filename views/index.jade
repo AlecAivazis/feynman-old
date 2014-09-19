@@ -61,12 +61,14 @@ block content
               td.label
                 | Grid Size:
               td.value
-                // span(ng-show="gridSize > 0")
-                // | {{gridSize}}
-                // span(ng-show="gridSize == 0")
-                // | none
                 slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" 
                        style="width: 70%")
+            tr
+              td.tool(colspan=2)
+                span.button(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
+                  | hide all anchors
+                span.button(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
+                  | show all anchors
 
       // WARNING: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}" style="margin-top: 10px")
