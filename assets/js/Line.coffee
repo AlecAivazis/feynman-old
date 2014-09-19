@@ -114,7 +114,7 @@ class Line
     angle = Math.atan(dy/dx) * 180/Math.PI 
 
     # check if we need to flip the arrow for consistency
-    if dx > 0 or dx == 0
+    if dx >= 0 
       # if we do then flip it
       angle += 180
 
