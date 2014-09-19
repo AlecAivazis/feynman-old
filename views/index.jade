@@ -187,6 +187,13 @@ block content
                        ng-model="labelDistance" )
             tr.property
               td.label
+                | label location:
+              td.value
+                | {{labelLocation}}
+                slider(floor="0" ceiling="1" step=".1" precision="1" style="width: 70%"
+                       ng-model="labelLocation" )
+            tr.property
+              td.label
                 | color:
               td.value
                 input(colorpicker="rgb" type="text" ng-model="color" name="color"

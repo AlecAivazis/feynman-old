@@ -83,7 +83,6 @@ class Anchor
 
       # check if the other anchor is within snap range
       if @snapRange * @snapRange > dx*dx + dy*dy
-        console.log 'snapping'
         # if it is then merge the two
         targetAnchor.merge compare
         # save the element we merged onto

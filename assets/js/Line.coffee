@@ -18,6 +18,7 @@ class Line
     @color = 'black'
     @loopDirection = 1
     @labelDistance = 30
+    @labelLocation = .5
     @drawArrow = false
     @drawEndCaps = false
     @flipArrow = false
@@ -146,8 +147,8 @@ class Line
     r = @labelDistance
       
     # calculate the midpoint
-    midx = (x1 + x2 ) / 2
-    midy = (y1 + y2 ) / 2
+    midx = x1 + @labelLocation * (x2 - x1)
+    midy = y1 + @labelLocation * (y2 - y1)
 
     # find the slope of the perpendicular line 
     # m' = -1/m

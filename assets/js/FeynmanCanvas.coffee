@@ -384,6 +384,8 @@ class FeynmanCanvas
           onLine = @isAnchorOnLine(@newAnchor)
           # if such a line exists
           if onLine
+            console.log 'you created an anchor that should snap to a line but was not created from one'
+            console.log 'should perform the snap and create the undo entry'
 
           # neither the initial or the other anchor are on a line
           else 

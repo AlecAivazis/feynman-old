@@ -23,6 +23,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
       when 'line'
         $scope.width = element.width
         $scope.labelDistance = element.labelDistance
+        $scope.labelLocation = element.labelLocation
       when 'anchor'
         $scope.radius = element.radius
     # load the type independent attributes
@@ -252,6 +253,11 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
   $scope.$watch 'labelDistance', (newVal, oldVal) ->
     if $scope.selectedElement and $scope.type == 'line'
       $scope.selectedElement.labelDistance = newVal
+      $scope.selectedElement.drawLabel()
+
+  $scope.$watch 'labelLocation', (newVal, oldVal) ->
+    if $scope.selectedElement and $scope.type == 'line'
+      $scope.selectedElement.labelLocation = parseFloat(newVal)
       $scope.selectedElement.drawLabel()
 
   $scope.$watch 'selectedElement.fixed', (newVal, oldVal) ->
