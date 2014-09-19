@@ -68,6 +68,9 @@ class Anchor
     @element.node.onclick = =>
       event.stopPropagation()
       $(document).trigger 'selectedElement', [this, 'anchor']
+      # draw the labels of the lines sincewe just selected an anchor
+      _.each @lines, (line) ->
+        line.drawLabel()
 
     # update the associated lines
     _.each @lines, (line) ->
@@ -267,10 +270,6 @@ class Anchor
       return
       
     # user is not holding alt
-    # go to each line
-    _.each @lines, (line) ->
-      # and tell it to hide its label
-      line.removeLabel()
     
     # if im currently selected and there's more than one
     if @element.hasClass('selectedElement') and Snap.selectAll('.selectedElement').length > 1
@@ -284,6 +283,7 @@ class Anchor
     else
       # so select it
       $(document).trigger 'selectedElement', [this, 'anchor']
+      
 
 
   onMove: (dx, dy, mouse_x, mouse_y, event) =>
@@ -295,6 +295,11 @@ class Anchor
         anchor.handleMove anchor.origin_x + dx, anchor.origin_y + dy
 
       return
+
+    # go to each line
+    _.each @lines, (line) ->
+      # and tell it to hide its label
+      line.removeLabel()
 
     # compute the new location
     x = @origin_x + dx
