@@ -112,15 +112,19 @@ class Line
     # figure out the angle that this line needs to take
     # compute the alignment angle in degrees
     angle = Math.atan(dy/dx) * 180/Math.PI 
+
     # check if we need to flip the arrow for consistency
-    if dx > 0
+    if dx > 0 or dx == 0
       # if we do then flip it
       angle += 180
+
     # add a little bit to accomodate the triangle's original orientation 
     angle += 90
+
     # check if they want the arrow flipped
     if @flipArrow 
       angle += 180
+
     # create a rotation matrix through that angle
     rotation = new Snap.Matrix().rotate(angle, midx, midy)
     # apply the transformation
