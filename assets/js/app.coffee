@@ -57,6 +57,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
     $scope.snapToGrid = canvas.snapToGrid
     $scope.showDiagramProperties = true
     $scope.hideAnchors = canvas.hideAnchors
+    $scope.hideGrid = canvas.hideGrid
     $rootScope.title = canvas.title
   
   # clear the selection
@@ -182,11 +183,15 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
       $(document).attr('canvas').draw()
 
   $scope.$watch 'hideAnchors', (newVal, oldVal) ->
-    # convert the string to a boolean by parsing it as json
     if $(document).attr 'canvas'
       $(document).attr('canvas').hideAnchors = newVal
       $(document).attr('canvas').draw()
     
+  $scope.$watch 'hideGrid', (newVal, oldVal) ->
+    if $(document).attr 'canvas'
+      $(document).attr('canvas').hideGrid = newVal
+      $(document).attr('canvas').draw()
+
   $scope.$watch 'color', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.color = newVal

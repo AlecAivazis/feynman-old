@@ -70,6 +70,13 @@ block content
                 span.button(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
                   | show all anchors
 
+            tr
+              td.tool(colspan=2)
+                span.button(ng-click="hideGrid = true" ng-show="hideGrid == false")
+                  | hide grid
+                span.button(ng-click="hideGrid = false" ng-show="hideGrid == true")
+                  | show grid
+
       // WARNING: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}" style="margin-top: 10px")
         table(width="100%")

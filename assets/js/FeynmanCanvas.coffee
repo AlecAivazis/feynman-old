@@ -21,6 +21,7 @@ class FeynmanCanvas
     @maxZoom = 2
     @deltaZoom = .1
     @hideAnchors = false
+    @hideGrid = false
 
     # register the canvas on the document
     $(document).attr('canvas', this)
@@ -87,7 +88,7 @@ class FeynmanCanvas
   drawGrid: () =>
 
     # hide the previous grid
-    @hideGrid()
+    @removeGrid()
     # create a group for the new grid
     grid = @paper.group().addClass('grid')
     # grab the current transformations of the diagram 
@@ -129,7 +130,7 @@ class FeynmanCanvas
     
 
   # remove the grid if it exists
-  hideGrid: () =>
+  removeGrid: () =>
     # look for the svg container of the grid
     grid = Snap.select('.grid')
     # if there is one
@@ -141,9 +142,9 @@ class FeynmanCanvas
   # refresh the pages representation on the DOM
   draw: () =>
     # if they are fixing the anchors to the grid
-    if @gridSize < 1
+    if @gridSize < 1 or @hideGrid
       # hide it
-      @hideGrid()
+      @removeGrid()
     # otherwise
     else
       # show them the grid
