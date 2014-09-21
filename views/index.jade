@@ -99,9 +99,10 @@ block content
               td.title
                 | {{event.title}}
   
+
       #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false" 
                        style="margin-top: 10px")
-        // anchor properties menu
+        // group of anchors properties menu
         table.propertiesMenu(ng-show="type == 'anchor'")
           thead
             tr.headerRow
@@ -132,6 +133,7 @@ block content
                 span.button(ng-click="alignGroup('horizontal')")
                   | horizontal
   
+      // selected element properties
       span(ng-hide="selectedElement == false")
         // anchor properties menu
         table.propertiesMenu(ng-show="type == 'anchor'" style="margin-top: 10px")
@@ -234,11 +236,6 @@ block content
               td.tool(colspan=2)
                 span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
                   | flip arrow direction
-            tr.property(ng-show="selectedElement.style == 'gluon'")
-              td.label
-                | draw end&nbsp;caps:
-              td.value
-                input(type="checkbox" ng-model="selectedElement.drawEndCaps")
             tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em'")
               td.label(ng-show="selectedElement.style == 'gluon'")
                 | loop direction:
@@ -250,6 +247,12 @@ block content
                 br
                 input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
                 | down
+            tr.property(ng-show="selectedElement.style == 'gluon'")
+              td.label
+                | draw end&nbsp;caps:
+              td.value
+                input(type="checkbox" ng-model="selectedElement.drawEndCaps")
+           
             tr
               td.tool(colspan=2)
                 span.button(ng-click="deleteSelectedElement('line')")

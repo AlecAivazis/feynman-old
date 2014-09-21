@@ -22,6 +22,7 @@ class Line
     @drawArrow = false
     @drawEndCaps = false
     @flipArrow = false
+    @snapRange = 5
 
 
   # bring this element from the graveyard (undo  delete)
@@ -685,8 +686,13 @@ class Line
     # the line that joins the two anchors is defined as
     # y - y1 = m ( x - x1) where
     m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
-    # therefore a point is on the line if
-    return y == m * (x - @anchor1.x) + @anchor1.y
+
+    # according to wikipedia 'Distance from a point to a line'
+    # the distance from a point to a line is given by
+    distance = Math.abs(m * x - y + m * @anchor1.x - @anchor1.y) / Math.sqrt(m*m + 1)
+
+    # therefore a point is considered on the line if the distance is less than snapRange
+    return distance <= @snapRange
 
 
   # create an anchor at the given coordinates and 
