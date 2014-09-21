@@ -386,6 +386,17 @@ class FeynmanCanvas
           onLine = @isAnchorOnLine(@newAnchor)
           # if such a line exists
           if onLine
+            # then the user created an anchor that is close enough to snap to a line
+            # split the line
+            split = onLine.split(@newAnchor.x, @newAnchor.y)
+            # merge the new anchor with the one created during the split
+            splitAnch = @newAnchor.merge(split.anchor)
+            # register it with the undo stack
+            new UndoEntry false,
+              title:  'added a branch to propagator'
+              data:
+                originalLine: onLine
+                splitAnch: @newAnchor
             console.log 'you created an anchor that should snap to a line but was not created from one'
             console.log 'should perform the snap and create the undo entry'
 

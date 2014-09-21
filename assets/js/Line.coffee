@@ -697,8 +697,14 @@ class Line
 
   # create an anchor at the given coordinates and 
   split: (x, y, createAttachedNode = false) =>
+
+    # find the closest point on the line to the requested point
+    m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
+    anchorX = ( m * y + x - m* (m* @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
+    anchorY = ( m * ( x + m * y ) + (m* @anchor1.x - @anchor1.y) ) / (m*m + 1)
+    
     # create the new elements
-    anch = new Anchor(@paper, x, y)
+    anch = new Anchor(@paper, anchorX, anchorY)
     l = new Line(@paper, anch, @anchor1) # anchor1 is arbitrary
     # remove this line from anchor1
     @anchor1.removeLine this

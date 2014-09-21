@@ -61,7 +61,7 @@ class Anchor
 
     # set the drag handlers
     @element.drag @onMove, @dragStart, @dragEnd
-
+    # add the element to the diagram group
     $(document).attr('canvas').addToDiagram @element
 
     # when you click on the circle
