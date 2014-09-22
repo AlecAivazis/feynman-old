@@ -162,6 +162,7 @@ class Anchor
 
             # move the anchor back to its original place (ignoring the grid)
             @data[0].handleMove(@data[3], @data[4], false)
+      @newAnchor = undefined
       return
 
     # if i am supposed to be a new anchor
@@ -228,6 +229,9 @@ class Anchor
     # grab the selected elements  
     selected = Snap.selectAll('.selectedElement')
 
+    @newAnchor = undefined
+
+
     # make sure there is an element selected
     if selected.length == 0
       return
@@ -284,8 +288,6 @@ class Anchor
         backwards: ->
           _.each @data[0], (element) ->
             element.anchor.handleMove element.origin_x, element.origin_y
-
-    @newAnchor = undefined
 
     # draw any labels that need to be
     _.each _.compact(@lines), (line)->
