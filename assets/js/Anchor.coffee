@@ -72,7 +72,7 @@ class Anchor
       _.each @lines, (line) ->
         line.drawLabel()
 
-    # update the associated lines
+    # update the associated lines before drawing the circle
     _.each @lines, (line) ->
       line.draw()
 
@@ -203,7 +203,6 @@ class Anchor
             @data.splitAnchor.remove()
             @data.splitLine.remove()
             @data.otherAnchor.draw()
-            
 
       # otherwise this anchor was not created onto a line
       else

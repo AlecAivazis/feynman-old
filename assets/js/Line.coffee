@@ -25,6 +25,24 @@ class Line
     @snapRange = 5
 
 
+  # clone the anchor's settings to a new line attached to the given anchors
+  clone: (anchor1, anchor2) =>
+    line = new Line(@paper, anchor1, anchor2, @style)
+    # set the values for tgghge clone
+    line.labelPosition = @labelPosition
+    line.width = @width
+    line.color = @color
+    line.loopDirection = if @style == 'gluon' then 0 - @loopDirection else @loopDirection
+    line.labelDistance = @labelDistance
+    line.labelLocation = @labelLocation
+    line.drawArrow = @drawArrow
+    line.drawEndCaps = @drawEndCaps
+    line.flipArrow = @flipArrow
+    line.snapRanhge = @snapRange
+    # return the clone
+    return line
+
+
   # bring this element from the graveyard (undo  delete)
   ressurect: =>
     @anchor1.addLine this
@@ -689,7 +707,8 @@ class Line
     
     # create the new elements
     anch = new Anchor(@paper, anchorX, anchorY)
-    l = new Line(@paper, anch, @anchor1) # anchor1 is arbitrary
+    # l = new Line(@paper, anch, @anchor1) # anchor1 is arbitrary
+    l = @clone(anch, @anchor1) # anchor1 is arbitrary
     # remove this line from anchor1
     @anchor1.removeLine this
     # draw the other anchor to get the new line
