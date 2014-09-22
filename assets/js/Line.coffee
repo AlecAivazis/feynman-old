@@ -27,12 +27,12 @@ class Line
 
   # clone the anchor's settings to a new line attached to the given anchors
   clone: (anchor1, anchor2) =>
-    line = new Line(@paper, anchor1, anchor2, @style)
+    line = new Line(@paper, anchor2, anchor1, @style)
     # set the values for tgghge clone
     line.labelPosition = @labelPosition
     line.width = @width
     line.color = @color
-    line.loopDirection = if @style == 'gluon' then 0 - @loopDirection else @loopDirection
+    line.loopDirection = @loopDirection
     line.labelDistance = @labelDistance
     line.labelLocation = @labelLocation
     line.drawArrow = @drawArrow
