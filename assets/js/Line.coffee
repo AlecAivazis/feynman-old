@@ -659,39 +659,23 @@ class Line
 
   # return if the given coordiantes fall on the line joining the two anchors
   isLocationBetweenAnchors: (x, y) ->
-    # instantiate the local variables needed to compute the rectangle
-    lowerx = 0
-    upperx = 0
-    lowery = 0
-    uppery = 0
-    # find the rectangle formed by the anchors as bounds
-    if @anchor1.x > @anchor2.x
-      lowerx = @anchor2.x
-      upperx = @anchor1.x
-    else
-      lowerx = @anchor1.x
-      upperx = @anchor2.x
-    # same for y
-    if @anchor1.y > @anchor2.y
-      lowery = @anchor2.y
-      uppery = @anchor1.y
-    else
-      lowery = @anchor1.y
-      uppery = @anchor2.y
+    # compute the bounds of the rectangle
+    lowerx = if @anchor1.x > @anchor2.x then @anchor2.x else @anchor1.x
+    upperx = if @anchor1.x > @anchor2.x then @anchor1.x else @anchor2.x
+    lowery = if @anchor1.y > @anchor2.y then @anchor2.y else @anchor1.y
+    uppery = if @anchor1.y > @anchor2.y then @anchor1.y else @anchor2.y
 
     # check that the coordinates are within the bounds
     if x < lowerx or x > upperx or y < lowery or y > uppery 
       return false
 
-    # the line that joins the two anchors is defined as
-    # y - y1 = m ( x - x1) where
+    # compute the slope of the line
     m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
 
-    # according to wikipedia 'Distance from a point to a line'
     # the distance from a point to a line is given by
     distance = Math.abs(m * x - y - m * @anchor1.x + @anchor1.y) / Math.sqrt(m*m + 1)
 
-    # therefore a point is considered on the line if the distance is less than snapRange
+    # a point should be considered on the line if the distance is less than snapRange
     return distance <= @snapRange
 
 

@@ -242,18 +242,61 @@ class Anchor
       # check that we actually moved it
       if @x == @origin_x and @y == @origin_y
         return
+
+      # check if the anchor was moved onto a line
+      onLine = $(document).attr('canvas').isAnchorOnLine(this)
+      if onLine
+        console.log 'moved the anchor onto a line'
+
+        split = onLine.split(@x, @y)
+        # merge the split anchor with this one
+        split.anchor.merge(this)
+        splitLine = split.line
+        otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
+
+        new UndoEntry false,
+          title: 'merged anchor with propagator'
+          data:
+            anchor: this
+            originalLine: onLine
+            splitLine: splitLine
+            otherAnchor: otherAnchor
+            splitAnchor: split.anchor
+            coords:
+              x: @x
+              y: @y
+            origin:
+              x: @origin_x
+              y: @origin_y
+          forwards: ->
+            console.log 'forward'
+            @data.originalLine.replaceAnchor @data.otherAnchor, @data.anchor
+            @data.splitLine.ressurect()
+            @data.anchor.addLine @data.originalLine
+            @data.anchor.handleMove(@data.coords.x, @data.coords.y)
+          backwards: ->
+            console.log 'backwards'
+            @data.originalLine.replaceAnchor @data.anchor, @data.otherAnchor
+            @data.anchor.removeLine @data.splitLine
+            @data.anchor.removeLine @data.originalLine
+            @data.splitLine.remove()
+            @data.anchor.handleMove(@data.origin.x, @data.origin.y)
+            @data.otherAnchor.addLine @data.originalLine
+            @data.otherAnchor.draw()
         
-      # register the move with the undo stack but do not waste the time performing it again
-      new UndoEntry false,
-        title: 'moved vertex to ' + @x + ', ' + @y 
-        data: [@paper, targetAnchor, targetAnchor.x, targetAnchor.y,
-                                     targetAnchor.origin_x, targetAnchor.origin_y]
-        # the forward action is to move to the current location
-        forwards: ->
-          @data[1].handleMove(@data[2], @data[3], false)
-        # the backwards action is to move to the origin as defined when the drag started
-        backwards: ->
-          @data[1].handleMove(@data[4], @data[5], false)
+      # otherwise the moved anchor was not on a line
+      else
+        # register the move with the undo stack but do not waste the time performing it again
+        new UndoEntry false,
+          title: 'moved vertex to ' + @x + ', ' + @y 
+          data: [@paper, targetAnchor, targetAnchor.x, targetAnchor.y,
+                         targetAnchor.origin_x, targetAnchor.origin_y]
+          # the forward action is to move to the current location
+          forwards: ->
+            @data[1].handleMove(@data[2], @data[3], false)
+          # the backwards action is to move to the origin as defined when the drag started
+          backwards: ->
+            @data[1].handleMove(@data[4], @data[5], false)
         
     # there is more than one selected element
     else
@@ -325,7 +368,6 @@ class Anchor
     else
       # so select it
       $(document).trigger 'selectedElement', [this, 'anchor']
-      
 
 
   dragMove: (dx, dy, mouse_x, mouse_y, event) =>
@@ -335,7 +377,7 @@ class Anchor
       _.each Snap.selectAll('.selectedElement'), (element) ->
         anchor = element.anchor
         anchor.handleMove anchor.origin_x + dx, anchor.origin_y + dy
-
+      # we're done here
       return
 
     # go to each line
