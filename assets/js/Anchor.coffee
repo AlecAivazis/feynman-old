@@ -60,7 +60,7 @@ class Anchor
       @element.addClass('hidden')
 
     # set the drag handlers
-    @element.drag @onMove, @dragStart, @dragEnd
+    @element.drag @dragMove, @dragStart, @dragEnd
     # add the element to the diagram group
     $(document).attr('canvas').addToDiagram @element
 
@@ -166,25 +166,65 @@ class Anchor
 
     # if i am supposed to be a new anchor
     if @newAnchor == targetAnchor
-      # add the entry in the undo stack
-      new UndoEntry false,
-        title: 'created vertex at ' + targetAnchor.x + ',' +  targetAnchor.y
-        data: [@paper, this, targetAnchor, lines[0]]
-        forwards: ->
-          # resurrect the anchor
-          @data[2].ressurect()
-          # resurrect the line
-          @data[3].ressurect()
-          # draw the anchor/line
-          @data[2].draw()
-          @data[3].draw()
-        # backwards action is to remove the anchor and the line
-        backwards: ->
-          # remove the anchor
-          @data[2].remove()
-          # remove the line
-          @data[3].remove()
+      # check if there is a line under this anchor
+      onLine = $(document).attr('canvas').isAnchorOnLine(@newAnchor)
+      # if such a line exists
+      if onLine
+        # save a reference to the joining line for the new anchor
+        newLine = @newAnchor.lines[0]
+        # split that line at the location
+        split = onLine.split(@newAnchor.x, @newAnchor.y)
+        # and merge the new anchor with the one created
+        splitAnchor = @newAnchor.merge(split.anchor)
+        splitLine = split.line
+        # save a reference to the other anchor
+        otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
+        # register the line creation and split with the undo stack
+        new UndoEntry false,
+          title: 'added internal propgator as a branch'
+          data:
+            originalLine: onLine
+            splitAnchor: splitAnchor
+            splitLine: splitLine
+            otherAnchor: otherAnchor
+            newLine: newLine
+          forwards: ->
+            @data.otherAnchor.removeLine @data.originalLine
+            @data.originalLine.replaceAnchor @data.otherAnchor, @data.splitAnchor
+            @data.splitAnchor.ressurect()
+            @data.splitLine.ressurect()
+            @data.newLine.ressurect()
+            @data.splitAnchor.draw()
+          backwards: ->
+            @data.newLine.remove()
+            @data.originalLine.replaceAnchor @data.splitAnchor, @data.otherAnchor
+            @data.otherAnchor.addLine @data.originalLine
+            @data.splitAnchor.remove()
+            @data.splitLine.remove()
+            @data.otherAnchor.draw()
+            
 
+      # otherwise this anchor was not created onto a line
+      else
+        # add the entry in the undo stack
+        new UndoEntry false,
+          title: 'created vertex at ' + targetAnchor.x + ',' +  targetAnchor.y
+          data: [@paper, this, targetAnchor, lines[0]]
+          forwards: ->
+            # resurrect the anchor
+            @data[2].ressurect()
+            # resurrect the line
+            @data[3].ressurect()
+            # draw the anchor/line
+            @data[2].draw()
+            @data[3].draw()
+          # backwards action is to remove the anchor and the line
+          backwards: ->
+            # remove the anchor
+            @data[2].remove()
+            # remove the line
+            @data[3].remove()
+  
     # grab the selected elements  
     selected = Snap.selectAll('.selectedElement')
 
@@ -286,7 +326,7 @@ class Anchor
       
 
 
-  onMove: (dx, dy, mouse_x, mouse_y, event) =>
+  dragMove: (dx, dy, mouse_x, mouse_y, event) =>
     event.stopPropagation()
     # check for the flag set on drag start  
     if @moveAsGroup

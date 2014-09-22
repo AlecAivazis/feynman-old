@@ -689,7 +689,7 @@ class Line
 
     # according to wikipedia 'Distance from a point to a line'
     # the distance from a point to a line is given by
-    distance = Math.abs(m * x - y + m * @anchor1.x - @anchor1.y) / Math.sqrt(m*m + 1)
+    distance = Math.abs(m * x - y - m * @anchor1.x + @anchor1.y) / Math.sqrt(m*m + 1)
 
     # therefore a point is considered on the line if the distance is less than snapRange
     return distance <= @snapRange
@@ -700,8 +700,8 @@ class Line
 
     # find the closest point on the line to the requested point
     m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
-    anchorX = ( m * y + x - m* (m* @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
-    anchorY = ( m * ( x + m * y ) + (m* @anchor1.x - @anchor1.y) ) / (m*m + 1)
+    anchorX = ( m * y + x + m* (m* @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
+    anchorY = ( m * ( x + m * y ) - (m* @anchor1.x - @anchor1.y) ) / (m*m + 1)
     
     # create the new elements
     anch = new Anchor(@paper, anchorX, anchorY)
