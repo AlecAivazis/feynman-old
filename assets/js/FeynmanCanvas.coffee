@@ -391,14 +391,43 @@ class FeynmanCanvas
             split = onLine.split(@newAnchor.x, @newAnchor.y)
             # merge the new anchor with the one created during the split
             splitAnch = @newAnchor.merge(split.anchor)
+            splitLine = split.line
+            # save a reference to the other anchor
+            otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
             # register it with the undo stack
             new UndoEntry false,
               title:  'added a branch to propagator'
               data:
                 originalLine: onLine
-                splitAnch: @newAnchor
-            console.log 'you created an anchor that should snap to a line but was not created from one'
-            console.log 'should perform the snap and create the undo entry'
+                splitAnchor: splitAnch
+                otherLine: splitLine
+                otherAnchor: otherAnchor
+                newLine: @currentAnchor.lines[0]
+                newAnchor: @currentAnchor
+              forwards: ->
+                # remove the original line from other anchor
+                @data.otherAnchor.removeLine @data.originalLine
+                # ressurect the split anchor
+                @data.splitAnchor.ressurect()
+                @data.otherLine.ressurect()
+                # replace otherAnch with split anch in the original line
+                @data.originalLine.replaceAnchor @data.otherAnchor, @data.splitAnchor
+                # ressurect the new anchor
+                @data.newAnchor.ressurect()
+                # and the new line
+                @data.newLine.ressurect()
+                # draw the anchors
+                @data.newAnchor.draw()
+                @data.splitAnchor.draw()
+              backwards: ->
+                @data.newAnchor.remove()
+                @data.newLine.remove()
+                @data.otherLine.remove()
+                @data.splitAnchor.remove()
+                @data.otherAnchor.removeLine @data.otherLine
+                @data.originalLine.replaceAnchor @data.splitAnchor, @data.otherAnchor
+                @data.otherAnchor.addLine @data.originalLine
+                @data.otherAnchor.draw()
 
           # neither the initial or the other anchor are on a line
           else 
