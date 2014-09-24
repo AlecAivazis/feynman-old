@@ -10,7 +10,7 @@ bzr="/usr/bin/bzr"
 
 # pull config
 echo pulling
-${bzr} pull
+${bzr} pull bzr+ssh://feynman/
 echo done
 
 # end of file
