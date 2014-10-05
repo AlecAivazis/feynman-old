@@ -428,6 +428,12 @@ class Line
 
     # draw the straight line
     group.add(@drawAsLine())
+
+
+  drawAsSfermion: =>
+    # a sfermion is an em propagator superimposed on a straight line
+     @paper.group(@drawAsEW(), @drawAsLine())
+
     
   drawAsEW: =>
     # the width of the pattern
@@ -497,6 +503,8 @@ class Line
         @element = @drawAsGluino()
       when "em"
         @element = @drawAsEW()
+      when "sfermion"
+        @element = @drawAsSfermion()
 
     # apply the correct styling
     @element.attr
