@@ -414,6 +414,20 @@ class Line
     # align along the line created by the anchors and return it
     @align(element, chainLength)
 
+
+  drawAsGluino: =>
+    # a gluino line is made up of a super imposed gluon and straight line
+    # create the compound element as an svg group
+    group = @paper.group()
+
+    # draw the gluon element
+    if @drawEndCaps
+      group.add(@drawAsGluonWithEndCaps())
+    else
+      group.add(@drawAsGluon())
+
+    # draw the straight line
+    group.add(@drawAsLine())
     
   drawAsEW: =>
     # the width of the pattern
@@ -471,7 +485,7 @@ class Line
 
     # clear any previous DOM elements
     @hide()
-    # what is drawn changes on the style
+    # what is drawn changes on the style attribute
     switch @style
       when "line"
         @element = @drawAsLine()
@@ -479,6 +493,8 @@ class Line
         @element = @drawAsDashedLine()
       when "gluon"
         @element = if @drawEndCaps then @drawAsGluonWithEndCaps() else @drawAsGluon()
+      when "gluino"
+        @element = @drawAsGluino()
       when "em"
         @element = @drawAsEW()
 

@@ -227,6 +227,10 @@ block content
                     | gluon
                   option(value = 'em')
                     | em
+                  option(value = 'gluino')
+                    | gluino
+                  option(value = 'sfermion')
+                    | sfermion
             tr.property(ng-show="selectedElement.style == 'line'")
               td.label
                 | show arrow
@@ -236,10 +240,10 @@ block content
               td.tool(colspan=2)
                 span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
                   | flip arrow direction
-            tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em'")
-              td.label(ng-show="selectedElement.style == 'gluon'")
+            tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
+              td.label(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
                 | loop direction:
-              td.label(ng-show="selectedElement.style == 'em'")
+              td.label(ng-show="selectedElement.style == 'em' || selectedElement.style == 'sfermion'")
                 | amplitude direction:
               td.value
                 input(type="radio" ng-model="selectedElement.loopDirection" value="1")
@@ -247,7 +251,7 @@ block content
                 br
                 input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
                 | down
-            tr.property(ng-show="selectedElement.style == 'gluon'")
+            tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
               td.label
                 | draw end&nbsp;caps:
               td.value
