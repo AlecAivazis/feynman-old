@@ -20,7 +20,7 @@ class Line
     @labelDistance = 30
     @labelLocation = .5
     @drawArrow = false
-    @drawEndCaps = false
+    @drawEndCaps = true
     @flipArrow = false
     @snapRange = 5
 
