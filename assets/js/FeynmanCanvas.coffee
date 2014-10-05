@@ -39,7 +39,6 @@ class FeynmanCanvas
     $(window).keydown (evt) =>
       # if its spacebar 
       if evt.which == 32
-        evt.preventDefault()
         # set the state variable
         @spacebarPressed = true
     # whever they release a button
