@@ -245,7 +245,6 @@ class Anchor
       # check if the anchor was moved onto a line
       onLine = $(document).attr('canvas').isAnchorOnLine(this)
       if onLine
-        console.log 'moved the anchor onto a line'
 
         split = onLine.split(@x, @y)
         # merge the split anchor with this one
@@ -268,13 +267,11 @@ class Anchor
               x: @origin_x
               y: @origin_y
           forwards: ->
-            console.log 'forward'
             @data.originalLine.replaceAnchor @data.otherAnchor, @data.anchor
             @data.splitLine.ressurect()
             @data.anchor.addLine @data.originalLine
             @data.anchor.handleMove(@data.coords.x, @data.coords.y)
           backwards: ->
-            console.log 'backwards'
             @data.originalLine.replaceAnchor @data.anchor, @data.otherAnchor
             @data.anchor.removeLine @data.splitLine
             @data.anchor.removeLine @data.originalLine

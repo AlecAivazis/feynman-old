@@ -322,9 +322,6 @@ class Line
     # the height of the pattern
     amplitude = if dx < 0 then scale else - scale
 
-    console.log amplitude
-
-
     # find the closest whole number of full periods
     loops = Math.round(length / scale / 2) 
     # compute the length of the chain
