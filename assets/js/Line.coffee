@@ -13,7 +13,6 @@ class Line
     @paper.lines.push this
 
     # default values
-    @labelPosition = 'top'
     @width = 2
     @color = 'black'
     @loopDirection = 1
@@ -161,6 +160,60 @@ class Line
       # do nothing
       return
 
+    labelCoords = @getLabelCoordinates()
+
+    # create the label at the appropriate location
+    @createLabel(labelCoords.x, labelCoords.y)
+
+
+  # render the label in and add it in the right place
+  createLabel: (x, y) =>
+    # remove the previous label
+    @removeLabel()
+    # if there is a label for this line
+    if @label
+      # create the element
+      @labelElement = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
+      # add it to the diagram
+      $(document).attr('canvas').addToDiagram @labelElement
+
+      @labelElement.drag @labelDrag, @labelDragStart
+
+
+  # prevent the drag event from propagating
+  labelDragStart: (x , y, event) =>
+    # prevent the drag event from propagating
+    event.stopPropagation()
+    # get the coordinsteas for the label
+    @labelOrigin = @getLabelCoordinates()
+      
+
+
+  # move the label as you drag it around
+  labelDrag: (deltaX, deltaY, x, y, event) =>
+    event.stopPropagation()
+
+    labelCoords =
+      x: @labelOrigin.x + deltaX
+      y: @labelOrigin.y + deltaY
+
+    # compute the distance between the label and first anchor
+    dx = labelCoords.x - @anchor1.x
+    dy = labelCoords.y - @anchor1.y
+    r = Math.sqrt(dx*dx + dy*dy)
+    # compute the angle formed by the lengths
+    theta =  - Math.atan2(dy, dx) 
+
+    # set the label distance attributes
+    @labelDistance = r * Math.sin(theta)
+    @labelLocation = r * Math.cos(theta) / (@anchor2.x - @anchor1.x)
+
+    # redraw the label at the new location
+    @createLabel(labelCoords.x, labelCoords.y)
+
+
+  # get the coordinates for the label
+  getLabelCoordinates: =>
     x1 = @anchor1.x
     y1 = @anchor1.y 
     x2 = @anchor2.x
@@ -187,41 +240,20 @@ class Line
     # add these values to the mid point for the appropriate center of the label
     # CAREFUL: these signs take into account the possible minus sign from midx/y calculation
     if m > 0
-      if @labelPosition == 'top'
-        labelx = midx - x
-        labely = midy - y
-      else
-        labelx = midx + x
-        labely = midy + y
+      labelx = if r > 0 then midx - x else midx + x
+      labely = if r > 0 then midy - y else midy + y
     if m < 0
-      if @labelPosition == 'top'
-        labelx = midx + x
-        labely = midy + y
-      else
-        labelx = midx - x
-        labely = midy - y
+      labelx = if r > 0 then midx + x else midx - x
+      labely = if r > 0 then midy + y else midy - y
+
 
     # if we hit an infinity in y
     if isNaN(labely)
-      if @labelPosition == 'top'
         labely = midy - r
-      else
-        labely = midy + r
 
-    # create the label at the appropriate location
-    @createLabel(labelx, labely)
-
-
-  # render the label in and add it in the right place
-  createLabel: (x, y) =>
-    # remove the previous label
-    @removeLabel()
-    # if there is a label for this line
-    if @label
-      # create the element
-      @labelElement = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
-      # add it to the diagram
-      $(document).attr('canvas').addToDiagram @labelElement
+    coords = 
+      x: labelx
+      y: labely
 
 
   # align an element along the line connecting the two anchors

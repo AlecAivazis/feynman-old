@@ -180,29 +180,6 @@ block content
                 input(type="text" ng-model="selectedElement.label" name="label")
             tr.property
               td.label
-                | label position:
-              td.value
-                input(type="radio" ng-model="selectedElement.labelPosition" value="top")
-                |  above
-                br
-                input(type="radio" ng-model="selectedElement.labelPosition" value="bottom")
-                |  below
-            tr.property
-              td.label
-                | label distance:
-              td.value
-                | {{labelDistance}}
-                slider(floor="10" ceiling="50" step="2" precision="1" style="width: 70%"
-                       ng-model="labelDistance" )
-            tr.property
-              td.label
-                | label location:
-              td.value
-                | {{labelLocation}}
-                slider(floor="0" ceiling="1" step=".1" precision="1" style="width: 70%"
-                       ng-model="labelLocation" )
-            tr.property
-              td.label
                 | color:
               td.value
                 input(colorpicker="rgb" type="text" ng-model="color" name="color"
