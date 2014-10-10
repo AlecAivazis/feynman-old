@@ -390,7 +390,7 @@ class Line
     # the width of the pattern
     scale = 10
     # keep the loops facing the right direction
-    amplitude = if dx < 0 then scale else - scale
+    amplitude = if dx <= 0 then scale else - scale
 
 
     # find the closest whole number of full periods
