@@ -204,8 +204,6 @@ class Line
     # compute the angle formed by the lengths
     theta =  -( Math.atan2(dy, dx) - Math.atan((@anchor1.y - @anchor2.y )/ (@anchor1.x - @anchor2.x) ))
 
-    console.log theta
-
     # set the label distance attributes
     @labelDistance = r * Math.sin(theta)
     @labelLocation = r * Math.cos(theta) / (@anchor2.x - @anchor1.x)
@@ -241,13 +239,12 @@ class Line
 
     # add these values to the mid point for the appropriate center of the label
     # CAREFUL: these signs take into account the possible minus sign from midx/y calculation
-    if m > 0
+    if m >= 0
       labelx = if r > 0 then midx - x else midx + x
       labely = if r > 0 then midy - y else midy + y
     if m < 0
       labelx = if r > 0 then midx + x else midx - x
       labely = if r > 0 then midy + y else midy - y
-
 
     # if we hit an infinity in y
     if isNaN(labely)
