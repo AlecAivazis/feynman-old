@@ -307,11 +307,6 @@ class Line
 
 
   drawAsGluon: =>
-    # the width of the pattern
-    scale = 10
-    # the height of the pattern
-    amplitude = scale
-
     # the coordinates of the anchors
     x1 = @anchor1.x
     y1 = @anchor1.y 
@@ -321,6 +316,14 @@ class Line
     dx = x1 - x2
     dy = y1 - y2
     length = Math.sqrt(dx*dx + dy*dy)
+
+    # the width of the pattern
+    scale = 10
+    # the height of the pattern
+    amplitude = if dx < 0 then scale else - scale
+
+    console.log amplitude
+
 
     # find the closest whole number of full periods
     loops = Math.round(length / scale / 2) 
@@ -373,20 +376,22 @@ class Line
 
 
   drawAsGluonWithEndCaps: =>
-    # the width of the pattern
-    scale = 10
-    # the height of the pattern
-    amplitude = scale
-
     # the coordinates of the anchors
     x1 = @anchor1.x
     y1 = @anchor1.y 
     x2 = @anchor2.x
     y2 = @anchor2.y 
+
     # compute the length of the line
     dx = x1 - x2
     dy = y1 - y2
     length = Math.sqrt(dx*dx + dy*dy)
+
+    # the width of the pattern
+    scale = 10
+    # keep the loops facing the right direction
+    amplitude = if dx < 0 then scale else - scale
+
 
     # find the closest whole number of full periods
     loops = Math.round(length / scale / 2) - 1
