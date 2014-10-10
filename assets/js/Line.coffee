@@ -202,7 +202,9 @@ class Line
     dy = labelCoords.y - @anchor1.y
     r = Math.sqrt(dx*dx + dy*dy)
     # compute the angle formed by the lengths
-    theta =  - Math.atan2(dy, dx) 
+    theta =  -( Math.atan2(dy, dx) - Math.atan((@anchor1.y - @anchor2.y )/ (@anchor1.x - @anchor2.x) ))
+
+    console.log theta
 
     # set the label distance attributes
     @labelDistance = r * Math.sin(theta)
