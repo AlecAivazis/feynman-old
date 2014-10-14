@@ -29,8 +29,26 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # load the type independent attributes
     $scope.color = element.color
     $scope.selectedElement = element
-    # apply the change since this is technically done in the jquery environment
+
+    # apply the change in angular since this is done in the jquery environment
     $scope.$apply()
+
+    # compute the coordinates of the event to place the tooltip
+    x = $('#sidebar').width()
+    y = 0
+    switch type
+      when 'line'
+        x += (element.anchor1.x + element.anchor2.x ) / 2
+        y = (element.anchor1.y + element.anchor2.y ) / 2
+      when 'anchor'
+        x += element.x
+        y = element.y
+
+    # set the off set to position the tooltip
+    $("#tooltip").offset
+      top: y+5
+      left: x - $('#tooltip').width()/2
+
 
   # add event handler for group selection
   $(document).on 'selectedGroup', (event, elements, type) ->
