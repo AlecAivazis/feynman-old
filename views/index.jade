@@ -111,10 +111,6 @@ block content
         span(ng-hide="selectedElement == false")
           // anchor properties menu
           table.propertiesMenu(ng-show="type == 'anchor'" style="margin-top: 10px")
-            thead
-              tr.headerRow
-                th(colspan=2)
-                  | Properties for selected anchor
             tbody
               tr.property
                 td.label
@@ -142,10 +138,6 @@ block content
     
           // line properties menu
           table.propertiesMenu(ng-show="type == 'line'" style="margin-top: 10px")
-            thead
-              tr.headerRow
-                th(colspan=2)
-                  | Properties for selected line
             tbody
               tr.property
                 td.label
@@ -160,14 +152,14 @@ block content
                     style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
               tr.property
                 td.label
-                  | stroke width:
+                  | width:
                 td.value
-                  | {{selectedElement.width}}
                   slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
-                         style="width: 70%")
+                         style="width: 75%")
+                  | &nbsp; {{selectedElement.width}}
                 tr.property
                 td.label
-                  | line style:
+                  | style:
                 td.value
                   select(ng-model="selectedElement.style")
                     option(value = 'line')
@@ -184,22 +176,26 @@ block content
                       | sfermion
               tr.property(ng-show="selectedElement.style == 'line'")
                 td.label
-                  | show arrow
+                  | arrow:
                 td.value
-                  input(type="checkbox" ng-model="selectedElement.drawArrow")
-              tr(ng-show="selectedElement.style == 'line'")
-                td.tool(colspan=2)
-                  span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
-                    | flip arrow direction
+                  span.button(ng-click="selectedElement.drawArrow = true" 
+                              ng-show="selectedElement.drawArrow == false")
+                    | show
+                  span.button(ng-click="selectedElement.drawArrow = false" 
+                              ng-show="selectedElement.drawArrow == true")
+                    | hide
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow"
+                              ng-show="selectedElement.drawArrow == true")
+                    | flip 
                     tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
-                td.label(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
+              td.label(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
                   | loop direction:
                 td.label(ng-show="selectedElement.style == 'em' || selectedElement.style == 'sfermion'")
                   | amplitude direction:
                 td.value
                   input(type="radio" ng-model="selectedElement.loopDirection" value="1")
                   | up
-                  br
                   input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
                   | down
                   tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
