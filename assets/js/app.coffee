@@ -50,15 +50,12 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
   $(document).on 'clearSelection', ->
     $scope.clearSelection()
 
+
+  # when the window resizes
   $(window).resize ->
-    resizeCanvas()
-
-
-  resizeCanvas =  ->
-    #$('#canvas').width($('#mainContent').width())
-    #$('#canvas').height($('#mainContent').height())
+    # refresh the grid
     $(document).attr('canvas').refresh()
-  
+
 
   # load the canvas atrributes when snap is done loading
   $(document).on 'doneWithInit', ->

@@ -25,6 +25,7 @@ svg
 sidebarWidth = 270px
 
 #sidebar
+  z-index: 2
   float: left
   text-align: center
   width: sidebarWidth
@@ -33,6 +34,10 @@ sidebarWidth = 270px
   overflow: hidden
 
   position: relative
+  
+  -webkit-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
+  -moz-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
+  box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
 
   table
     width: 100%
@@ -125,6 +130,7 @@ circle.selectedElement
   z-index: 5
 
 #mainContent
+  z-index: 1
   position: absolute
   left: sidebarWidth
   right: 0
