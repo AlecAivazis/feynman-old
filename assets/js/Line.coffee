@@ -246,10 +246,6 @@ class Line
       labelx = if r > 0 then midx + x else midx - x
       labely = if r > 0 then midy + y else midy - y
 
-    # if we hit an infinity in y
-    if isNaN(labely)
-        labely = midy - r
-
     coords = 
       x: labelx
       y: labely
