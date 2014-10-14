@@ -6,7 +6,7 @@
 # create the angular module 
 app = angular.module 'feynman', ['colorpicker.module', 'ui.slider', 'undo']
 # define the controller for the properties menu
-app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout) ->
+app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout) ->
 
   # add event handler for element selection
   $(document).on 'selectedElement', (event, element, type) ->

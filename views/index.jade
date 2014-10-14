@@ -13,7 +13,7 @@ append js
 
   != js('UndoEntry')
   != js('undo')
-  != js('app')
+  != js('sidebar')
   
 
 append css
@@ -23,7 +23,7 @@ append css
 block content
   body(ng-app="feynman")
 
-    span#sidebar(ng-controller="diagramProperties")
+    span#sidebar(ng-controller="sidebar")
       
       #diagramProperties
         table.propertiesMenu(ng-show="showDiagramProperties == true")

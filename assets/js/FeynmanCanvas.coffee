@@ -257,7 +257,7 @@ class FeynmanCanvas
 
     # apply the transformation and style the rectangle
     @selectionRect_element.transform(transform).attr
-      stroke: 'red'
+      stroke: 'green'
       strokeWidth: 1.5
       fill: 'none'
 
