@@ -1,16 +1,20 @@
 @import mixins
 
+html
+  height: 100%
+
 body
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
   width: 100%
   margin: 0
+  height: 100%
 
 a
   color: #00B7FF
 
 #canvas
-  height: 390px
-  width: 540px
+  height: 100%
+  width: 100%
   overflow: hidden
   float: right
 
@@ -23,8 +27,11 @@ sidebarWidth = 270px
   float: left
   text-align: center
   width: sidebarWidth
+  height: 100%
   text-align: center
   overflow: hidden
+
+  position: relative
 
   table
     width: 100%
@@ -125,5 +132,9 @@ circle.selectedElement
   top: 0
 
 #footer 
+  position: absolute
+  bottom: 0
   clear: both
+
+  padding: 5px
   

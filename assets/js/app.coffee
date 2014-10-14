@@ -55,8 +55,8 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
 
 
   resizeCanvas =  ->
-    $('#canvas').width($('#mainContent').width())
-    $('#canvas').height($('#mainContent').height())
+    #$('#canvas').width($('#mainContent').width())
+    #$('#canvas').height($('#mainContent').height())
     $(document).attr('canvas').refresh()
   
 
