@@ -150,10 +150,16 @@ class FeynmanCanvas
     if @gridSize < 1 or @hideGrid
       # hide it
       @removeGrid()
+      # if they meant to hide the grid
+      if @hideGrid
+        # hide the grey background
+        $('#canvas').css('background', 'white')
     # otherwise
     else
       # show them the grid
       @drawGrid()
+      # with the right color background
+      $('#canvas').css('background', '#f5f5f5')
     
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->
