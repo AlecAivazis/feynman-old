@@ -73,8 +73,7 @@ block content
                 | {{event.id}}: 
               td.title
                 | {{event.title}}
-  
-
+ 
       #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false" 
                        style="margin-top: 10px")
         // group of anchors properties menu
@@ -95,124 +94,124 @@ block content
               td.label
                 | radius: 
               td.value
-                span(ng-show="groupRadius > 0")
-                  | {{groupRadius}}
-                slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
-                       style="width: 70%")
-            tr.groupTools(ng-show="selectedGroup != false")
-              td.tool(colspan=2)
-                span.label
-                  | align:
-                span.button(ng-click="alignGroup('vertical')")
-                  | vertical
-                span.button(ng-click="alignGroup('horizontal')")
-                  | horizontal
-  
-      // selected element properties
-      span(ng-hide="selectedElement == false")
-        // anchor properties menu
-        table.propertiesMenu(ng-show="type == 'anchor'" style="margin-top: 10px")
-          thead
-            tr.headerRow
-              th(colspan=2)
-                | Properties for selected anchor
-          tbody
-            tr.property
-              td.label
-                | fill color:
-              td.value
-                input(colorpicker="rgb" type="text" ng-model="color" name="color"
-                  style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
-            tr.property
-              td.label
-                | radius: 
-              td.value
-                | {{radius}}
-                slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
-                       style="width: 70%")
-            tr.property
-              td.label
-                | fixed:
-              td.value
-                input(type="checkbox" ng-model="selectedElement.fixed")
-            tr
-              td.tool(colspan=2)
-                span.button(ng-click="deleteSelectedElement('anchor')")
-                  | delete this anchor
+                 span(ng-show="groupRadius > 0")
+                   | {{groupRadius}}
+                 slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
+                        style="width: 70%")
+             tr.groupTools(ng-show="selectedGroup != false")
+               td.tool(colspan=2)
+                 span.label
+                   | align:
+                 span.button(ng-click="alignGroup('vertical')")
+                   | vertical
+                 span.button(ng-click="alignGroup('horizontal')")
+                   | horizontal
+      #tooltip
+        // selected element properties
+        span(ng-hide="selectedElement == false")
+          // anchor properties menu
+          table.propertiesMenu(ng-show="type == 'anchor'" style="margin-top: 10px")
+            thead
+              tr.headerRow
+                th(colspan=2)
+                  | Properties for selected anchor
+            tbody
+              tr.property
+                td.label
+                  | fill color:
+                td.value
+                  input(colorpicker="rgb" type="text" ng-model="color" name="color"
+                    style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+              tr.property
+                td.label
+                  | radius: 
+                td.value
+                  | {{radius}}
+                  slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
+                         style="width: 70%")
+              tr.property
+                td.label
+                  | fixed:
+                td.value
+                  input(type="checkbox" ng-model="selectedElement.fixed")
+              tr
+                td.tool(colspan=2)
+                  span.button(ng-click="deleteSelectedElement('anchor')")
+                    | delete this anchor
+      
     
-  
-        // line properties menu
-        table.propertiesMenu(ng-show="type == 'line'" style="margin-top: 10px")
-          thead
-            tr.headerRow
-              th(colspan=2)
-                | Properties for selected line
-          tbody
-            tr.property
-              td.label
-                | label:
-              td.value
-                input(type="text" ng-model="selectedElement.label" name="label")
-            tr.property
-              td.label
-                | color:
-              td.value
-                input(colorpicker="rgb" type="text" ng-model="color" name="color"
-                  style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
-            tr.property
-              td.label
-                | stroke width:
-              td.value
-                | {{selectedElement.width}}
-                slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
-                       style="width: 70%")
-            tr.property
-              td.label
-                | line style:
-              td.value
-                select(ng-model="selectedElement.style")
-                  option(value = 'line')
-                    | line
-                  option(value = 'dashed')
-                    | dashed
-                  option(value = 'gluon')
-                    | gluon
-                  option(value = 'em')
-                    | em
-                  option(value = 'gluino')
-                    | gluino
-                  option(value = 'sfermion')
-                    | sfermion
-            tr.property(ng-show="selectedElement.style == 'line'")
-              td.label
-                | show arrow
-              td.value
-                input(type="checkbox" ng-model="selectedElement.drawArrow")
-            tr(ng-show="selectedElement.style == 'line'")
-              td.tool(colspan=2)
-                span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
-                  | flip arrow direction
-            tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
-              td.label(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
-                | loop direction:
-              td.label(ng-show="selectedElement.style == 'em' || selectedElement.style == 'sfermion'")
-                | amplitude direction:
-              td.value
-                input(type="radio" ng-model="selectedElement.loopDirection" value="1")
-                | up
-                br
-                input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
-                | down
-            tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
-              td.label
-                | draw end&nbsp;caps:
-              td.value
-                input(type="checkbox" ng-model="selectedElement.drawEndCaps")
-           
-            tr
-              td.tool(colspan=2)
-                span.button(ng-click="deleteSelectedElement('line')")
-                  | delete this line
+          // line properties menu
+          table.propertiesMenu(ng-show="type == 'line'" style="margin-top: 10px")
+            thead
+              tr.headerRow
+                th(colspan=2)
+                  | Properties for selected line
+            tbody
+              tr.property
+                td.label
+                  | label:
+                td.value
+                  input(type="text" ng-model="selectedElement.label" name="label")
+              tr.property
+                td.label
+                  | color:
+                td.value
+                  input(colorpicker="rgb" type="text" ng-model="color" name="color"
+                    style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+              tr.property
+                td.label
+                  | stroke width:
+                td.value
+                  | {{selectedElement.width}}
+                  slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
+                         style="width: 70%")
+                tr.property
+                td.label
+                  | line style:
+                td.value
+                  select(ng-model="selectedElement.style")
+                    option(value = 'line')
+                      | line
+                    option(value = 'dashed')
+                      | dashed
+                    option(value = 'gluon')
+                      | gluon
+                    option(value = 'em')
+                      | em
+                    option(value = 'gluino')
+                      | gluino
+                    option(value = 'sfermion')
+                      | sfermion
+              tr.property(ng-show="selectedElement.style == 'line'")
+                td.label
+                  | show arrow
+                td.value
+                  input(type="checkbox" ng-model="selectedElement.drawArrow")
+              tr(ng-show="selectedElement.style == 'line'")
+                td.tool(colspan=2)
+                  span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow")
+                    | flip arrow direction
+                    tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
+                td.label(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
+                  | loop direction:
+                td.label(ng-show="selectedElement.style == 'em' || selectedElement.style == 'sfermion'")
+                  | amplitude direction:
+                td.value
+                  input(type="radio" ng-model="selectedElement.loopDirection" value="1")
+                  | up
+                  br
+                  input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
+                  | down
+                  tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
+                td.label
+                  | draw end&nbsp;caps:
+                td.value
+                  input(type="checkbox" ng-model="selectedElement.drawEndCaps")
+             
+              tr
+                td.tool(colspan=2)
+                  span.button(ng-click="deleteSelectedElement('line')")
+                    | delete this line
       #footer
         | click on element to select (drag on canvas to select many)
         br
@@ -227,6 +226,8 @@ block content
         | scroll wheel to zoom
       // alt dragging moving the window instead: 
       // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
+
+    #tooltip
 
     #mainContent
       svg#canvas
