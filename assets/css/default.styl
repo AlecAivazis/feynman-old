@@ -2,7 +2,8 @@
 
 body
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
-  width: 900px
+  width: 100%
+  margin: 0
 
 a
   color: #00B7FF
@@ -10,33 +11,31 @@ a
 #canvas
   height: 390px
   width: 540px
-  margin: 20px
-  margin-right: none
   overflow: hidden
+  float: right
 
 svg
   float: left
 
+sidebarWidth = 270px
+
 #sidebar
-  float: right
+  float: left
   text-align: center
-  width: 260px
-  text-align: right
+  width: sidebarWidth
+  text-align: center
+  overflow: hidden
+
+  table
+    width: 100%
 
 #undoHistory
-  border: 1px solid black
-  border-radius: 4px
   padding: 20px
   
   table tbody
     display: block
     max-height: 100px
     overflow: auto
-
-.propertiesMenu
-  border: 1px solid black
-  border-radius: 4px
-  padding: 20px
 
 .propertiesMenu .headerRow th
   padding-bottom: 15px
@@ -47,17 +46,17 @@ svg
   margin: 5px 0px
   padding: 0px 20px
 
-.property .label 
-  text-align: right
-  vertical-align: top
-  padding-right: 5px
+  .label 
+    text-align: right
+    vertical-align: top
+    padding-right: 5px
 
-.property .value
-  text-align: left
-
-.property .input
-  text-align: left
+  .value
+    text-align: left
   
+  .input
+    text-align: left
+    
 .colorpicker
   background: white
   border: 1px solid black
@@ -105,6 +104,10 @@ circle.selectedElement
     margin-left: 5px
     button(none, none)
 
+.inlineButton
+  button(none, none)
+  display:  inline
+
 .lineDecoration
   fill: black
 
@@ -115,7 +118,11 @@ circle.selectedElement
   z-index: 5
 
 #mainContent
-  float: left
+  position: absolute
+  left: sidebarWidth
+  right: 0
+  bottom: 0
+  top: 0
 
 #footer 
   clear: both

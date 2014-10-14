@@ -22,35 +22,11 @@ append css
 
 block content
   body(ng-app="feynman")
-    h1 {{title}}! 
-
-    #mainContent
-      svg#canvas
-      
-      #footer
-        | click on element to select (drag on canvas to select many)
-        br
-        | alt + drag on the canvas to create an element
-        br
-        | alt + drag from an element to create new branch 
-        br
-        | drag element to move it (including labels)
-        br 
-        | space + drag to pan the canvas
-        br
-        | scroll wheel to zoom
-      // alt dragging moving the window instead: 
-      // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
-      
 
     span#sidebar(ng-controller="diagramProperties")
       
       #diagramProperties
         table.propertiesMenu(ng-show="showDiagramProperties == true")
-          thead
-            tr.headerRow
-              th(colspan=2)
-                | Properties for diagram
           tbody
             tr.property
               td.label
@@ -64,17 +40,16 @@ block content
                 slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" 
                        style="width: 70%")
             tr
-              td.tool(colspan=2)
+              td.tool
                 span.button(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
                   | hide all anchors
                 span.button(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
                   | show all anchors
 
-            tr
-              td.tool(colspan=2)
-                span.button(ng-click="hideGrid = true" ng-show="hideGrid == false")
+              td.tool
+                span.inlineButton(ng-click="hideGrid = true" ng-show="hideGrid == false")
                   | hide grid
-                span.button(ng-click="hideGrid = false" ng-show="hideGrid == true")
+                span.inlineButton(ng-click="hideGrid = false" ng-show="hideGrid == true")
                   | show grid
 
       // WARNING: this id can't change without reflecting it in the javascript
@@ -238,3 +213,21 @@ block content
               td.tool(colspan=2)
                 span.button(ng-click="deleteSelectedElement('line')")
                   | delete this line
+      #footer
+        | click on element to select (drag on canvas to select many)
+        br
+        | alt + drag on the canvas to create an element
+        br
+        | alt + drag from an element to create new branch 
+        br
+        | drag element to move it (including labels)
+        br 
+        | space + drag to pan the canvas
+        br
+        | scroll wheel to zoom
+      // alt dragging moving the window instead: 
+      // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
+
+    #mainContent
+      svg#canvas
+      

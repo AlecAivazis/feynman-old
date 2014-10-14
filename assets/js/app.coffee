@@ -50,6 +50,16 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
   $(document).on 'clearSelection', ->
     $scope.clearSelection()
 
+  $(window).resize ->
+    resizeCanvas()
+
+
+  resizeCanvas =  ->
+    $('#canvas').width($('#mainContent').width())
+    $('#canvas').height($('#mainContent').height())
+    $(document).attr('canvas').refresh()
+  
+
   # load the canvas atrributes when snap is done loading
   $(document).on 'doneWithInit', ->
     canvas = $(document).attr 'canvas'
@@ -59,6 +69,7 @@ app.controller 'diagramProperties', ['$scope',  '$rootScope', '$timeout', ($scop
     $scope.hideAnchors = canvas.hideAnchors
     $scope.hideGrid = canvas.hideGrid
     $rootScope.title = canvas.title
+    resizeCanvas()
   
   # clear the selection
   $scope.clearSelection = ->

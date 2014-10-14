@@ -84,6 +84,12 @@ class FeynmanCanvas
     @diagramGroup.add element
 
 
+  refresh: =>
+    @zoomIn()
+    @zoomOut()
+    
+
+
   drawGrid: () =>
 
     # hide the previous grid
