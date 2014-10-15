@@ -30,15 +30,14 @@ block content
           tbody
             tr.property
               td.label
-                | Title:
+                | Title
               td.value
                 input(type="text" ng-model="$parent.title" name="label")
             tr.property
               td.label
-                | Grid Size:
+                | Grid Size
               td.value
-                slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" 
-                       style="width: 70%")
+                slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" )
             tr
               td.tool
                 span.button(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
@@ -70,7 +69,7 @@ block content
                            ng-class="{current : event.id == current, disabled: event.id > current}"
                            ng-show="showHistory == true")
               td.id
-                | {{event.id}}: 
+                | {{event.id}} 
               td.title
                 | {{event.title}}
  
@@ -85,23 +84,22 @@ block content
           tbody
             tr.property
               td.label
-                | fill color:
+                | fill color
               td.value
                 input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
                       style="background: {{displayColor}}; color: {{displayColor}}; \
                              border: 1px solid {{groupColor}}; color: {{displayColor}};")
             tr.property
               td.label
-                | radius: 
+                | radius 
               td.value
                  span(ng-show="groupRadius > 0")
                    | {{groupRadius}}
-                 slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
-                        style="width: 70%")
+                 slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius")
              tr.groupTools(ng-show="selectedGroup != false")
                td.tool(colspan=2)
                  span.label
-                   | align:
+                   | align
                  span.button(ng-click="alignGroup('vertical')")
                    | vertical
                  span.button(ng-click="alignGroup('horizontal')")
@@ -116,20 +114,20 @@ block content
             tbody
                tr.property
                  td.label
-                   | fill color:
+                   | color
                  td.value
                    input(colorpicker="rgb" type="text" ng-model="color" name="color"
                      style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
                tr.property
                  td.label
-                   | radius: 
+                   | radius 
                   td.value
                    | {{radius}}
                    slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
                          style="width: 70%")
               tr.property
                  td.label
-                   | fixed:
+                   | fixed
                  td.value
                    input(type="checkbox" ng-model="selectedElement.fixed")
                tr
@@ -142,25 +140,25 @@ block content
              tbody
                tr.property
                  td.label
-                   | label:
+                   | label
                  td.value
                    input(type="text" ng-model="selectedElement.label" name="label")
                tr.property
                  td.label
-                   | color:
+                   | color
                  td.value
                    input(colorpicker="rgb" type="text" ng-model="color" name="color"
                      style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
                tr.property
                  td.label
-                   | width:
+                   | width
                  td.value
                    slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
                           style="width: 75%")
                    | &nbsp; {{selectedElement.width}}
-                 tr.property
+               tr.property
                  td.label
-                   | style:
+                   | style
                  td.value
                    select(ng-model="selectedElement.style")
                      option(value = 'line')
@@ -177,7 +175,7 @@ block content
                        | sfermion
                tr.property(ng-show="selectedElement.style == 'line'")
                  td.label
-                   | arrow:
+                   | arrow
                  td.value
                    span.button(ng-click="selectedElement.drawArrow = true" 
                                ng-show="selectedElement.drawArrow == false")
@@ -191,17 +189,19 @@ block content
                      | flip 
                tr.property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
                  td.label(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'gluino'")
-                   | loop direction:
+                   | loop direction
                  td.label(ng-show="selectedElement.style == 'em' || selectedElement.style == 'sfermion'")
-                   | amplitude direction:
+                   | amplitude direction
                  td.value
-                   input(type="radio" ng-model="selectedElement.loopDirection" value="1")
-                   | up
-                   input(type="radio" ng-model="selectedElement.loopDirection" value="-1")
-                   | down
+                   span.button(ng-click="selectedElement.loopDirection = 1" 
+                               ng-class="{enabled: selectedElement.loopDirection == -1, disabled: selectedElement.loopDirection == 1}")
+                     | up 
+                   span.button(ng-click="selectedElement.loopDirection = -1" 
+                               ng-class="{enabled: selectedElement.loopDirection == 1, disabled: selectedElement.loopDirection == -1}")
+                     | down
                tr.property(ng-show="selectedElement.style == 'gluon'")
                  td.label
-                   | draw end&nbsp;caps:
+                   | draw end&nbsp;caps
                  td.value
                    input(type="checkbox" ng-model="selectedElement.drawEndCaps")
                
@@ -221,7 +221,7 @@ block content
         | space + drag to pan the canvas
         br
         | scroll wheel to zoom
-      // alt dragging moving the window instead: 
+      // alt dragging moving the window instead 
       // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
 
     #mainContent

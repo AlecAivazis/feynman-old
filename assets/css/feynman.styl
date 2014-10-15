@@ -38,6 +38,9 @@ sidebarWidth = 270px
   box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
 
   table
+    100%
+
+.propertiesMenu .headerRow th
     width: 100%
 
 #tooltip
@@ -51,19 +54,33 @@ tooltipColor = #7a7a7a
 #tooltipContent 
   background: tooltipColor
   margin-left: -50%
+  width: 245px
+  text-align: center
+
+#tooltip .label
+  width: 60px
+
+#tooltip .value
+  width: 130px
+  
+
+#tooltip .value input , #tooltip .value select
+  margin-top: 5px
+  width: 150px
+    
 
 #tooltipTriangle
   text-align: left
   height: 10px
   margin-left: -10px
 
-.arrow-up
-  width: 0
-  height: 0
-  border-left: 10px solid transparent
-  border-right: 10px solid transparent
-  border-bottom: 10px solid tooltipColor
-  display: inline-block
+  .arrow-up
+    width: 0
+    height: 0
+    border-left: 10px solid transparent
+    border-right: 10px solid transparent
+    border-bottom: 10px solid tooltipColor
+    display: inline-block
 
 #undoHistory
   padding: 20px
@@ -73,7 +90,6 @@ tooltipColor = #7a7a7a
     max-height: 100px
     overflow: auto
 
-.propertiesMenu .headerRow th
   padding-bottom: 15px
   img
     vertical-align: middle
@@ -82,21 +98,37 @@ tooltipColor = #7a7a7a
   display: none
 
 .property
-  margin: 5px 0px
-  padding: 0px 20px
 
   .label 
     text-align: right
+    text-transform: capitalize
     padding-right: 5px
+    width: 60px
+    display: inline-block
 
   .value
     text-align: left
+    width: 130px
+    display: inline-block
 
     .button
         width: 200px
+
+.button 
+   width: 150px
+   margin-left: 5px
+   cursor: pointer
+
+  .enabled
+    background: green
+
+  .disabled
+    background: red
   
-  .input
-    text-align: left
+
+input , select
+  text-align: left
+  width: 150px
     
 .colorpicker
   background: white
@@ -105,9 +137,6 @@ tooltipColor = #7a7a7a
 
 .fixed 
   fill: #b3b3b3
-
-select
-  width: 100%
 
 .selectedElement
   stroke: #0091ff
