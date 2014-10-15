@@ -32,8 +32,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
     # apply the change in angular since this is done in the jquery environment
     $scope.$apply()
+    # orient the tooptip on the selected element
+    $scope.orientTooltip(element, type)
 
+
+  # align the tooltip element along an element
+  $scope.orientTooltip = (element, type) ->
     # compute the coordinates of the event to place the tooltip
+    console.log type
     x = $('#sidebar').width()
     y = 0
     switch type
@@ -46,9 +52,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
     # set the off set to position the tooltip
     $("#tooltip").offset
-      top: y+5
-      left: x - $('#tooltip').width()/2
-
+      top: y+10
+      left: x 
 
   # add event handler for group selection
   $(document).on 'selectedGroup', (event, elements, type) ->
@@ -270,6 +275,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $scope.$watch 'selectedElement.style', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.draw()
+      console.log 'recalculate tooltip'
+      $scope.orientTooltip($scope.selectedElement, $scope.type)
 
   $scope.$watch 'selectedElement.loopDirection', (newVal, oldVal) ->
     if $scope.selectedElement

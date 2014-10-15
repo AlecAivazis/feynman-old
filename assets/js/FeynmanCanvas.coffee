@@ -263,7 +263,7 @@ class FeynmanCanvas
 
     # apply the transformation and style the rectangle
     @selectionRect_element.transform(transform).attr
-      stroke: 'green'
+      stroke: '#0091ff'
       strokeWidth: 1.5
       fill: 'none'
 
@@ -549,10 +549,10 @@ class FeynmanCanvas
     # if they asked for the particle / antiparticle pattern
     if pattern == 'pap'
       # define the anchors for the particle, anti particle patterns
-      a = new Anchor(@paper, 50, 50)
-      b = new Anchor(@paper, 150, 150)
-      c = new Anchor(@paper, 50, 250)
-      d = new Anchor(@paper, 250, 150)
+      a = new Anchor(@paper, 150, 100)
+      b = new Anchor(@paper, 250, 200)
+      c = new Anchor(@paper, 150, 300)
+      d = new Anchor(@paper, 350, 200)
   
       # and the lines connecting them
       k = new Line(@paper, a, b)
