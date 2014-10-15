@@ -56,7 +56,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $("#tooltip").offset
       # place the tooltip slightly below the target coordinates
       top: y+10
-      left: x 
+      left: x - $('#tooltip').width()/2
 
 
   # add event handler for group selection
