@@ -368,6 +368,10 @@ class Anchor
 
   dragMove: (dx, dy, mouse_x, mouse_y, event) =>
     event.stopPropagation()
+
+    # before we do anything else orient the tooltip
+    $(document).trigger 'orientTooltip'
+    
     # check for the flag set on drag start  
     if @moveAsGroup
       _.each Snap.selectAll('.selectedElement'), (element) ->

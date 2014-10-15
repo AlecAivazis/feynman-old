@@ -601,6 +601,11 @@ class Line
 
   onDrag: (dx, dy, x, y, event) =>
     event.stopPropagation()
+
+    # before we do anything else orient the tooltip
+    $(document).trigger 'orientTooltip'
+    
+
     # if we made a new anchor with this mode
     if @newAnchor
       # move it

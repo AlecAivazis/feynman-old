@@ -44,16 +44,20 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     y = 0
     switch type
       when 'line'
+        # use the midpoint of the line
         x += (element.anchor1.x + element.anchor2.x ) / 2
         y = (element.anchor1.y + element.anchor2.y ) / 2
       when 'anchor'
+        # use the anchor's coordinates
         x += element.x
         y = element.y
 
     # set the off set to position the tooltip
     $("#tooltip").offset
+      # place the tooltip slightly below the target coordinates
       top: y+10
       left: x 
+
 
   # add event handler for group selection
   $(document).on 'selectedGroup', (event, elements, type) ->
@@ -69,15 +73,22 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.selectedGroup = elements
     $scope.$apply()
 
+
   # add event handle for clear selection
   $(document).on 'clearSelection', ->
     $scope.clearSelection()
+
+
+  # add a listener to reorient thee tooltip when things move
+  $(document).on 'orientTooltip', ->
+    $scope.orientTooltip($scope.selectedElement, $scope.type)
 
 
   # when the window resizes
   $(window).resize ->
     # refresh the grid
     refreshCanvas()
+
 
   refreshCanvas = ->
     $(document).attr('canvas').refresh()
