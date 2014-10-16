@@ -24,7 +24,7 @@ a
 svg
   float: left
 
-sidebarWidth = 175px
+sidebarWidth = 210px
 
 #sidebar
   z-index: 2
@@ -70,37 +70,13 @@ tooltipColor = #3c3c3c
 #tooltip .label
   width: 60px
 
-#tooltip .value
-  width: 130px
-  
-
-#tooltip .value input , #tooltip .value select
-  margin-top: 5px
-  width: 150px
-    
-
-#tooltipTriangle
-  text-align: center
-  height: 10px
-
-  .arrow-up
-    width: 0
-    height: 0
-    border-left: 10px solid transparent
-    border-right: 10px solid transparent
-    border-bottom: 10px solid tooltipColor
-    display: inline-block
-
-#undoHistory
-  
-
-  padding-bottom: 15px
-  img
-    vertical-align: middle
-
 #historyContent
   max-height: 100px
   overflow: auto
+  padding-bottom: 10px
+
+#historyTitle
+  margin-bottom: 10px
 
 .bubble .value 
   display: none
@@ -109,14 +85,14 @@ tooltipColor = #3c3c3c
 
   margin-bottom: 15px
 
-  .label 
+  &.label 
     text-align: right
     text-transform: capitalize
     padding-right: 5px
     width: 60px
     display: inline-block
 
-  .value
+  &.value
     text-align: left
     width: 130px
     display: inline-block
@@ -171,9 +147,6 @@ circle.selectedElement
 .gridLine
   stroke: #e5e5e5
 
-#historyTitle
-  margin-bottom: 10px
-
 .historyItem
   color: black
   vertical-align: top
@@ -192,18 +165,10 @@ circle.selectedElement
   &.disabled
     color: black
 
- 
-.tool
-  padding-top: 5px
-  text-align: center
 
-  .button
+.button
     margin-left: 5px
     button(none, none)
-
-.inlineButton
-  button(none, none)
-  display:  inline
 
 .lineDecoration
   fill: black
@@ -250,6 +215,7 @@ circle.selectedElement
 
 #footer 
   text-align: left
+  padding-bottom: 10px
 
 .panelTitle
   text-align: left

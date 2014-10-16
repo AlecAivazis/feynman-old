@@ -26,7 +26,10 @@ block content
     #sidebar(ng-controller="sidebar")
       
       #diagramProperties
-        table.propertiesMenu(ng-show="showDiagramProperties == true")
+        .propertiesMenu(ng-show="showDiagramProperties == true")
+          .property
+
+        table.propertiesMenu
           tbody
             tr.property
               td.label
@@ -61,10 +64,9 @@ block content
           span.hidePanel(ng-show="showHistory == false" ng-click="showHistory = true" )
             | show
 
-        #historyContent
+        #historyContent(ng-show="showHistory == true")
           .historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
-                       ng-class="{current : event.id == current, disabled: event.id > current}"
-                       ng-show="showHistory == true")
+                       ng-class="{current : event.id == current, disabled: event.id > current}")
             span.id
               | {{event.id}} : 
             span.title
