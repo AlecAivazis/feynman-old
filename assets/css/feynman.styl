@@ -24,7 +24,7 @@ a
 svg
   float: left
 
-sidebarWidth = 270px
+sidebarWidth = 210px
 
 #sidebar
   z-index: 2
@@ -35,9 +35,15 @@ sidebarWidth = 270px
   text-align: center
   overflow: hidden
 
+  padding: 20px
+
   -webkit-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
   -moz-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
   box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
+
+#sidebar > div
+  border-bottom: 1px solid #eeeeee
+  padding-top: 10px
 
 .propertiesMenu .headerRow th
     width: 100%
@@ -86,7 +92,6 @@ tooltipColor = #3c3c3c
     display: inline-block
 
 #undoHistory
-  padding: 20px
   
 
   padding-bottom: 15px
@@ -238,15 +243,13 @@ circle.selectedElement
 #mainContent
   z-index: 1
   position: absolute
-  left: sidebarWidth
+  left: sidebarWidth+40px
   right: 0
   bottom: 0
   top: 0
 
 #footer 
   text-align: left
-
-  padding: 20px
 
 .panelTitle
   text-align: left
