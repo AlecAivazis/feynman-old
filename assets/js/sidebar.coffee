@@ -33,7 +33,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # apply the change in angular since this is done in the jquery environment
     $scope.$apply()
     # orient the tooptip on the selected element
-    $scope.orientTooltip(element, type)
+    #$scope.orientTooltip(element, type)
 
 
   # align the tooltip element along an element
@@ -81,7 +81,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   # add a listener to reorient thee tooltip when things move
   $(document).on 'orientTooltip', ->
-    $scope.orientTooltip($scope.selectedElement, $scope.type)
+    #$scope.orientTooltip($scope.selectedElement, $scope.type)
 
 
   # when the window resizes
@@ -104,6 +104,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.hideGrid = canvas.hideGrid
     $rootScope.title = canvas.title
     refreshCanvas()
+
   
   # clear the selection
   $scope.clearSelection = ->
@@ -121,6 +122,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.selectedElement = false
     $scope.selectedGroup = false
     $scope.$apply()
+
 
   # align event element in the selected group align the given direction
   $scope.alignGroup = (direction) ->
@@ -158,6 +160,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           _.each @data[0], (anchor) =>
             anchor.element.handleMove(anchor.x, anchor.y, false)
     , 0
+
 
   # assuming the selected element is a line, delete it and register it with the undo stack
   $scope.deleteSelectedElement = (type) ->
@@ -287,7 +290,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     if $scope.selectedElement
       $scope.selectedElement.draw()
       console.log 'recalculate tooltip'
-      $scope.orientTooltip($scope.selectedElement, $scope.type)
 
   $scope.$watch 'selectedElement.loopDirection', (newVal, oldVal) ->
     if $scope.selectedElement

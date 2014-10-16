@@ -37,24 +37,25 @@ sidebarWidth = 270px
   -moz-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
   box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
 
-  table
-    100%
-
 .propertiesMenu .headerRow th
     width: 100%
 
-#tooltip
-  position: absolute
-  z-index: 20
-  opacity: .98
-  color: white
-
 tooltipColor = #7a7a7a
 
-#tooltipContent 
+#tooltip
+  position: fixed
+  top: 0
+  right: 0
+  height: 100%
+
+  z-index: 20
+  opacity: .8
+  color: white
+
   background: tooltipColor
-  width: 245px
+  width: 220px
   text-align: center
+  height: 100%
 
 #tooltip .label
   width: 60px
@@ -122,11 +123,15 @@ tooltipColor = #7a7a7a
 
   .disabled
     background: red
+
+#sidebar .button 
+  width: 50px
+
   
 
 input , select
   text-align: left
-  width: 150px
+  width: 175px
     
 .colorpicker
   background: white
@@ -204,4 +209,8 @@ circle.selectedElement
   text-align: left
 
   padding: 5px
+
+#tooltip .button
+  width: 100%
+  color: white
   
