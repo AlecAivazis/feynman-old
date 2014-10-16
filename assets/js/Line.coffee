@@ -14,7 +14,7 @@ class Line
 
     # default values
     @width = 2
-    @color = 'black'
+    @color = '#000000'
     @loopDirection = 1
     @labelDistance = 30
     @labelLocation = .5
