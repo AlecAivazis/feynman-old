@@ -104,7 +104,8 @@ block content
           #lineProperties.propertiesMenu(ng-show="type == 'line'" )
 
             .property
-              input(type="text" ng-model="selectedElement.label" name="label")
+              input(type="text" ng-model="selectedElement.label" name="label"
+                    placeholder="Enter a label")
 
             .property
               input(colorpicker="rgb" type="text" ng-model="color" name="color"
