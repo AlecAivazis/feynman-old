@@ -9,6 +9,8 @@ body
   margin: 0
   height: 100%
 
+  color: #333333
+
 a
   color: #00B7FF
 
@@ -86,14 +88,14 @@ tooltipColor = #3c3c3c
 #undoHistory
   padding: 20px
   
-  table tbody
-    display: block
-    max-height: 100px
-    overflow: auto
 
   padding-bottom: 15px
   img
     vertical-align: middle
+
+#historyContent
+  max-height: 100px
+  overflow: auto
 
 .bubble .value 
   display: none
@@ -118,14 +120,14 @@ tooltipColor = #3c3c3c
         width: 200px
 
 .button 
-   width: 150px
-   margin-left: 5px
-   cursor: pointer
+  width: 150px
+  margin-left: 5px
+  cursor: pointer
 
-  .enabled
+  &.enabled
     background: green
 
-  .disabled
+  &.disabled
     background: red
 
 #sidebar .button 
@@ -164,23 +166,24 @@ circle.selectedElement
 .gridLine
   stroke: #e5e5e5
 
-.historyTitle
-  text-align: left
-  padding-bottom: 5px
+#historyTitle
+  margin-bottom: 10px
 
 .historyItem
   color: black
   vertical-align: top
   cursor: pointer
+  text-align: left
 
   .id
     width: 10%
   .title
     width: 90%
     text-align: left
+    float: right
   
   &.current
-    color: #0091ff
+    color: #1c8ed6
   &.disabled
     color: black
 
@@ -241,14 +244,29 @@ circle.selectedElement
   top: 0
 
 #footer 
-  position: absolute
-  bottom: 0
-  left: 0
-  clear: both
-  z-index: 15
   text-align: left
 
-  padding: 5px
+  padding: 20px
+
+.panelTitle
+  text-align: left
+  font-weight: bold
+
+.hidePanel
+  float: right
+  cursor: pointer
+  color: #2d89d3
+
+.hotkey
+  padding: 7px
+  color: #8d8d8d
+
+  .hotkeyTitle
+    font-weight: bold
+
+  .hotkeyDescription
+    margin-left: 5px
+
 
 #tooltip .button
   width: 100%

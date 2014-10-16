@@ -53,26 +53,24 @@ block content
 
       // WARNING: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}" )
-        table(width="100%")
-          thead
-            tr.headerRow.historyTitle
-              th(colspan=2 ng-init="showHistory = false")
-                | History
-                span(ng-show="showHistory == true" ng-click="showHistory = false" 
-                     style="float: right; cursor: pointer;")
-                  | hide history
-                span(ng-show="showHistory == false" ng-click="showHistory = true" 
-                     style="float: right; cursor: pointer;")
-                  | show history
-          tbody
-            tr.historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
-                           ng-class="{current : event.id == current, disabled: event.id > current}"
-                           ng-show="showHistory == true")
-              td.id
-                | {{event.id}} 
-              td.title
-                | {{event.title}}
- 
+
+        #historyTitle.panelTitle(ng-init="showHistory = false")
+          | History
+          span.hidePanel(ng-show="showHistory == true" ng-click="showHistory = false" )
+            | hide
+          span.hidePanel(ng-show="showHistory == false" ng-click="showHistory = true" )
+            | show
+
+        #historyContent
+          .historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
+                       ng-class="{current : event.id == current, disabled: event.id > current}"
+                       ng-show="showHistory == true")
+            span.id
+              | {{event.id}} : 
+            span.title
+              | {{event.title}}
+              
+
      
       #tooltip
 
@@ -180,19 +178,57 @@ block content
               | horizontal
  
       #footer
-        | click on element to select (drag on canvas to select many)
-        br
-        | alt + drag on the canvas to create an element
-        br
-        | alt + drag from an element to create new branch 
-        br
-        | drag element to move it (including labels)
-        br 
-        | space + drag to pan the canvas
-        br
-        | scroll wheel to zoom
-      // alt dragging moving the window instead 
-      // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
+        #footerTitle.panelTitle
+          | Hotkeys/Tips
+          span.hidePanel(ng-click="showFooter = !showFooter" ng-show="showFooter == true")
+            | hide
+          span.hidePanel(ng-click="showFooter = !showFooter" ng-show="showFooter == false")
+            | show
+        #footerContent(ng-show="showFooter == true" ng-init="showFooter = true")
+          .hotkey
+            span.hotkeyTitle
+              | Select element:
+            span.hotkeyDescription
+              | Left click
+          .hotkey
+            span.hotkeyTitle
+              | Move element:
+            span.hotkeyDescription
+              | Drag
+          .hotkey
+            span.hotkeyTitle
+              | Select multiple elements:
+            span.hotkeyDescription
+              | Drag on canvas
+          .hotkey
+            span.hotkeyTitle
+              | New element:
+            span.hotkeyDescription
+              | alt + drag
+          .hotkey
+            span.hotkeyTitle
+              | New branch:
+            span.hotkeyDescription
+              | alt + drag from an existing element
+          .hotkey
+            span.hotkeyTitle
+              | Undo:
+            span.hotkeyDescription
+              | ctrl + x (NYI)
+          .hotkey
+            span.hotkeyTitle
+              | Pan:
+            span.hotkeyDescription
+              | space + drag
+          .hotkey
+            span.hotkeyTitle
+              | Zoom:
+            span.hotkeyDescription
+              | scroll wheel
+              
+          
+        // alt dragging moving the window instead 
+        // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
 
     #mainContent
       svg#canvas
