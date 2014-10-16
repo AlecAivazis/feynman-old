@@ -26,34 +26,30 @@ block content
     #sidebar(ng-controller="sidebar")
       
       #diagramProperties
-        .propertiesMenu(ng-show="showDiagramProperties == true")
-          .property
+        .diagramProperty
+          .label
+            | title
+          .value
+            input(type="text" ng-model="$parent.title" name="label")
 
-        table.propertiesMenu
-          tbody
-            tr.property
-              td.label
-                | Title
-              td.value
-                input(type="text" ng-model="$parent.title" name="label")
-            tr.property
-              td.label
-                | Grid Size
-              td.value
-                slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" )
-            tr
-              td.tool
-                span.button(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
-                  | hide all anchors
-                span.button(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
-                  | show all anchors
+        .diagramProperty
+          .label
+            | grid size
+            span.propertyValue
+              | {{gridSize}}
+          .value
+            slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" )
 
-              td.tool
-                span.button(ng-click="hideGrid = true" ng-show="hideGrid == false")
-                  | hide grid
-                span.button(ng-click="hideGrid = false" ng-show="hideGrid == true")
-                  | show grid
-
+        .diagramProperty
+          span.button(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
+            | hide anchors
+          span.button(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
+            | show anchors
+          span.button(ng-click="hideGrid = true" ng-show="hideGrid == false")
+            | hide grid
+          span.button(ng-click="hideGrid = false" ng-show="hideGrid == true")
+            | show grid
+      
       // WARNING: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}" )
 
@@ -61,7 +57,7 @@ block content
           | History
           span.hidePanel(ng-show="showHistory == true" ng-click="showHistory = false" )
             | hide
-          span.hidePanel(ng-show="showHistory == false" ng-click="showHistory = true" )
+          span.showPanel(ng-show="showHistory == false" ng-click="showHistory = true" )
             | show
 
         #historyContent(ng-show="showHistory == true")
@@ -71,8 +67,6 @@ block content
               | {{event.id}} : 
             span.title
               | {{event.title}}
-              
-
      
       #tooltip
 
@@ -184,7 +178,7 @@ block content
           | Hotkeys/Tips
           span.hidePanel(ng-click="showFooter = !showFooter" ng-show="showFooter == true")
             | hide
-          span.hidePanel(ng-click="showFooter = !showFooter" ng-show="showFooter == false")
+          span.showPanel(ng-click="showFooter = !showFooter" ng-show="showFooter == false")
             | show
         #footerContent(ng-show="showFooter == true" ng-init="showFooter = true")
           .hotkey

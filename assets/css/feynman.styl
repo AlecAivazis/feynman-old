@@ -45,9 +45,6 @@ sidebarWidth = 210px
   border-bottom: 1px solid #eeeeee
   padding-top: 10px
 
-.propertiesMenu .headerRow th
-    width: 100%
-
 tooltipColor = #3c3c3c
 
 #tooltip
@@ -67,6 +64,19 @@ tooltipColor = #3c3c3c
   text-align: center
   height: 100%
 
+.diagramProperty  
+  margin-bottom: 10px   
+
+  .label
+    text-align: left
+    margin-bottom: 10px
+
+  input
+    width: 100%
+
+#tooltip .property
+  margin-bottom: 15px
+
 #tooltip .label
   width: 60px
 
@@ -82,23 +92,8 @@ tooltipColor = #3c3c3c
   display: none
 
 .property
-
   margin-bottom: 15px
 
-  &.label 
-    text-align: right
-    text-transform: capitalize
-    padding-right: 5px
-    width: 60px
-    display: inline-block
-
-  &.value
-    text-align: left
-    width: 130px
-    display: inline-block
-
-    .button
-        width: 200px
 
 .button 
   width: 150px
@@ -221,7 +216,7 @@ circle.selectedElement
   text-align: left
   font-weight: bold
 
-.hidePanel
+.hidePanel, .showPanel
   float: right
   cursor: pointer
   color: #2d89d3
