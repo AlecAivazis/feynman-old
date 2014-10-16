@@ -41,13 +41,15 @@ block content
             slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" )
 
         .diagramProperty
-          span.button(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
+          span.button.disabled(ng-click="hideAnchors = true" ng-show="hideAnchors == false"
+                               style="margin-right: 5px")
             | hide anchors
-          span.button(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
+          span.button.enabled(ng-click="hideAnchors = false" ng-show="hideAnchors == true"
+                               style="margin-right: 5px")
             | show anchors
-          span.button(ng-click="hideGrid = true" ng-show="hideGrid == false")
+          span.button.disabled(ng-click="hideGrid = true" ng-show="hideGrid == false")
             | hide grid
-          span.button(ng-click="hideGrid = false" ng-show="hideGrid == true")
+          span.button.enabled(ng-click="hideGrid = false" ng-show="hideGrid == true")
             | show grid
       
       // WARNING: this id can't change without reflecting it in the javascript
@@ -92,7 +94,7 @@ block content
                           ng-class="{enabled: selectedElement.fixed == false, disabled: selectedElement.fixed == true}" )
                 | fixed
             .property
-              span.button(ng-click="deleteSelectedElement('anchor')")
+              span.button.delete(ng-click="deleteSelectedElement('anchor')")
                 | delete this anchor
 
           #lineProperties.propertiesMenu(ng-show="type == 'line'" )
@@ -151,7 +153,7 @@ block content
               input(type="checkbox" ng-model="selectedElement.drawEndCaps")
 
             .property
-              span.button(ng-click="deleteSelectedElement('line')")
+              span.button.delete(ng-click="deleteSelectedElement('line')")
                 | delete this line
 
         #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false")

@@ -4,7 +4,7 @@ html
   height: 100%
 
 body
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif
   width: 100%
   margin: 0
   height: 100%
@@ -36,6 +36,7 @@ sidebarWidth = 210px
   overflow: hidden
 
   padding: 20px
+  padding-top: 0
 
   -webkit-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
   -moz-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
@@ -66,6 +67,7 @@ tooltipColor = #3c3c3c
 
 .diagramProperty  
   margin-bottom: 10px   
+  text-align: center
 
   .label
     text-align: left
@@ -96,19 +98,16 @@ tooltipColor = #3c3c3c
 
 
 .button 
-  width: 150px
-  margin-left: 5px
   cursor: pointer
-
-  &.enabled
-    background: green
+  button(grey, 85px)
+  color: #1c83ce
+  height: 15px
+  border: 1px solid #bbbbbb
+  padding-top: 7px
+  text-transform: capitalize
 
   &.disabled
-    background: red
-
-#sidebar .button 
-  width: 50px
-
+    color: #bf5352
   
 
 input , select
@@ -161,10 +160,6 @@ circle.selectedElement
     color: black
 
 
-.button
-    margin-left: 5px
-    button(none, none)
-
 .lineDecoration
   fill: black
 
@@ -212,8 +207,23 @@ circle.selectedElement
   text-align: left
   padding-bottom: 10px
 
-.panelTitle
+.panelTitle, .diagramProperty .label
   text-align: left
+  font-weight: bold
+  text-transform: capitalize
+
+.diagramProperty input
+  background: #fafafa
+  border: 1px solid #bbbbbb
+  width: sidebarWidth - 10px
+  box-shadow: none
+  -moz-box-shadow: none
+  -webkit-box-shadow: none
+
+.propertyValue
+  float: right
+  font-weight: normal
+  color: #8d8d8d
   font-weight: bold
 
 .hidePanel, .showPanel
@@ -230,9 +240,3 @@ circle.selectedElement
 
   .hotkeyDescription
     margin-left: 5px
-
-
-#tooltip .button
-  width: 100%
-  color: white
-  
