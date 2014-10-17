@@ -132,26 +132,33 @@ block content
 
             .property(ng-show="selectedElement.style == 'line'")
               span.button(ng-click="selectedElement.drawArrow = true" 
-                          ng-show="selectedElement.drawArrow == false")
+                          ng-show="selectedElement.drawArrow == false" style="width: 149px")
                 | show arrow
               span.button.disabled(ng-click="selectedElement.drawArrow = false" 
-                          ng-show="selectedElement.drawArrow == true")
+                          ng-show="selectedElement.drawArrow == true" style="margin-right: 10px")
                 | hide arrow
-              &nbsp;&nbsp;&nbsp;&nbsp;
               span.button(ng-click="selectedElement.flipArrow = !selectedElement.flipArrow"
-                          ng-show="selectedElement.drawArrow == true")
+                          ng-show="selectedElement.drawArrow == true" style="width: 58px")
                 | flip
             
             .property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
               span.button(ng-click="selectedElement.loopDirection = 1" 
-                          ng-class="{enabled: selectedElement.loopDirection == -1, disabled: selectedElement.loopDirection == 1}")
+                          ng-class="{enabled: selectedElement.loopDirection == -1, disabled: selectedElement.loopDirection == 1}"
+                          style="margin-right: 8px; width: 59px")
                 | up 
               span.button(ng-click="selectedElement.loopDirection = -1" 
-                          ng-class="{enabled: selectedElement.loopDirection == 1, disabled: selectedElement.loopDirection == -1}")
+                          ng-class="{enabled: selectedElement.loopDirection == 1, disabled: selectedElement.loopDirection == -1}"
+                          style=" width: 59px;")
                 | down
 
             .property(ng-show="selectedElement.style == 'gluon'")
-              input(type="checkbox" ng-model="selectedElement.drawEndCaps")
+              span.button.disabled(ng-show="selectedElement.drawEndCaps == true" 
+                          ng-click="selectedElement.drawEndCaps = false" style="width: 150px")
+                | hide end caps
+              span.button(ng-show="selectedElement.drawEndCaps == false" 
+                          ng-click="selectedElement.drawEndCaps = true" style="width: 150px")
+                | draw end caps
+
 
             .property
               span.button.delete(ng-click="deleteSelectedElement('line')")
