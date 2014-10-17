@@ -46,7 +46,7 @@ sidebarWidth = 210px
   border-bottom: 1px solid #eeeeee
   padding-top: 10px
 
-tooltipColor = #3c3c3c
+tooltipColor = rgba(60, 60, 60, .8)
 
 #tooltip
   position: fixed
@@ -57,7 +57,6 @@ tooltipColor = #3c3c3c
   padding: 25px
 
   z-index: 20
-  opacity: .8
   color: white
 
   background: tooltipColor
@@ -105,10 +104,21 @@ tooltipColor = #3c3c3c
   border: 1px solid #bbbbbb
   padding-top: 7px
   text-transform: capitalize
+  font-weight: bold
+
+  font-size: 11px
 
   &.disabled
     color: #bf5352
-  
+
+#tooltip .button 
+  width: auto
+
+  &.delete
+    color: white
+    button(red, 150px)
+    border: none
+
 
 input , select
   text-align: left

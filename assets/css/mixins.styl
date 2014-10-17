@@ -21,8 +21,8 @@ button($color, $width)
     $shadowColor = #62d573
 
   else if $color == red
-    $color1 = #e13333
-    $color2 = #bd1717
+    $color1 = #da7a79
+    $color2 = #c85553
     $shadowColor = #f0727
 
   else if $color == grey
@@ -52,6 +52,6 @@ button($color, $width)
     color: black
 
   if $shadowColor != none
-    box-shadow: inset 0 1px 0 
+    box-shadow: inset 0 1px 0 $shadowColor
     -moz-box-shadow: inset 0 1px 0 $shadowColor
     -webkit-box-shadow: inset 0 1px 0 $shadowColor

@@ -42,10 +42,10 @@ block content
 
         .diagramProperty
           span.button.disabled(ng-click="hideAnchors = true" ng-show="hideAnchors == false"
-                               style="margin-right: 5px")
+                               style="margin-right: 3px")
             | hide anchors
           span.button.enabled(ng-click="hideAnchors = false" ng-show="hideAnchors == true"
-                               style="margin-right: 5px")
+                               style="margin-right: 3px")
             | show anchors
           span.button.disabled(ng-click="hideGrid = true" ng-show="hideGrid == false")
             | hide grid
@@ -133,7 +133,7 @@ block content
               span.button(ng-click="selectedElement.drawArrow = true" 
                           ng-show="selectedElement.drawArrow == false")
                 | show arrow
-              span.button(ng-click="selectedElement.drawArrow = false" 
+              span.button.disabled(ng-click="selectedElement.drawArrow = false" 
                           ng-show="selectedElement.drawArrow == true")
                 | hide arrow
               &nbsp;&nbsp;&nbsp;&nbsp;
