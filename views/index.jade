@@ -75,8 +75,27 @@ block content
 
         #palette(ng-show="selectedElement == false || selectedElement == undefined "
                  ng-hide="selectedGroup != false" )
-
-          | pick an element!
+          #paletteTitle
+            | item palette
+          #paletteBody
+            | Drag and drop items to add them to a canvas
+          table#paletteItems(cellspacing="20px" style="margin: -20px")
+            tr
+              td.paletteItem(element="line")
+                | line
+              td.paletteItem(element="circle")
+                | circle
+            tr
+              td.paletteItem(element="em")
+                | em
+              td.paletteItem(element="gluon")
+                | gluon
+            tr
+              td.paletteItem(element="dashed")
+                | dashed
+              td.paletteItem(element="text")
+                | text
+                  
         //#tooltipTriangle(ng-show="type == 'anchor' || type == 'line'")
           //.arrow-up
           //  &nbsp;

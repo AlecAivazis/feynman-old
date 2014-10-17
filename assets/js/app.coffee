@@ -103,6 +103,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.hideAnchors = canvas.hideAnchors
     $scope.hideGrid = canvas.hideGrid
     $rootScope.title = canvas.title
+
+    $('.paletteItem').on 'click', (event, drag) ->
+      console.log $(this).attr('element'), event
+
     refreshCanvas()
 
   
@@ -289,7 +293,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $scope.$watch 'selectedElement.style', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.draw()
-      console.log 'recalculate tooltip'
 
   $scope.$watch 'selectedElement.loopDirection', (newVal, oldVal) ->
     if $scope.selectedElement
