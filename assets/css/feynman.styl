@@ -94,11 +94,11 @@ tooltipColor = rgba(60, 60, 60, .8)
 
 .property
   margin-bottom: 15px
-
+  text-align: left
 
 .button 
   cursor: pointer
-  button(grey, 85px)
+  button(grey, auto)
   color: #1c83ce
   height: 15px
   border: 1px solid #bbbbbb
@@ -111,9 +111,6 @@ tooltipColor = rgba(60, 60, 60, .8)
   &.disabled
     color: #bf5352
 
-#tooltip .button 
-  width: auto
-
   &.delete
     color: white
     button(red, 150px)
@@ -123,7 +120,7 @@ tooltipColor = rgba(60, 60, 60, .8)
 input , select
   text-align: left
   height: 30px
-  width: 165px
+  width: 175px
   border-radius(3px)  
   border: none
   background: white
@@ -132,7 +129,7 @@ input , select
   -moz-box-shadow: inset 1px 1px 1px 0px #000000
   box-shadow: inset 1px 1px 1px 0px #000000
 
-  padding-left: 10px
+  text-indent: 10px
     
 .colorpicker
   background: white
@@ -183,13 +180,11 @@ circle.selectedElement
 
   div
     width: 30px
-    height: 32px
+    height: 30px
     display: inline-block
     background: #dddddd
     text-align: center
       
-    margin-right: -4px
-
     div
       display: inline-block
       width: 15px
@@ -198,12 +193,12 @@ circle.selectedElement
 
 
   input
-     width: 130px
+     width: 140px
      margin-right: -3px
      margin-top: -1px
      display: inline-block
      border-radius(0px)
-     height: 31px
+     border: none
 
 #mainContent
   z-index: 1
@@ -225,7 +220,7 @@ circle.selectedElement
 .diagramProperty input
   background: #fafafa
   border: 1px solid #bbbbbb
-  width: sidebarWidth - 10px
+  width: sidebarWidth
   box-shadow: none
   -moz-box-shadow: none
   -webkit-box-shadow: none

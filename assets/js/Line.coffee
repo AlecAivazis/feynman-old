@@ -13,7 +13,7 @@ class Line
     @paper.lines.push this
 
     # default values
-    @width = 2
+    @width = 2.0
     @color = '#000000'
     @loopDirection = 1
     @labelDistance = 30

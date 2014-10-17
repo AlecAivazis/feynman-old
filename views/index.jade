@@ -41,16 +41,17 @@ block content
             slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" )
 
         .diagramProperty
-          span.button.disabled(ng-click="hideAnchors = true" ng-show="hideAnchors == false"
-                               style="margin-right: 3px")
-            | hide anchors
-          span.button.enabled(ng-click="hideAnchors = false" ng-show="hideAnchors == true"
-                               style="margin-right: 3px")
-            | show anchors
-          span.button.disabled(ng-click="hideGrid = true" ng-show="hideGrid == false")
+          span.button.disabled(ng-click="hideGrid = true" ng-show="hideGrid == false"
+                               style="margin-right: 10px")
             | hide grid
-          span.button.enabled(ng-click="hideGrid = false" ng-show="hideGrid == true")
+          span.button.enabled(ng-click="hideGrid = false" ng-show="hideGrid == true"
+                               style="margin-right: 10px")
             | show grid
+          span.button.disabled(ng-click="hideAnchors = true" ng-show="hideAnchors == false")
+            | hide anchors
+          span.button.enabled(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
+            | show anchors
+
       
       // WARNING: this id can't change without reflecting it in the javascript
       #undoHistory(ng-controller="undoCtrl" current="{{current}}" )
@@ -111,7 +112,7 @@ block content
 
             .property
               slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
-                        style="width: 75%")
+                        style="width: 82%")
               | &nbsp; {{selectedElement.width}}
 
             .property
