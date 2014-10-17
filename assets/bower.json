@@ -19,6 +19,7 @@
     "angular": "~1.2.20",
     "underscore": "~1.6.0",
     "angular-bootstrap-colorpicker": "~3.0.8",
-    "snap.svg": "~0.3.0"
+    "snap.svg": "~0.3.0",
+    "jquery-ui": "~1.11.2"
   }
 }
