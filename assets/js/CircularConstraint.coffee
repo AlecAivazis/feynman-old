@@ -58,5 +58,26 @@ class CircularConstraint
 
 
   dragEnd: =>
-    console.log 'drag end'
+    # check that we actually moved somewhere
+    if @x != @origin.x and @y != @origin.y
+      # register the drag with the undo stack
+      new UndoEntry false,
+        title: "moved circular constraint"
+        data:
+          element: this
+          origin: @origin
+          newLoc:
+            x: @x
+            y: @y
+        forwards: ->
+          @data.element.handleMove(@data.newLoc.x, @data.newLoc.y)
+        backwards: ->
+          @data.element.handleMove(@data.origin.x, @data.origin.y)
+
+
+  remove: =>
+    # if the element exists on the canvas
+    if @element
+      # remove it
+      @element.remove()
     

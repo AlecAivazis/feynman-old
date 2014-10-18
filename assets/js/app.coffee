@@ -276,6 +276,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.remove()
                     @data.anchor1.remove()
                     @data.anchor2.remove()
+
               # when its a text field
               when 'text'
                 new UndoEntry false,
@@ -286,6 +287,18 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.element.draw()
                   backwards: ->
                     @data.element.remove()
+
+              # when its a circular constraint
+              when "circle"
+                new UndoEntry false,
+                  title: 'Added a circular constraint to the canvas'
+                  data:
+                    element: paletteData.selectedElement
+                  forwards: ->
+                    @data.element.draw()
+                  backwards: ->
+                    @data.element.remove()
+                  
         
         # clear the palette data so the next drag is fresh
         paletteData = {}

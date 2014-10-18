@@ -60,7 +60,7 @@ class Text
     if @x != @origin.x and @y != @origin.y
       # register the drag with the undo stack
       new UndoEntry false,
-        title: "moved text to #{@x}, #{@y}"
+        title: "moved text" 
         data:
           element: this
           origin: @origin
