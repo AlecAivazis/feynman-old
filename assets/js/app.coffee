@@ -196,6 +196,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               
           # hide the dragged element past the tooltip
           draggedElement.hide()
+      # the dragging of an element from the palette has stopped
+      stop: (event) ->
+        console.log 'stopped!'
 
   # clear the selection
   $scope.clearSelection = ->
