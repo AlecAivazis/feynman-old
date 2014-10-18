@@ -186,6 +186,16 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               
               when 'circle'
                 console.log 'new circle!'
+                # compute the coordinates on the canvas
+                paletteData.origin = canvas.getCanvasCoordinates(
+                     offset.left - $("#sidebar").width() - ( paletteData.draggedElement.width() / 2 ),
+                     offset.top + (paletteData.draggedElement.height() / 2 ) )
+                paletteData.selectedElement = new CircularConstraint(paper,paletteData.origin.x,
+                                                                           paletteData.origin.y,
+                                                                           paletteData.draggedElement.height()/2)
+                # draw the constraint
+                paletteData.selectedElement.draw()
+  
 
             # prevent future drags from creating new elements
             paletteData.placedElement = true
@@ -203,8 +213,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               # move the second anchor by the same amount as the mouse moved
               paletteData.anchor2.handleMove(paletteData.anchor2_origin.x + dx,
                                              paletteData.anchor2_origin.y + dy)
-            # when its a text field
-            when "text"
+            # when its an element by itself
+            when "text", "circle"
               # move the selected element
               mouseCoords = canvas.getCanvasCoordinates(event.pageX - $('#canvas').offset().left , event.pageY)
               paletteData.selectedElement.handleMove(mouseCoords.x, mouseCoords.y)
