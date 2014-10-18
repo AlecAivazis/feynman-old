@@ -524,6 +524,12 @@ class FeynmanCanvas
     else
       y = event.pageY 
 
+    return @getCanvasCoordinates(x, y)
+
+
+  # turn page coordinates into canvas coordinates (ie take into account zoom and pan) 
+  getCanvasCoordinates: (x, y) =>
+
     # grab the current transformation
     transformInfo =  @diagramGroup.transform().globalMatrix.split()
     # apply the transformations to the location we started the drag

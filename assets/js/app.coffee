@@ -94,6 +94,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $(document).attr('canvas').refresh()
     
 
+  # store an object for the palette data
+  paletteData = {}
+    
+    
   # load the canvas atrributes when snap is done loading
   $(document).on 'doneWithInit', ->
     canvas = $(document).attr 'canvas'
@@ -104,12 +108,83 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.hideGrid = canvas.hideGrid
     $rootScope.title = canvas.title
 
-    $('.paletteItem').on 'click', (event, drag) ->
-      console.log $(this).attr('element'), event
-
     refreshCanvas()
 
-  
+    # add the drag handlers to the items on the pallet
+    $('.paletteItem').draggable
+      # use the image as the element that is dragged
+      helper: 'clone'
+      # at the beginning of the drag
+      start: ->
+        # compute the offset of the tooltip once
+        paletteData.tooltipOffset = $('#tooltip').offset()
+        paletteData.placedElement = false
+        # prevent the function from returning anything
+        return
+      # while the user is dragging
+      drag: (event) ->
+        # when the element gets outside of the tooltip
+        if event.pageX < paletteData.tooltipOffset.left
+          # save a reference to the element were dragging
+          draggedElement = $('.ui-draggable-dragging').eq(0)
+          # figure out its type
+          type = draggedElement.attr('element')
+          # if its the first time we have been past the tooltip
+          if not paletteData.placedElement
+            # grab the paper object from the canvas
+            paper = $(document).attr('canvas').paper
+            # compute the offset of the dragged element
+            offset = draggedElement.offset()
+            
+            # handle each type independently
+            switch type
+              # when it is a line style
+              when "line", "em", "gluon", "dashed"
+                # compute the lower left coordinates of the bounding box
+                lowerLeft = canvas.getCanvasCoordinates(
+                   offset.left - draggedElement.width() - $('#sidebar').width(),
+                   offset.top + draggedElement.height() )
+                # make an anchor at the lower left corner
+                anchor1 = new Anchor(paper, lowerLeft.x, lowerLeft.y)
+                # draw the anchor
+                anchor1.draw()
+
+                # compute the upper right coordinates of the bounding box
+                upperRight = canvas.getCanvasCoordinates( offset.left - $('#sidebar').width() , offset.top )
+                # create an anchor at the upper right coordinates
+                anchor2 = new Anchor(paper, upperRight.x, upperRight.y)
+
+                # make a line joining the two anchors with the appropriate style
+                line = new Line(paper, anchor1, anchor2, type)
+              
+                # draw the second anchor
+                anchor2.draw()
+
+                # select the newly created line
+                $(document).trigger 'selectedElement', [line, 'line']
+
+                paletteData.selectedElement = line
+                paletteData.anchor1_origin = lowerLeft
+                paletteData.anchor2_origin = upperRight
+
+              when 'text'
+                console.log 'new text!'
+              when 'circle'
+                console.log 'new circle!'
+
+            # prevent future drags from creating new elements
+            paletteData.placedElement = true
+
+          # move the selected element
+          switch type
+            # when it is a line style
+            when "line", "em", "gluon", "dashed"
+              
+              console.log event
+          
+          # hide the dragged element past the tooltip
+          draggedElement.hide()
+
   # clear the selection
   $scope.clearSelection = ->
   
