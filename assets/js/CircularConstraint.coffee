@@ -46,18 +46,21 @@ class CircularConstraint
     dx = x - @x
     dy = y - @y
     # and the slope of the line joining the two
-    m = (y - @y)/(x - @x)
+    m = dy/dx 
     # calculate the distances from the origin
     translate =
       x: Math.sqrt(@r*@r / (1 + (m*m)))
       y: m * Math.sqrt(@r*@r / (1 + (m*m)))
-
-    if dx >= 0 
+    # apply the right translations in the appropriate quadrant
+    if dx > 0 
       x: @x + translate.x
       y: @y + translate.y
-    else
+    else if dx < 0
       x: @x - translate.x
       y: @y - translate.y
+    else
+      x: @x
+      y: if dy >0 then @y + @r else @y - @r
 
 
   isPointInside: (x, y) =>
