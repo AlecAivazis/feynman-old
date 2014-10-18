@@ -129,6 +129,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           draggedElement = $('.ui-draggable-dragging').eq(0)
           # figure out its type
           type = draggedElement.attr('element')
+
           # if its the first time we have been past the tooltip
           if not paletteData.placedElement
             # grab the paper object from the canvas
@@ -163,9 +164,13 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 # select the newly created line
                 $(document).trigger 'selectedElement', [line, 'line']
 
-                paletteData.selectedElement = line
+                paletteData.anchor1 = anchor1
+                paletteData.anchor2 = anchor2
                 paletteData.anchor1_origin = lowerLeft
                 paletteData.anchor2_origin = upperRight
+                paletteData.mouse_origin =
+                  x: event.pageX
+                  y: event.pageY
 
               when 'text'
                 console.log 'new text!'
@@ -179,9 +184,16 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           switch type
             # when it is a line style
             when "line", "em", "gluon", "dashed"
+              # compute the change in mouse coordinates
+              dx = (event.pageX - paletteData.mouse_origin.x)/canvas.zoomLevel
+              dy = (event.pageY - paletteData.mouse_origin.y)/canvas.zoomLevel
+              # move the first anchor by the same amount as the mouse moved
+              paletteData.anchor1.handleMove(paletteData.anchor1_origin.x + dx,
+                                             paletteData.anchor1_origin.y + dy)
+              # move the second anchor by the same amount as the mouse moved
+              paletteData.anchor2.handleMove(paletteData.anchor2_origin.x + dx,
+                                             paletteData.anchor2_origin.y + dy)
               
-              console.log event
-          
           # hide the dragged element past the tooltip
           draggedElement.hide()
 
