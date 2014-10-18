@@ -290,15 +290,49 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
               # when its a circular constraint
               when "circle"
-                new UndoEntry false,
-                  title: 'Added a circular constraint to the canvas'
-                  data:
-                    element: paletteData.selectedElement
-                  forwards: ->
-                    @data.element.draw()
-                  backwards: ->
-                    @data.element.remove()
-                  
+                # check if any anchors needs to be constrained
+                constrained = $(document).attr('canvas').checkAnchorsForConstraint(paletteData.selectedElement)
+                # if any anchors were there
+                if constrained.length > 0
+                  # go over each of the constrained anchors
+                  _.each constrained, (anchor) ->
+                    # apply the constrain
+                    anchor.addConstraint(paletteData.selectedElement)
+                    # draw the anchor with the new constrain
+                    anchor.draw()
+                  # register the new constraint with the undo stack
+                  new UndoEntry false,
+                    title: 'created constraint for anchors'
+                    data:
+                      constraint: paletteData.selectedElement
+                      anchors: constrained
+                    backwards: ->
+                      @data.constraint.remove()
+                      # remove the constraint from the anchors
+                      _.each @data.anchors, (anchor) ->
+                        anchor.removeConstraint()
+                        # draw the anchor with the updated constraint
+                        anchor.draw()
+                    forwards: ->
+                      constraint = @data.constraint
+                      constraint.draw()
+                      # add the constraint to the anchors
+                      _.each @data.anchors, (anchor) ->
+                        anchor.addConstraint(constraint)
+                        # draw the anchor with the new constraint
+                        anchor.draw()
+                    
+                # no anchors need constraining
+                else
+                  # register the free constraint with the undo stack
+                  new UndoEntry false,
+                    title: 'Added a circular constraint to the canvas'
+                    data:
+                      element: paletteData.selectedElement
+                    forwards: ->
+                      @data.element.draw()
+                    backwards: ->
+                      @data.element.remove()
         
         # clear the palette data so the next drag is fresh
         paletteData = {}
