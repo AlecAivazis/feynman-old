@@ -164,7 +164,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 # select the newly created line
                 $(document).trigger 'selectedElement', [line, 'line']
                 paletteData.selectedElement = line
-
+                # store the necessary data
                 paletteData.anchor1 = anchor1
                 paletteData.anchor2 = anchor2
                 paletteData.anchor1_origin = lowerLeft
@@ -174,7 +174,16 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                   y: event.pageY
 
               when 'text'
-                console.log 'new text!'
+                # compute the coordinates on the canvas
+                paletteData.origin = canvas.getCanvasCoordinates(
+                     offset.left - $("#sidebar").width() - ( paletteData.draggedElement.width() / 2 ),
+                     offset.top + (paletteData.draggedElement.height() / 2 ) )
+                # create the text object at the appropriate coordinates
+                paletteData.selectedElement = new Text(paper, paletteData.origin.x,
+                                                              paletteData.origin.y, 'Enter text here!')
+                # draw the text field
+                paletteData.selectedElement.draw()
+              
               when 'circle'
                 console.log 'new circle!'
 
@@ -194,7 +203,12 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               # move the second anchor by the same amount as the mouse moved
               paletteData.anchor2.handleMove(paletteData.anchor2_origin.x + dx,
                                              paletteData.anchor2_origin.y + dy)
-              
+            # when its a text field
+            when "text"
+              # move the selected element
+              mouseCoords = canvas.getCanvasCoordinates(event.pageX - $('#canvas').offset().left , event.pageY)
+              paletteData.selectedElement.handleMove(mouseCoords.x, mouseCoords.y)
+
           # hide the dragged element past the tooltip
           paletteData.draggedElement.hide()
 
