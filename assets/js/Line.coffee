@@ -685,42 +685,84 @@ class Line
         otherAnch = if otherLine.anchor1 == splitAnch then otherLine.anchor2 else otherLine.anchor1
         # get the anchor that is connected to this
         thisAnch = if this.anchor1 == splitAnch then this.anchor2 else this.anchor1
-        
-        # regsiter the creation of the branch with the undo stack
-        new UndoEntry false,
-          title: 'added branch to propagator'
-          data: [@newAnchor, newLine, splitAnch, otherLine, otherAnch, this, thisAnch]
-          # the forwards action is to fake the branch by bringing back the old elements
-          forwards: ->
-            # remove this from the other anchor
-            @data[4].removeLine @data[5]
-            # ressurect the newAnchor
-            @data[0].ressurect()
-            # ressurect the splitAnchor
-            @data[2].ressurect()
-            # while were at it replace other anchor with split anch in me
-            @data[5].replaceAnchor @data[4], @data[2]
-            # ressurect the newLine
-            @data[1].ressurect()
-            # ressurect the other anchorr
-            @data[4].ressurect()
-            # ressurect the other line
-            @data[3].ressurect()
-            # draw the anchors
-            @data[0].draw()
-            @data[2].draw()
-            @data[4].draw()
-          # the backwards removes everything and makes this back to what it was
-          backwards: ->
-            # remove the intermediate elements
-            @data[0].remove()
-            @data[1].remove()
-            @data[2].remove()
-            @data[3].remove()
-            # before removing the midAnch, lets replace it with the otherAnch
-            @data[5].replaceAnchor @data[2], @data[4]
-            @data[4].addLine @data[5]
-            @data[4].draw()
+
+        # check if the newAnchor was made on a constraint
+        onConstraint = $(document).attr('canvas').isAnchorOnConstraint(@newAnchor)
+        # if such a constraint exists
+        if onConstraint
+          # apply the constraint to the anchor
+          @newAnchor.addConstraint(onConstraint)
+          # draw the new anchor with the updated constraint
+          @newAnchor.draw()
+          # register this with the undo stack
+          new UndoEntry false,
+            title: 'added internal constrained propagator'
+            data:
+              newAnchor: @newAnchor
+              constraint: onConstraint
+              newLine: newLine
+              splitAnchor: splitAnch
+              otherLine: otherLine
+              otherAnchor: otherAnch
+              originalLine: this
+              originalAnchor: thisAnch
+            backwards: ->
+              @data.newAnchor.removeConstraint()
+              @data.otherLine.remove()
+              @data.newAnchor.remove()
+              @data.newLine.remove()
+              @data.splitAnchor.remove()
+              @data.otherAnchor.removeLine(@data.otherLine)
+              @data.originalLine.replaceAnchor(@data.splitAnchor, @data.otherAnchor)
+              @data.otherAnchor.addLine(@data.originalLine)
+              @data.originalAnchor.draw()
+            forwards: ->
+              @data.newAnchor.ressurect()
+              @data.newAnchor.addConstraint(@data.constraint)
+              @data.newAnchor.draw()
+              @data.otherAnchor.removeLine(@data.originalLine)
+              @data.splitAnchor.ressurect()
+              @data.originalLine.replaceAnchor(@data.otherAnchor, @data.splitAnchor)
+              @data.splitAnchor.addLine(@data.originalLine)
+              @data.otherLine.ressurect()
+              @data.newLine.ressurect()
+              @data.splitAnchor.draw()
+              
+              
+        else
+          # regsiter the creation of the branch with the undo stack
+          new UndoEntry false,
+            title: 'added branch to propagator'
+            data: [@newAnchor, newLine, splitAnch, otherLine, otherAnch, this, thisAnch]
+            # the forwards action is to fake the branch by bringing back the old elements
+            forwards: ->
+              # remove this from the other anchor
+              @data[4].removeLine @data[5]
+              # ressurect the newAnchor
+              @data[0].ressurect()
+              # ressurect the splitAnchor
+              @data[2].ressurect()
+              # while were at it replace other anchor with split anch in me
+              @data[5].replaceAnchor @data[4], @data[2]
+              # ressurect the newLine
+              @data[1].ressurect()
+              # ressurect the other anchorr
+              @data[3].ressurect()
+              # draw the anchors
+              @data[0].draw()
+              @data[2].draw()
+              @data[4].draw()
+            # the backwards removes everything and makes this back to what it was
+            backwards: ->
+              # remove the intermediate elements
+              @data[0].remove()
+              @data[1].remove()
+              @data[2].remove()
+              @data[3].remove()
+              # before removing the midAnch, lets replace it with the otherAnch
+              @data[5].replaceAnchor @data[2], @data[4]
+              @data[4].addLine @data[5]
+              @data[4].draw()
     # a new anchor was not created during this drag
     else
       # only continue if it was an actual move
