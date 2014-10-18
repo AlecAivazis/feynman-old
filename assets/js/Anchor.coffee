@@ -236,10 +236,12 @@ class Anchor
             constraint: onConstraint
           forwards: ->
             @data.anchor.ressurect()
+            @data.anchor.addConstraint(@data.constraint)
             @data.line.ressurect()
             @data.anchor.draw()
           backwards: ->
             @data.anchor.remove()
+            @data.anchor.removeConstraint()
             @data.line.remove()
       
 

@@ -88,19 +88,63 @@ class CircularConstraint
   dragEnd: =>
     # check that we actually moved somewhere
     if @x != @origin.x and @y != @origin.y
-      # register the drag with the undo stack
-      new UndoEntry false,
-        title: "moved circular constraint"
-        data:
-          element: this
-          origin: @origin
-          newLoc:
-            x: @x
-            y: @y
-        forwards: ->
-          @data.element.handleMove(@data.newLoc.x, @data.newLoc.y)
-        backwards: ->
-          @data.element.handleMove(@data.origin.x, @data.origin.y)
+      # see if any anchors need to be constrained
+      constrained = $(document).attr('canvas').checkAnchorsForConstraint(this)
+      constraint = this
+      # if there are anchors that we constrained
+      if constrained.length > 0
+        # go over each of them
+        _.each constrained, (anchor) ->
+          # add the constraint
+          anchor.addConstraint(constraint)
+          # draw with the updated constraint
+          anchor.draw()
+        # register the move and constrain with the undo stack
+        new UndoEntry false,
+          title: 'moved circular constraint ontop of anchors'
+          data:
+            anchors: constrained
+            constraint: constraint
+            origin: @origin
+            newLoc:
+              x: @x
+              y: @y
+          backwards: ->
+            constraint = @data.constraint
+            # go over each anchor
+            _.each @data.anchors, (anchor) ->
+              # remove the constraint
+              anchor.removeConstraint(constraint)
+              # draw without the constraint
+              anchor.draw()
+            # move the constraint back to the origin
+            @data.constraint.handleMove(@data.origin.x, @data.origin.y)
+          forwards: ->
+            constraint = @data.constraint
+            # move to the new location
+            @data.constraint.handleMove(@data.newLoc.x, @data.newLoc.y)
+            # go over each of the anchors
+            _.each @data.anchors, (anchor) ->
+              # apply the constraint
+              anchor.addConstraint(constraint)
+              # draw with the new constraint
+              anchor.draw()
+            
+
+      else
+        # register the drag with the undo stack
+        new UndoEntry false,
+          title: "moved circular constraint"
+          data:
+            constraint: this
+            origin: @origin
+            newLoc:
+              x: @x
+              y: @y
+          forwards: ->
+            @data.constraint.handleMove(@data.newLoc.x, @data.newLoc.y)
+          backwards: ->
+            @data.constraint.handleMove(@data.origin.x, @data.origin.y)
 
 
   remove: =>

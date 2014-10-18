@@ -487,13 +487,30 @@ class FeynmanCanvas
     $(document).trigger('clearSelection')
 
 
+  # check all anchors for possible constraints
+  checkAnchorsForConstraint: (constraint) =>
+    # keep a list of the anchors we constrained
+    constrained = []
+    # go over every anchor
+    _.each @paper.anchors, (anchor) ->
+      # and see if we can constrain it
+      onConstraint = $(document).attr('canvas').isAnchorOnConstraint(anchor)
+      # if such a constraint exists
+      if onConstraint
+        # add it to the list
+        constrained.push(anchor)
+
+    # once were done return the list 
+    return constrained
+
+
   # check if a particular anchor falls in a constraint
   isAnchorOnConstraint: (anchor) =>
     # start with a false response
     constraint = false
     # loop over every constraint
     _.each @paper.constraints, (cons) ->
-      if cons.isPointInside(anchor.x, anchor.y)
+      if cons.isPointInside(anchor.x, anchor.y) and anchor not in cons.anchors
         constraint = cons
 
     # return the response
