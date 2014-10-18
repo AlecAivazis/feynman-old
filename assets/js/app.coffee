@@ -204,11 +204,13 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           if paletteData.selectedElement
             # when its a line
             if paletteData.type in ["line", "em", "gluon", "dashed"]
+              # remove the two anchors
               paletteData.selectedElement.anchor1.remove()
               paletteData.selectedElement.anchor2.remove()
 
+            # remove the selected element
             paletteData.selectedElement.remove()
-
+            # clear the palette data associated with the created element
             paletteData.placedElement = false
             paletteData.selectedElement = undefined
             # clear the selection 
@@ -271,6 +273,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # clear the angular selection
     $scope.selectedElement = false
     $scope.selectedGroup = false
+    # apply these changes to angular
     $scope.$apply()
 
 
