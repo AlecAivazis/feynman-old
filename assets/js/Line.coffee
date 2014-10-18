@@ -733,8 +733,13 @@ class Line
     @newAnchor = undefined
 
 
+  # check if either of the lines anchors should be merged onto a line or anchor
+  checkForMerges: =>
+    return false
+
+
   # return if the given coordiantes fall on the line joining the two anchors
-  isLocationBetweenAnchors: (x, y) ->
+  isLocationBetweenAnchors: (x, y) =>
     # compute the bounds of the rectangle
     lowerx = if @anchor1.x > @anchor2.x then @anchor2.x else @anchor1.x
     upperx = if @anchor1.x > @anchor2.x then @anchor1.x else @anchor2.x

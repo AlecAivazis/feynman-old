@@ -119,32 +119,32 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         # compute the offset of the tooltip once
         paletteData.tooltipOffset = $('#tooltip').offset()
         paletteData.placedElement = false
+
+        # save a reference to the element were dragging
+        paletteData.draggedElement = $('.ui-draggable-dragging').eq(0)
+        # figure out its type
+        paletteData.type = paletteData.draggedElement.attr('element')
         # prevent the function from returning anything
         return
       # while the user is dragging
       drag: (event) ->
         # when the element gets outside of the tooltip
         if event.pageX < paletteData.tooltipOffset.left
-          # save a reference to the element were dragging
-          draggedElement = $('.ui-draggable-dragging').eq(0)
-          # figure out its type
-          type = draggedElement.attr('element')
-
           # if its the first time we have been past the tooltip
           if not paletteData.placedElement
             # grab the paper object from the canvas
             paper = $(document).attr('canvas').paper
             # compute the offset of the dragged element
-            offset = draggedElement.offset()
+            offset = paletteData.draggedElement.offset()
             
             # handle each type independently
-            switch type
+            switch paletteData.type
               # when it is a line style
               when "line", "em", "gluon", "dashed"
                 # compute the lower left coordinates of the bounding box
                 lowerLeft = canvas.getCanvasCoordinates(
-                   offset.left - draggedElement.width() - $('#sidebar').width(),
-                   offset.top + draggedElement.height() )
+                   offset.left - paletteData.draggedElement.width() - $('#sidebar').width(),
+                   offset.top + paletteData.draggedElement.height() )
                 # make an anchor at the lower left corner
                 anchor1 = new Anchor(paper, lowerLeft.x, lowerLeft.y)
                 # draw the anchor
@@ -156,13 +156,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 anchor2 = new Anchor(paper, upperRight.x, upperRight.y)
 
                 # make a line joining the two anchors with the appropriate style
-                line = new Line(paper, anchor1, anchor2, type)
+                line = new Line(paper, anchor1, anchor2, paletteData.type)
               
                 # draw the second anchor
                 anchor2.draw()
 
                 # select the newly created line
                 $(document).trigger 'selectedElement', [line, 'line']
+                paletteData.selectedElement = line
 
                 paletteData.anchor1 = anchor1
                 paletteData.anchor2 = anchor2
@@ -181,7 +182,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             paletteData.placedElement = true
 
           # move the selected element
-          switch type
+          switch paletteData.type
             # when it is a line style
             when "line", "em", "gluon", "dashed"
               # compute the change in mouse coordinates
@@ -195,10 +196,40 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                                              paletteData.anchor2_origin.y + dy)
               
           # hide the dragged element past the tooltip
-          draggedElement.hide()
+          paletteData.draggedElement.hide()
       # the dragging of an element from the palette has stopped
       stop: (event) ->
-        console.log 'stopped!'
+        # check if the newly created element can be merged onto anything
+        if paletteData.selectedElement and paletteData.selectedElement.checkForMerges
+          merges =  paletteData.selectedElement.checkForMerges()
+      
+        if merges
+          console.log 'there are merges for the newly created element BEGIN THE UNDO TREE'
+        else
+          switch paletteData.type
+            # when it is a line style
+            when "line", "em", "gluon", "dashed"
+              # register the element creation with the undo stack
+              new UndoEntry false,
+                title: "Added a standalone #{paletteData.type} propagator from the palette"
+                data:
+                  line: paletteData.selectedElement
+                  anchor1: paletteData.anchor1
+                  anchor2: paletteData.anchor2
+                forwards: ->
+                  @data.anchor1.ressurect() 
+                  @data.anchor2.ressurect() 
+                  @data.line.ressurect()
+                  @data.anchor1.draw()
+                  @data.anchor2.draw()
+                backwards: ->
+                  @data.line.remove()
+                  @data.anchor1.remove()
+                  @data.anchor2.remove()
+        
+              
+          
+        paletteData = {}
 
   # clear the selection
   $scope.clearSelection = ->
