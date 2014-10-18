@@ -76,9 +76,14 @@ class CircularConstraint
 
   onDrag: (deltaX, deltaY, x, y, event) =>
     # compute the coordinates with the canvas transforms
-    coords = $(document).attr('canvas').getCanvasCoordinates(@origin.x + deltaX, @origin.y + deltaY)
-    # move the text to the new coordinates
-    @handleMove(coords.x, coords.y)
+    zoom = $(document).attr('canvas').zoomLevel
+    # if the alt key was held
+    if event.altKey 
+      @targetAnchor.handleMove(@origin.x + deltaX/zoom, @origin.y + deltaY/zoom)
+    # nothing was held down
+    else
+      # move the text to the new coordinates
+      @handleMove(@origin.x + deltaX/zoom, @origin.y + deltaY/zoom)
 
 
   dragStart: (x, y, event) =>
@@ -88,6 +93,22 @@ class CircularConstraint
     @origin =
       x: @x
       y: @y
+
+    # check if the alt key was held down
+    if event.altKey
+      coords = $(document).attr('canvas').getCanvasCoordinates(x - $("#canvas").offset().left, y)
+      # create an anchor at the coordiantes
+      @newAnchor = new Anchor(@paper, coords.x, coords.y)
+      # constrain the anchor to the constraint
+      @newAnchor.addConstraint(this)
+      # draw the anchor with the new constraint
+      @newAnchor.draw()
+      # make a second anchor connected to this one
+      @targetAnchor = @newAnchor.split(true)
+      @origin =
+        x: coords.x
+        y: coords.y
+      
 
 
   dragEnd: =>
