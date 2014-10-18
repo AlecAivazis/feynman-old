@@ -188,7 +188,6 @@ class Line
     @labelOrigin = @getLabelCoordinates()
       
 
-
   # move the label as you drag it around
   labelDrag: (deltaX, deltaY, x, y, event) =>
     event.stopPropagation()

@@ -180,7 +180,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                      offset.top + (paletteData.draggedElement.height() / 2 ) )
                 # create the text object at the appropriate coordinates
                 paletteData.selectedElement = new Text(paper, paletteData.origin.x,
-                                                              paletteData.origin.y, 'Enter text here!')
+                                                              paletteData.origin.y, 'text!')
                 # draw the text field
                 paletteData.selectedElement.draw()
               
@@ -268,6 +268,16 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.remove()
                     @data.anchor1.remove()
                     @data.anchor2.remove()
+              # when its a text field
+              when 'text'
+                new UndoEntry false,
+                  title: 'Added a text field to the canvas'
+                  data:
+                    element: paletteData.selectedElement
+                  forwards: ->
+                    @data.element.draw()
+                  backwards: ->
+                    @data.element.remove()
         
         # clear the palette data so the next drag is fresh
         paletteData = {}
