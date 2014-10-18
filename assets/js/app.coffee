@@ -39,7 +39,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   # align the tooltip element along an element
   $scope.orientTooltip = (element, type) ->
     # compute the coordinates of the event to place the tooltip
-    console.log type
     x = $('#sidebar').width()
     y = 0
     switch type
@@ -185,7 +184,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 paletteData.selectedElement.draw()
               
               when 'circle'
-                console.log 'new circle!'
                 # compute the coordinates on the canvas
                 paletteData.origin = canvas.getCanvasCoordinates(
                      offset.left - $("#sidebar").width() - ( paletteData.draggedElement.width() / 2 ),

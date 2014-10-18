@@ -41,12 +41,20 @@ class CircularConstraint
     return false
 
 
-  onDrag: (dx, dy, x, y, event) =>
-    console.log 'onDrag'
+  onDrag: (deltaX, deltaY, x, y, event) =>
+    # compute the coordinates with the canvas transforms
+    coords = $(document).attr('canvas').getCanvasCoordinates(@origin.x + deltaX, @origin.y + deltaY)
+    # move the text to the new coordinates
+    @handleMove(coords.x, coords.y)
 
 
   dragStart: (x, y, event) =>
-    console.log 'drag start'
+    # stop propagation
+    event.stopPropagation()
+    # save the original location
+    @origin =
+      x: @x
+      y: @y
 
 
   dragEnd: =>
