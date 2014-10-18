@@ -19,6 +19,11 @@ class CircularConstraint
     # add the circular element to the canvas
     @element = @paper.circle(@x, @y, @r)
 
+    @element.attr
+      fill: 'transparent'
+      stroke: 'black'
+      strokeWidth: 2
+
     # add it to the diagram group aswell
     $(document).attr('canvas').addToDiagram(@element)
 
@@ -101,7 +106,7 @@ class CircularConstraint
           anchor.draw()
         # register the move and constrain with the undo stack
         new UndoEntry false,
-          title: 'moved circular constraint ontop of anchors'
+          title: 'moved circular constraint on top of anchors'
           data:
             anchors: constrained
             constraint: constraint
