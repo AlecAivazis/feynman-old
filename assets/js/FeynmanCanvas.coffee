@@ -12,6 +12,7 @@ class FeynmanCanvas
     @diagramGroup = @paper.g().addClass('diagram')
     @paper.anchors = [] 
     @paper.lines = [] 
+    @paper.constraints = []
     @zoomLevel = 1
 
     # default values
@@ -485,6 +486,19 @@ class FeynmanCanvas
     # and clear the selection
     $(document).trigger('clearSelection')
 
+
+  # check if a particular anchor falls in a constraint
+  isAnchorOnConstraint: (anchor) =>
+    # start with a false response
+    constraint = false
+    # loop over every constraint
+    _.each @paper.constraints, (cons) ->
+      if cons.isPointInside(anchor.x, anchor.y)
+        constraint = cons
+
+    # return the response
+    return constraint
+      
 
   # check if a particular anchor falls on any of the lines in the canvas
   # removing any of its children before calculating

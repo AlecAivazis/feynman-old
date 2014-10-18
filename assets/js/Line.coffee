@@ -259,10 +259,12 @@ class Line
   align: (element, width) =>
 
     # current x loc for path generation
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    anchor1 = @anchor1.getLocation()
+    x1 = anchor1.x
+    y1 = anchor1.y 
+    anchor2 = @anchor2.getLocation()
+    x2 = anchor2.x
+    y2 = anchor2.y 
 
     # compute the lengths between the anchors
     dx = x2 - x1
@@ -291,10 +293,12 @@ class Line
 
   drawAsLine: =>
     # add the line to the dom
-    x1 = @anchor1.x
-    y1 = @anchor1.y
-    x2 = @anchor2.x
-    y2 = @anchor2.y
+    anchor1 = @anchor1.getLocation()
+    x1 = anchor1.x
+    y1 = anchor1.y
+    anchor2 = @anchor2.getLocation()
+    x2 = anchor2.x
+    y2 = anchor2.y
     @paper.path('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2)
 
 
@@ -307,10 +311,12 @@ class Line
 
   drawAsGluon: =>
     # the coordinates of the anchors
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    anchor1 = @anchor1.getLocation()
+    x1 = anchor1.x
+    y1 = anchor1.y 
+    anchor2 = @anchor2.getLocation()
+    x2 = anchor2.x
+    y2 = anchor2.y 
     # compute the length of the line
     dx = x1 - x2
     dy = y1 - y2
@@ -373,10 +379,12 @@ class Line
 
   drawAsGluonWithEndCaps: =>
     # the coordinates of the anchors
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    anchor1 = @anchor1.getLocation()
+    x1 = anchor1.x
+    y1 = anchor1.y 
+    anchor2 = @anchor2.getLocation()
+    x2 = anchor2.x
+    y2 = anchor2.y 
 
     # compute the length of the line
     dx = x1 - x2
@@ -473,10 +481,12 @@ class Line
     # the height of the pattern
     amplitude = 3*scale/2
     # the coordinates of the anchors
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    anchor1 = @anchor1.getLocation()
+    x1 = anchor1.x
+    y1 = anchor1.y 
+    anchor2 = @anchor2.getLocation()
+    x2 = anchor2.x
+    y2 = anchor2.y 
     # compute the length of the line
     dx = x1 - x2
     dy = y1 - y2

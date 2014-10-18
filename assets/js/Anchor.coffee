@@ -26,6 +26,14 @@ class Anchor
       @lines.push lines
 
 
+  getLocation: =>
+    if @constraint
+      @constraint.constrain(@x, @y)
+    else
+      x: @x
+      y: @y
+
+
   # update the anchor element on the user interface
   draw: =>
     # default status is not selected
@@ -40,8 +48,16 @@ class Anchor
       # remove it
       @element.remove()
 
+    x = @x
+    y = @y
+
+    if @constraint
+      coords = @constraint.constrain(@x, @y)
+      x = coords.x
+      y = coords.y
+
     # add the circle at the appropriate location with the on move event handler
-    @element = @paper.circle(@x, @y, @radius).attr
+    @element = @paper.circle(x, y, @radius).attr
       fill: if @color then @color else 'black'
 
     @element.anchor = this
@@ -169,6 +185,7 @@ class Anchor
     if @newAnchor == targetAnchor
       # check if there is a line under this anchor
       onLine = $(document).attr('canvas').isAnchorOnLine(@newAnchor)
+      onConstraint = $(document).attr('canvas').isAnchorOnConstraint(@newAnchor)
       # if such a line exists
       if onLine
         # save a reference to the joining line for the new anchor
@@ -203,6 +220,28 @@ class Anchor
             @data.splitAnchor.remove()
             @data.splitLine.remove()
             @data.otherAnchor.draw()
+
+      # if the anchor was created onto a constraint
+      else if onConstraint
+        # add the constraint to the anchor
+        @newAnchor.addConstraint(onConstraint)
+        # update the new anchor with the constraint
+        @newAnchor.draw()
+        # register it with the undo stack
+        new UndoEntry false,
+          title: 'created vertex constrained to circle'
+          data:
+            anchor: targetAnchor
+            line: lines[0]
+            constraint: onConstraint
+          forwards: ->
+            @data.anchor.ressurect()
+            @data.line.ressurect()
+            @data.anchor.draw()
+          backwards: ->
+            @data.anchor.remove()
+            @data.line.remove()
+      
 
       # otherwise this anchor was not created onto a line
       else
@@ -284,7 +323,7 @@ class Anchor
       else
         # register the move with the undo stack but do not waste the time performing it again
         new UndoEntry false,
-          title: 'moved vertex to ' + @x + ', ' + @y 
+          title: 'moved vertex' 
           data: [@paper, targetAnchor, targetAnchor.x, targetAnchor.y,
                          targetAnchor.origin_x, targetAnchor.origin_y]
           # the forward action is to move to the current location
@@ -466,16 +505,33 @@ class Anchor
     @handleMove(@x, @y)
 
 
+  addConstraint: (constraint) =>
+    @constraint = constraint
+    constraint.anchors.push this
+
+
+  removeConstraint: =>
+    @constraint.anchors = _.without @constraint.anchors, this
+    @constraint = undefined
+
+
   handleMove: (x, y, useGrid = true) =>
     # if its fixed
     if @fixed
       # dont do anything
       return
        
-    # grab the document's feynman canvas
+    # grab the canvas grid size
     gridSize = $(document).attr('canvas').gridSize
+    # check if the anchor is constrained to anything
+    if @constraint
+      # calculate the constrained coordinates
+      coords = @constraint.constrain(x, y)
+      # set the coordinates from the constraint
+      @x = coords.x
+      @y = coords.y
     # if they want to snap everything to a grid
-    if gridSize > 0
+    else if gridSize > 0
       # find the nearest point on the grid
       @x = Math.round(x/gridSize)*gridSize
       @y = Math.round(y/gridSize)*gridSize

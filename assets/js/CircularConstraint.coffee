@@ -7,6 +7,8 @@
 class CircularConstraint
 
   constructor: (@paper, @x, @y, @r) ->
+    @paper.constraints.push this
+    @anchors = []
 
   draw: =>
     # if an element already exists on the canvas
@@ -23,6 +25,13 @@ class CircularConstraint
     # add the event handlers
     @element.drag @onDrag, @dragStart, @dragEnd
 
+    # draw each of the anchors
+    _.each @anchors, (anchor) ->
+      anchor.draw()
+      # draw each of the anchors lines
+      _.each anchor.lines, (line) ->
+        line.draw()
+
 
   handleMove: (x, y) =>
     # set the instance variables
@@ -33,12 +42,28 @@ class CircularConstraint
 
 
   constrain: (x , y) =>
-    x: x
-    y: y
+    # compute the distances between the point and the center
+    dx = x - @x
+    dy = y - @y
+    # and the slope of the line joining the two
+    m = (y - @y)/(x - @x)
+    # calculate the distances from the origin
+    translate =
+      x: Math.sqrt(@r*@r / (1 + (m*m)))
+      y: m * Math.sqrt(@r*@r / (1 + (m*m)))
+
+    if dx >= 0 
+      x: @x + translate.x
+      y: @y + translate.y
+    else
+      x: @x - translate.x
+      y: @y - translate.y
 
 
   isPointInside: (x, y) =>
-    return false
+    dx = x - @x
+    dy = y - @y
+    return Math.sqrt(dx*dx + dy*dy) < @r
 
 
   onDrag: (deltaX, deltaY, x, y, event) =>
@@ -80,4 +105,5 @@ class CircularConstraint
     if @element
       # remove it
       @element.remove()
-    
+
+    @paper.constraints = _.without @paper.constraints, this
