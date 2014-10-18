@@ -181,11 +181,11 @@ class Anchor
       @newAnchor = undefined
       return
 
+    onConstraint = $(document).attr('canvas').isAnchorOnConstraint(targetAnchor)
     # if i am supposed to be a new anchor
     if @newAnchor == targetAnchor
       # check if there is a line under this anchor
       onLine = $(document).attr('canvas').isAnchorOnLine(@newAnchor)
-      onConstraint = $(document).attr('canvas').isAnchorOnConstraint(@newAnchor)
       # if such a line exists
       if onLine
         # save a reference to the joining line for the new anchor
@@ -320,8 +320,39 @@ class Anchor
             @data.anchor.handleMove(@data.origin.x, @data.origin.y)
             @data.otherAnchor.addLine @data.originalLine
             @data.otherAnchor.draw()
+
+      # otherwise if the anchor was moved on a constraint
+      else if onConstraint
+        # add the constraint to the new target
+        targetAnchor.addConstraint(onConstraint)
+        # draw with the target with the new constraint
+        targetAnchor.draw()
+        # register the move with the undo stack
+        new UndoEntry false,
+          title: 'constrained vertex to circle'
+          data:
+            constraint: onConstraint
+            anchor: targetAnchor
+            origin:
+              x: targetAnchor.origin_x
+              y: targetAnchor.origin_y
+            newLoc:
+              x: targetAnchor.x
+              y: targetAnchor.y
+          backwards: ->
+            # remove the constraint
+            @data.anchor.removeConstraint()
+            # move the anchor back to the origin
+            @data.anchor.handleMove(@data.origin.x, @data.origin.y)
+          forwards: ->
+            # move the anchor
+            @data.anchor.handleMove(@data.newLoc.x, @data.newLoc.y)
+            #add the constraint
+            @data.anchor.addConstraint(@data.constraint)
+            # draw the anchor with the new constraint
+            @data.anchor.draw()
         
-      # otherwise the moved anchor was not on a line
+      # otherwise the moved anchor was not on a line or constraint
       else
         # register the move with the undo stack but do not waste the time performing it again
         new UndoEntry false,
