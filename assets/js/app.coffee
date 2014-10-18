@@ -197,38 +197,63 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               
           # hide the dragged element past the tooltip
           paletteData.draggedElement.hide()
+
+        # the cursor is inside the toolbar
+        else
+          # if there is a selected element
+          if paletteData.selectedElement
+            # when its a line
+            if paletteData.type in ["line", "em", "gluon", "dashed"]
+              paletteData.selectedElement.anchor1.remove()
+              paletteData.selectedElement.anchor2.remove()
+
+            paletteData.selectedElement.remove()
+
+            paletteData.placedElement = false
+            paletteData.selectedElement = undefined
+            # clear the selection 
+            $(document).trigger('clearSelection')
+
+          # show the element from the toolbar
+          paletteData.draggedElement.show()
+  
+          
       # the dragging of an element from the palette has stopped
       stop: (event) ->
-        # check if the newly created element can be merged onto anything
-        if paletteData.selectedElement and paletteData.selectedElement.checkForMerges
-          merges =  paletteData.selectedElement.checkForMerges()
-      
-        if merges
-          console.log 'there are merges for the newly created element BEGIN THE UNDO TREE'
-        else
-          switch paletteData.type
-            # when it is a line style
-            when "line", "em", "gluon", "dashed"
-              # register the element creation with the undo stack
-              new UndoEntry false,
-                title: "Added a standalone #{paletteData.type} propagator from the palette"
-                data:
-                  line: paletteData.selectedElement
-                  anchor1: paletteData.anchor1
-                  anchor2: paletteData.anchor2
-                forwards: ->
-                  @data.anchor1.ressurect() 
-                  @data.anchor2.ressurect() 
-                  @data.line.ressurect()
-                  @data.anchor1.draw()
-                  @data.anchor2.draw()
-                backwards: ->
-                  @data.line.remove()
-                  @data.anchor1.remove()
-                  @data.anchor2.remove()
+        # if we let go with an element selected
+        if paletteData.selectedElement
+          # if that element can check for merges
+          if paletteData.selectedElement.checkForMerges
+            # do so
+            merges =  paletteData.selectedElement.checkForMerges()
+          # if the element merged with something
+          if merges
+            console.log 'there are merges for the newly created element BEGIN THE UNDO TREE'
+          # the element did not merge with anything
+          else
+            # leave an appropriate undo element
+            switch paletteData.type
+              # when it is a line 
+              when "line", "em", "gluon", "dashed"
+                # register the element creation with the undo stack
+                new UndoEntry false,
+                  title: "Added a standalone #{paletteData.type} propagator from the palette"
+                  data:
+                    line: paletteData.selectedElement
+                    anchor1: paletteData.anchor1
+                    anchor2: paletteData.anchor2
+                  forwards: ->
+                    @data.anchor1.ressurect() 
+                    @data.anchor2.ressurect() 
+                    @data.line.ressurect()
+                    @data.anchor1.draw()
+                    @data.anchor2.draw()
+                  backwards: ->
+                    @data.line.remove()
+                    @data.anchor1.remove()
+                    @data.anchor2.remove()
         
-              
-          
+        # clear the palette data so the next drag is fresh
         paletteData = {}
 
   # clear the selection
