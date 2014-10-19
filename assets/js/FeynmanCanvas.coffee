@@ -443,25 +443,55 @@ class FeynmanCanvas
 
           # neither the initial or the other anchor are on a line
           else 
-            # register it with the undo stack
-            new UndoEntry false ,
-              title: 'created a standalone propagator'
-              data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
-              forwards: ->
-                # ressurect the 2 anchors
-                @data[0].ressurect()
-                @data[1].ressurect()
-              # and then the line
-                @data[2].ressurect()
-                # draw the 2 anchors
-                @data[0].draw()
-                @data[1].draw()
-              backwards: ->
-                # remove everything
-                @data[2].remove()
-                @data[1].remove()
-                @data[0].remove()
-            
+            # check if the new anchor is on a constraint
+            onConstraint = @isAnchorOnConstraint(@currentAnchor)
+            # if such a constraint exists
+            if onConstraint
+              # add the constraint to the anchor
+              @currentAnchor.addConstraint(onConstraint)
+              # draw the anchor with the new constraint
+              @currentAnchor.draw()
+              # register the undo stack
+              new UndoEntry false,
+                title: 'added branch to circle'
+                data:
+                  constraint: onConstraint
+                  line: @newAnchor.lines[0]
+                  constrainedAnchor: @currentAnchor
+                  otherAnchor: @newAnchor
+                backwards: ->
+                  @data.otherAnchor.remove()
+                  @data.constrainedAnchor.remove()
+                  @data.line.remove()
+                forwards: ->
+                  @data.otherAnchor.ressurect()
+                  @data.constrainedAnchor.ressurect()
+                  @data.constrainedAnchor.addConstraint(@data.constraint)
+                  @data.line.ressurect()
+                  @data.constrainedAnchor.draw()
+                  @data.otherAnchor.draw()
+                
+            # the anchor was not created on a constraint
+            else
+              # register it with the undo stack
+              new UndoEntry false ,
+                title: 'created a standalone propagator'
+                data: [@newAnchor, @currentAnchor, @newAnchor.lines[0]]
+                forwards: ->
+                  # ressurect the 2 anchors
+                  @data[0].ressurect()
+                  @data[1].ressurect()
+                # and then the line
+                  @data[2].ressurect()
+                  # draw the 2 anchors
+                  @data[0].draw()
+                  @data[1].draw()
+                backwards: ->
+                  # remove everything
+                  @data[2].remove()
+                  @data[1].remove()
+                  @data[0].remove()
+              
       # clear the anchor references
       @currentAnchor = undefined
       @newAnchor = undefined
