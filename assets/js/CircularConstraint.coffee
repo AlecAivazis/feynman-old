@@ -105,6 +105,7 @@ class CircularConstraint
       @newAnchor.draw()
       # make a second anchor connected to this one
       @targetAnchor = @newAnchor.split(true)
+      # set the origin
       @origin =
         x: coords.x
         y: coords.y
@@ -114,6 +115,134 @@ class CircularConstraint
   dragEnd: =>
     # check that we actually moved somewhere
     if @x != @origin.x and @y != @origin.y
+      # check if we are targetting an anchor
+      if @targetAnchor
+        # check for merges with other anchors
+        merged = @targetAnchor.checkForMerges()
+        # if such a merge happened
+        if merged
+          line = @targetAnchor.lines[0]
+          # register it with the undo stack
+          new UndoEntry false,
+            title: 'created internal branch off of circular constraint'
+            data:
+              constraint: this
+              otherAnchor: if line.anchor1 == merged then line.anchor2 else line.anchor1
+              line: @targetAnchor.lines[0]
+              newAnchor: merged
+            backwards: ->
+              @data.otherAnchor.remove()
+              @data.line.remove()
+            
+            forwards: ->
+              @data.otherAnchor.ressurect()
+              @data.line.ressurect()
+              @data.otherAnchor.addConstraint(@data.constraint)
+              @data.otherAnchor.draw()
+          
+        # no such merge happened
+        else
+          # check if the target anchor is on a line or constraint
+          onLine = $(document).attr('canvas').isAnchorOnLine(@targetAnchor)
+          onConstraint = $(document).attr('canvas').isAnchorOnConstraint(@targetAnchor)
+          # if there is such a line
+          if onLine
+            console.log 'branched off of circle on to line!'
+            # split the line at the anchor's location
+            split = onLine.split(@targetAnchor.x, @targetAnchor.y)
+            # merge the newly created anchor with the one we created earlier
+            splitAnchor = split.anchor.merge(@targetAnchor)
+            # save references to the other elements
+            splitLine = split.line
+            otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
+            newLine = @targetAnchor.lines[0]
+            # regsiter the line split with the undo stack
+            new UndoEntry false,
+              title: 'added a constrained branch'
+              data:
+                constraint: this
+                constrainedAnchor: if newLine.anchor1 == splitAnchor then newLine.anchor2 else newLine.anchor1
+                splitLine: splitLine
+                otherAnchor: otherAnchor
+                originalLine: onLine
+                splitAnchor: splitAnchor
+                newLine: newLine 
+              backwards: ->
+                @data.originalLine.replaceAnchor(@data.splitAnchor, @data.otherAnchor)
+                @data.otherAnchor.addLine(@data.originalLine)
+                @data.newLine.remove()
+                @data.constrainedAnchor.remove()
+                @data.splitAnchor.remove()
+                @data.splitLine.remove()
+                @data.otherAnchor.draw()
+              forwards: ->
+                @data.originalLine.replaceAnchor(@data.otherAnchor, @data.splitAnchor)
+                @data.splitAnchor.addLine(@data.originalLine)
+                @data.splitLine.ressurect()
+                @data.constrainedAnchor.ressurect()
+                @data.constrainedAnchor.addConstraint(@data.constraint)
+                @data.newLine.ressurect()
+                @data.splitAnchor.draw()
+                @data.constrainedAnchor.draw()
+            
+          # if there is such a constraint
+          else if onConstraint
+            # add the new constraint to the anchor
+            @targetAnchor.addConstraint(onConstraint)
+            # draw the anchor with the new constraint
+            @targetAnchor.draw()
+            # grab a reference to the created line
+            newLine = @targetAnchor.lines[0]
+            # register the internal line with the undo stack
+            new UndoEntry false,
+              title: 'created internal propagator'
+              data:
+                constraint1: this
+                constraint2: onConstraint
+                anchor1: if newLine.anchor1 == @targetAnchor then newLine.anchor2 else newLine.anchor1
+                anchor2: @targetAnchor
+                line: newLine
+              backwards: ->
+                @data.anchor1.remove()
+                @data.anchor2.remove()
+                @data.line.remove()
+              forwards: ->
+                @data.anchor1.ressurect()
+                @data.anchor1.addConstraint(@data.constraint1)
+                @data.anchor1.draw()
+                @data.anchor2.ressurect()
+                @data.anchor2.addConstraint(@data.constraint2)
+                @data.anchor2.draw()
+                @data.line.ressurect()
+                @data.line.draw()
+
+          else
+            # register the free branch with the undo stack
+            new UndoEntry false,
+            title: 'added branch to circular constraint'
+            data:
+              constraint: this
+              line: @targetAnchor.lines[0]
+              newAnchor: @targetAnchor
+              otherAnchor: if @targetAnchor.lines[0].anchor2 == @targetAnchor then  @targetAnchor.lines[0].anchor1 else @targetAnchor.lines[0].anchor2
+            backwards: ->
+              @data.newAnchor.remove()
+              @data.line.remove()
+              @data.otherAnchor.removeConstraint()
+              @data.otherAnchor.remove()
+            forwards: ->
+              @data.otherAnchor.ressurect()
+              @data.otherAnchor.addConstraint(@data.constraint)
+              @data.newAnchor.ressurect()
+              @data.line.ressurect()
+              @data.otherAnchor.draw()
+              @data.newAnchor.draw()
+
+
+        # clear the anchor reference
+        @targetAnchor = undefined
+        return
+      
       # see if any anchors need to be constrained
       constrained = $(document).attr('canvas').checkAnchorsForConstraint(this)
       constraint = this

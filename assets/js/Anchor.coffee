@@ -105,8 +105,10 @@ class Anchor
       dx = targetAnchor.x - compare.x
       dy = targetAnchor.y - compare.y
 
+      snapRange = @snapRange
+
       # check if the other anchor is within snap range
-      if @snapRange * @snapRange > dx*dx + dy*dy
+      if snapRange * snapRange >= dx*dx + dy*dy
         # if it is then merge the two
         targetAnchor.merge compare
         # save the element we merged onto
@@ -505,6 +507,8 @@ class Anchor
     # remove this element from the papers list
     @paper.anchors =  _.without @paper.anchors, this
     # @lines = []
+    if @constraint
+      @removeConstraint()
 
 
   ressurect: =>
