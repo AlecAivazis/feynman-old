@@ -33,7 +33,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # apply the change in angular since this is done in the jquery environment
     $scope.$apply()
     # orient the tooptip on the selected element
-    #$scope.orientTooltip(element, type)
 
 
   # align the tooltip element along an element
