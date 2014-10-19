@@ -174,6 +174,7 @@ class CircularConstraint
               @data.otherAnchor.draw()
             forwards: ->
               @data.originalLine.replaceAnchor(@data.otherAnchor, @data.splitAnchor)
+              @data.splitAnchor.ressurect()
               @data.splitAnchor.addLine(@data.originalLine)
               @data.splitLine.ressurect()
               @data.constrainedAnchor.ressurect()

@@ -730,43 +730,112 @@ class Line
               
               
         else
-          # regsiter the creation of the branch with the undo stack
-          new UndoEntry false,
-            title: 'added branch to propagator'
-            data: [@newAnchor, newLine, splitAnch, otherLine, otherAnch, this, thisAnch]
-            # the forwards action is to fake the branch by bringing back the old elements
-            forwards: ->
-              # remove this from the other anchor
-              @data[4].removeLine @data[5]
-              # ressurect the newAnchor
-              @data[0].ressurect()
-              # ressurect the splitAnchor
-              @data[2].ressurect()
-              # while were at it replace other anchor with split anch in me
-              @data[5].replaceAnchor @data[4], @data[2]
-              # ressurect the newLine
-              @data[1].ressurect()
-              # ressurect the other anchorr
-              @data[3].ressurect()
-              # draw the anchors
-              @data[0].draw()
-              @data[2].draw()
-              @data[4].draw()
-            # the backwards removes everything and makes this back to what it was
-            backwards: ->
-              # remove the intermediate elements
-              @data[0].remove()
-              @data[1].remove()
-              @data[2].remove()
-              @data[3].remove()
-              # before removing the midAnch, lets replace it with the otherAnch
-              @data[5].replaceAnchor @data[2], @data[4]
-              @data[4].addLine @data[5]
-              @data[4].draw()
+          # check if the newAnchor was made on a line
+          onLine = $(document).attr('canvas').isAnchorOnLine(@newAnchor)
+          # if such a line exists
+          if onLine
+            # save a reference to the internal line
+            internalLine = @newAnchor.lines[0]
+            # split the line at the anchor's location
+            split = onLine.split(@newAnchor.x, @newAnchor.y)
+            # merge the newAnchor with the one created by the split 
+            splitAnchor = split.anchor.merge(@newAnchor)
+            splitLine = split.line
+
+            # get the information for the anchor that was created first
+            anchor1 =
+              originalLine: this
+              splitAnchor: if internalLine.anchor1 == splitAnchor then internalLine.anchor2 else internalLine.anchor1
+              otherLine: otherLine
+              otherAnchor: otherAnch
+
+            anchor2 =
+              originalLine: onLine
+              splitAnchor: splitAnchor
+              otherLine: splitLine
+              otherAnchor: if splitLine.anchor1 == splitAnchor then splitLine.anchor2 else splitLine.anchor1
+
+            # regsiter the double split with the undo stack
+            new UndoEntry false,
+              title: 'added internal propagator as a branch'
+              data:
+                anchor1: anchor1
+                anchor2: anchor2
+                line: internalLine
+              backwards: ->
+                @data.line.remove()
+                # undo the split surrounding the split anchor created first
+                @data.anchor1.originalLine.replaceAnchor(@data.anchor1.splitAnchor, @data.anchor1.otherAnchor)
+                @data.anchor1.otherAnchor.removeLine(@data.anchor1.otherLine)
+                @data.anchor1.otherAnchor.addLine(@data.anchor1.originalLine)
+                @data.anchor1.splitAnchor.remove()
+                @data.anchor1.otherLine.remove()
+                @data.anchor1.otherAnchor.draw()
+                # do the same for anchor2
+                @data.anchor2.originalLine.replaceAnchor(@data.anchor2.splitAnchor, @data.anchor2.otherAnchor)
+                @data.anchor2.otherAnchor.removeLine(@data.anchor2.otherLine)
+                @data.anchor2.otherAnchor.addLine(@data.anchor2.originalLine)
+                @data.anchor2.splitAnchor.remove()
+                @data.anchor2.otherLine.remove()
+                @data.anchor2.otherAnchor.draw()
+  
+              forwards: ->
+                # redo the split
+                @data.anchor1.splitAnchor.ressurect()
+                @data.anchor1.originalLine.replaceAnchor(@data.anchor1.otherAnchor, @data.anchor1.splitAnchor)
+                @data.anchor1.splitAnchor.addLine(@data.anchor1.originalLine)
+                @data.anchor1.otherLine.ressurect() 
+                # same thing for the second line
+                @data.anchor2.splitAnchor.ressurect()
+                @data.anchor2.originalLine.replaceAnchor(@data.anchor2.otherAnchor, @data.anchor2.splitAnchor)
+                @data.anchor2.splitAnchor.addLine(@data.anchor2.originalLine)
+                @data.anchor2.otherLine.ressurect() 
+                # bring the internal line back
+                @data.line.ressurect()
+                # draw the two anchors
+                @data.anchor1.splitAnchor.draw()
+                @data.anchor2.splitAnchor.draw()
+
+          # the anchor was not made on a line
+          else
+            # regsiter the creation of the branch with the undo stack
+            new UndoEntry false,
+              title: 'added branch to propagator'
+              data: [@newAnchor, newLine, splitAnch, otherLine, otherAnch, this, thisAnch]
+              # the forwards action is to fake the branch by bringing back the old elements
+              forwards: ->
+                # remove this from the other anchor
+                @data[4].removeLine @data[5]
+                # ressurect the newAnchor
+                @data[0].ressurect()
+                # ressurect the splitAnchor
+                @data[2].ressurect()
+                # while were at it replace other anchor with split anch in me
+                @data[5].replaceAnchor @data[4], @data[2]
+                # ressurect the newLine
+                @data[1].ressurect()
+                # ressurect the other anchorr
+                @data[3].ressurect()
+                # draw the anchors
+                @data[0].draw()
+                @data[2].draw()
+                @data[4].draw()
+              # the backwards removes everything and makes this back to what it was
+              backwards: ->
+                # remove the intermediate elements
+                @data[0].remove()
+                @data[1].remove()
+                @data[2].remove()
+                @data[3].remove()
+                # before removing the midAnch, lets replace it with the otherAnch
+                @data[5].replaceAnchor @data[2], @data[4]
+                @data[4].addLine @data[5]
+                @data[4].draw()
+
     # a new anchor was not created during this drag
     else
       # only continue if it was an actual move
-      if @anchor1.x == @anchor1.origin_x
+      if @anchor1.x == @anchor1.origin_x and @anchor1.y == @anchor1.origin_y
         return
       # register the move on the undo stack
       new UndoEntry false,
