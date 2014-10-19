@@ -466,6 +466,17 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             @data.constraint.remove()
 
       , 0
+    else if type == 'text'
+      $timeout ->
+        new UndoEntry true,
+          title: 'removed text field'
+          data:
+            element: element.text
+          backwards: ->
+            @data.element.draw()
+          forwards: ->
+            @data.element.remove()
+      , 0
     # clear the element selection
     $timeout ->
       $(document).trigger('clearSelection')
