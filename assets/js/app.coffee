@@ -298,7 +298,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.remove()
 
               # only one split
-              else if (anchor1OnLine and not anchor2Merged) or (anchor2OnLine and not anchor1Merged)
+              else if (anchor1OnLine and not anchor2Merged) != (anchor2OnLine and not anchor1Merged)
                 split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
 
                 # merge the split anchor with the appopriate one
