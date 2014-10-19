@@ -210,6 +210,9 @@ block content
           .property
             input(colorpicker="rgb" type="text" ng-model="color" name="color"
                   style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+          .property
+            span.button.delete(ng-click="deleteSelectedElement('constraint')")
+              | delete this constraint
         
         #textProperties.propertiesMenu(ng-show="type == 'text'")
           .property

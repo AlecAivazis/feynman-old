@@ -25,6 +25,8 @@ class CircularConstraint
     # add the circular element to the canvas
     @element = @paper.circle(@x, @y, @radius)
 
+    @element.constraint = this
+
     # add the select event handler to the circle
     @element.node.onclick = (event)=>
       event.stopPropagation()

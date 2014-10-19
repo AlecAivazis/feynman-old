@@ -438,6 +438,39 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             @data[0].draw()
       , 0
 
+    # else if its a constraint
+    else if type == 'constraint'
+      $timeout ->
+        # remove the constraint and register it with the undo stack
+        new UndoEntry true,
+          title: 'removed constraint'
+          data:
+            constraint: element.constraint
+            anchors: element.constraint.anchors
+          backwards: ->
+            constraint = @data.constraint
+            # draw the constraint
+            @data.constraint.draw()
+            # go to each of the anchors
+            _.each @data.anchors, (anchor) ->
+              # add the constraint
+              anchor.addConstraint(constraint)
+              # draw with the new constraint
+              anchor.draw()
+          forwards: ->
+            _.each @data.anchors, (anchor) ->
+              # remove the constraint
+              anchor.removeConstraint()
+              # redraw with the anchor
+              anchor.draw()
+            @data.constraint.remove()
+
+      , 0
+    # clear the element selection
+    $timeout ->
+      $(document).trigger('clearSelection')
+    , 0
+
 
   # update the properties of the appropriate element when we change the selectedElements 
   # the only reason to do this is because some attributes are not settable with foo.bar = 2
