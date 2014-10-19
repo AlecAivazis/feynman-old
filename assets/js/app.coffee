@@ -255,23 +255,75 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           switch paletteData.type
             # when it is a line 
             when "line", "em", "gluon", "dashed"
-              # register the element creation with the undo stack
-              new UndoEntry false,
-                title: "Added a standalone propagator from the palette"
-                data:
-                  line: paletteData.selectedElement
-                  anchor1: paletteData.anchor1
-                  anchor2: paletteData.anchor2
-                forwards: ->
-                  @data.anchor1.ressurect() 
-                  @data.anchor2.ressurect() 
-                  @data.line.ressurect()
-                  @data.anchor1.draw()
-                  @data.anchor2.draw()
-                backwards: ->
-                  @data.line.remove()
-                  @data.anchor1.remove()
-                  @data.anchor2.remove()
+              # save references to the two anchors
+              anchor1 = paletteData.selectedElement.anchor1
+              anchor2 = paletteData.selectedElement.anchor2
+              # check the anchors for potential merges
+              anchor1Merged = anchor1.checkForMerges()
+              anchor2Merged = anchor2.checkForMerges()
+              anchor1OnLine = $(document).attr('canvas').isAnchorOnLine(anchor1) 
+              anchor2OnLine = $(document).attr('canvas').isAnchorOnLine(anchor2) 
+
+              # if only one of them merged
+              if ( anchor1Merged and not anchor2OnLine ) or ( anchor2Merged and not anchor1OnLine )
+                # save the references to the meaning elements
+                merged = if anchor1Merged then anchor1Merged else anchor2Merged
+                line = paletteData.selectedElement
+                otherAnchor = if line.anchor1 == merged then line.anchor2 else line.anchor1
+                # register the branch with the undo stack
+                new UndoEntry false,
+                  title: 'added propragator to vertex'
+                  data:
+                    line: line
+                    otherAnchor: otherAnchor
+                  backwards: ->
+                    @data.otherAnchor.remove()
+                    @data.line.remove()
+                  forwards: ->
+                    @data.otherAnchor.ressurect()
+                    @data.line.ressurect()
+                    @data.otherAnchor.draw()
+
+              # both merged
+              else if anchor1Merged and anchor2Merged 
+                # register the line creation with the undo stack
+                new UndoEntry false,
+                  title: 'added internal propagator'
+                  data:
+                    line: paletteData.selectedElement
+                  forwards: ->
+                    @data.line.ressurect()
+                    @data.line.draw()
+                  backwards: ->
+                    @data.line.remove()
+
+              # only one split
+              else if (anchor1OnLine and not anchor2Merged) or (anchor2OnLine and not anchor1Merged)
+                console.log 'only one split'
+
+              # both sides were a split
+              else if anchor1OnLine and anchor2OnLine
+                console.log 'both split'
+
+              # nothing happened with the line
+              else
+                # register the element creation with the undo stack
+                new UndoEntry false,
+                  title: "Added a standalone propagator from the palette"
+                  data:
+                    line: paletteData.selectedElement
+                    anchor1: paletteData.anchor1
+                    anchor2: paletteData.anchor2
+                  forwards: ->
+                    @data.anchor1.ressurect() 
+                    @data.anchor2.ressurect() 
+                    @data.line.ressurect()
+                    @data.anchor1.draw()
+                    @data.anchor2.draw()
+                  backwards: ->
+                    @data.line.remove()
+                    @data.anchor1.remove()
+                    @data.anchor2.remove()
             # when its a text field
             when 'text'
               new UndoEntry false,
