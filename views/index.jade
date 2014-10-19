@@ -210,7 +210,12 @@ block content
           .property
             input(colorpicker="rgb" type="text" ng-model="color" name="color"
                   style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+        
+        #textProperties.propertiesMenu(ng-show="type == 'text'")
+          .property
+            input(type="text" ng-model="selectedElement.text" name="label" placeholder="text!")
  
+
       #footer
         #footerTitle.panelTitle
           | Hotkeys/Tips

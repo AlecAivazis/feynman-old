@@ -26,6 +26,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         $scope.labelLocation = element.labelLocation
       when 'anchor', 'circle'
         $scope.radius = element.radius
+      when 'text'
+        $scope.text = element.text
     # load the type independent attributes
     $scope.color = element.color
     $scope.selectedElement = element
@@ -181,6 +183,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                                                               paletteData.origin.y, 'text!')
                 # draw the text field
                 paletteData.selectedElement.draw()
+
+                # select the object
+                $(document).trigger 'selectedElement', [paletteData.selectedElement, 'text']
               
               when 'circle'
                 # compute the coordinates on the canvas
@@ -195,8 +200,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 # select the object
                 $(document).trigger 'selectedElement', [paletteData.selectedElement, 'circle']
                 
-  
-
             # prevent future drags from creating new elements
             paletteData.placedElement = true
 
@@ -464,6 +467,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       # redraw the canvas
       $(document).attr('canvas').draw()
 
+
   $scope.$watch 'hideAnchors', (newVal, oldVal) ->
     if $(document).attr 'canvas'
       $(document).attr('canvas').hideAnchors = newVal
@@ -497,6 +501,11 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     if $scope.selectedElement and $scope.type in ['anchor' ,'circle']
       $scope.selectedElement.radius = newVal
       $scope.selectedElement.draw()
+
+  $scope.$watch 'selectedElement.text', (newVal, oldVal) ->
+    if $scope.selectedElement and $scope.type == 'text'
+      $scope.selectedElement.draw()
+
 
   $scope.$watch 'groupRadius', (newVal, oldVal) ->
 

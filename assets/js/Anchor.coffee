@@ -61,7 +61,7 @@ class Anchor
       fill: if @color then @color else 'black'
 
     @element.anchor = this
-
+    @element.addClass('anchor')
     # add the fixed class if necessary
     if @fixed
       @element.addClass('fixed')

@@ -8,14 +8,30 @@ class Text
     
 
   draw: =>
+    # if this element was previously selected
+    if @element and @element.hasClass('selectedElement')
+      isSelected = true
 
+    # if the element was drawn before
     if @element
+      # remove the element
       @remove()
+      # if there is a selection box
+      if @border
+        # remove it
+        @border.remove()
     
     # use an image from codecogs public api
     @element = @paper.image("http://latex.codecogs.com/svg.latex?#{@text}" , @x, @y)
     # add it to the diagram group
     $(document).attr('canvas').addToDiagram(@element)
+
+    # add the select event handler to the circle
+    @element.node.onclick = (event)=>
+      event.stopPropagation()
+      $(document).trigger 'selectedElement', [this, 'text']
+
+    @element.addClass('text')
 
     # add the event handlers
     @element.drag @onDrag, @dragStart, @onDragEnd

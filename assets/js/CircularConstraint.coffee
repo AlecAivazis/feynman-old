@@ -79,7 +79,7 @@ class CircularConstraint
       y: @y - translate.y
     else
       x: @x
-      y: if dy >0 then @y + @r else @y - @r
+      y: if dy >0 then @y + @radius else @y - @radius
 
 
   isPointInside: (x, y) =>
@@ -128,7 +128,6 @@ class CircularConstraint
       
 
   dragEnd: =>
-    console.log 'drag ended'
     # check if we are targetting an anchor
     if @targetAnchor
       # check for merges with other anchors
