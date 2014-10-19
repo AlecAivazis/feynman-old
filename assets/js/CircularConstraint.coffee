@@ -6,22 +6,36 @@
 
 class CircularConstraint
 
-  constructor: (@paper, @x, @y, @r) ->
+  constructor: (@paper, @x, @y, @radius) ->
     @paper.constraints.push this
     @anchors = []
+    @color = '#000000'
 
   draw: =>
+
+    # if this element was previously selected
+    if @element and @element.hasClass('selectedElement')
+      isSelected = true
+
     # if an element already exists on the canvas
     if @element
       # then remove it
       @element.remove()
 
     # add the circular element to the canvas
-    @element = @paper.circle(@x, @y, @r)
+    @element = @paper.circle(@x, @y, @radius)
+
+    # add the select event handler to the circle
+    @element.node.onclick = (event)=>
+      event.stopPropagation()
+      $(document).trigger 'selectedElement', [this, 'circle']
+
+    if isSelected
+      @element.addClass('selectedElement')
 
     @element.attr
       fill: 'transparent'
-      stroke: 'black'
+      stroke: @color
       strokeWidth: 2
 
     # add it to the diagram group aswell
@@ -54,8 +68,8 @@ class CircularConstraint
     m = dy/dx 
     # calculate the distances from the origin
     translate =
-      x: Math.sqrt(@r*@r / (1 + (m*m)))
-      y: m * Math.sqrt(@r*@r / (1 + (m*m)))
+      x: Math.sqrt(@radius*@radius / (1 + (m*m)))
+      y: m * Math.sqrt(@radius*@radius / (1 + (m*m)))
     # apply the right translations in the appropriate quadrant
     if dx > 0 
       x: @x + translate.x
@@ -71,7 +85,7 @@ class CircularConstraint
   isPointInside: (x, y) =>
     dx = x - @x
     dy = y - @y
-    return Math.sqrt(dx*dx + dy*dy) < @r
+    return Math.sqrt(dx*dx + dy*dy) < @radius
 
 
   onDrag: (deltaX, deltaY, x, y, event) =>
@@ -109,10 +123,12 @@ class CircularConstraint
       @origin =
         x: coords.x
         y: coords.y
+    else
+      $(document).trigger 'selectedElement', [this, 'circle']
       
 
-
   dragEnd: =>
+    console.log 'drag ended'
     # check if we are targetting an anchor
     if @targetAnchor
       # check for merges with other anchors

@@ -24,7 +24,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         $scope.width = element.width
         $scope.labelDistance = element.labelDistance
         $scope.labelLocation = element.labelLocation
-      when 'anchor'
+      when 'anchor', 'circle'
         $scope.radius = element.radius
     # load the type independent attributes
     $scope.color = element.color
@@ -192,6 +192,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                                                                            paletteData.draggedElement.height()/2)
                 # draw the constraint
                 paletteData.selectedElement.draw()
+                # select the object
+                $(document).trigger 'selectedElement', [paletteData.selectedElement, 'circle']
+                
   
 
             # prevent future drags from creating new elements
@@ -338,7 +341,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   # clear the selection
   $scope.clearSelection = ->
-  
     # find every selected element
     _.each Snap.selectAll('.selectedElement'), (element) ->
       # only for anchors (ignore lines)
@@ -352,6 +354,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.selectedElement = false
     $scope.selectedGroup = false
     # apply these changes to angular
+    $scope.type = undefined
     $scope.$apply()
 
 
@@ -474,9 +477,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $scope.$watch 'color', (newVal, oldVal) ->
     if $scope.selectedElement
       $scope.selectedElement.color = newVal
-      if $scope.type == 'line'
-        $scope.selectedElement.draw()
-      if $scope.type =='anchor'
+      if $scope.type in ['line', 'anchor', 'circle']
         $scope.selectedElement.draw()
 
   $scope.$watch 'groupColor', (newVal, oldVal) ->
@@ -493,7 +494,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         element.draw()
         
   $scope.$watch 'radius', (newVal, oldVal) ->
-    if $scope.selectedElement and $scope.type == 'anchor'
+    if $scope.selectedElement and $scope.type in ['anchor' ,'circle']
       $scope.selectedElement.radius = newVal
       $scope.selectedElement.draw()
 
