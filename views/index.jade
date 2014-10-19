@@ -37,8 +37,11 @@ block content
         .diagramProperty
           .label
             | grid size
-            span.propertyValue
+            span.propertyValue(ng-hide="gridSize == 0")
               | {{gridSize}}
+            span.propertyValue(ng-show="gridSize == 0")
+              | none
+
           .value
             slider(floor="0" ceiling="100" step="10" precision="0"  ng-model="gridSize" )
 
@@ -84,19 +87,19 @@ block content
           table#paletteItems(cellspacing="20px" style="margin: -20px")
             tr
               td
-                img.paletteItem(element="line")(src="/images/line.png")
+                img.paletteItem(element="line" src="/images/line.png")
               td
-                img.paletteItem(element="circle")(src="/images/circle.png")
+                img.paletteItem(element="circle" src="/images/circle.png")
             tr
               td
-                img.paletteItem(element="em")(src="/images/em.png")
+                img.paletteItem(element="em" src="/images/em.png")
               td
-                img.paletteItem(element="gluon")(src="/images/gluon.png")
+                img.paletteItem(element="gluon" src="/images/gluon.png")
             tr
               td
-                img.paletteItem(element="dashed")(src="/images/dashed.png")
+                img.paletteItem(element="dashed" src="/images/dashed.png")
               td
-                img.paletteItem(element="text")(src="/images/text.png")
+                img.paletteItem(element="text" src="/images/text.png")
                   
         //#tooltipTriangle(ng-show="type == 'anchor' || type == 'line'")
           //.arrow-up

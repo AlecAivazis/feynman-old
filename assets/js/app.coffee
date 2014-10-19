@@ -251,93 +251,83 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       stop: (event) ->
         # if we let go with an element selected
         if paletteData.selectedElement
-          # if that element can check for merges
-          if paletteData.selectedElement.checkForMerges
-            # do so
-            merges =  paletteData.selectedElement.checkForMerges()
-          # if the element merged with something
-          if merges
-            console.log 'there are merges for the newly created element BEGIN THE UNDO TREE'
-          # the element did not merge with anything
-          else
-            # leave an appropriate undo element
-            switch paletteData.type
-              # when it is a line 
-              when "line", "em", "gluon", "dashed"
-                # register the element creation with the undo stack
-                new UndoEntry false,
-                  title: "Added a standalone #{paletteData.type} propagator from the palette"
-                  data:
-                    line: paletteData.selectedElement
-                    anchor1: paletteData.anchor1
-                    anchor2: paletteData.anchor2
-                  forwards: ->
-                    @data.anchor1.ressurect() 
-                    @data.anchor2.ressurect() 
-                    @data.line.ressurect()
-                    @data.anchor1.draw()
-                    @data.anchor2.draw()
-                  backwards: ->
-                    @data.line.remove()
-                    @data.anchor1.remove()
-                    @data.anchor2.remove()
+          # leave an appropriate undo element
+          switch paletteData.type
+            # when it is a line 
+            when "line", "em", "gluon", "dashed"
+              # register the element creation with the undo stack
+              new UndoEntry false,
+                title: "Added a standalone propagator from the palette"
+                data:
+                  line: paletteData.selectedElement
+                  anchor1: paletteData.anchor1
+                  anchor2: paletteData.anchor2
+                forwards: ->
+                  @data.anchor1.ressurect() 
+                  @data.anchor2.ressurect() 
+                  @data.line.ressurect()
+                  @data.anchor1.draw()
+                  @data.anchor2.draw()
+                backwards: ->
+                  @data.line.remove()
+                  @data.anchor1.remove()
+                  @data.anchor2.remove()
+            # when its a text field
+            when 'text'
+              new UndoEntry false,
+                title: 'Added a text field to the canvas'
+                data:
+                  element: paletteData.selectedElement
+                forwards: ->
+                  @data.element.draw()
+                backwards: ->
+                  @data.element.remove()
 
-              # when its a text field
-              when 'text'
+            # when its a circular constraint
+            when "circle"
+              # check if any anchors needs to be constrained
+              constrained = $(document).attr('canvas').checkAnchorsForConstraint(paletteData.selectedElement)
+              # if any anchors were there
+              if constrained.length > 0
+                # go over each of the constrained anchors
+                _.each constrained, (anchor) ->
+                  # apply the constrain
+                  anchor.addConstraint(paletteData.selectedElement)
+                  # draw the anchor with the new constrain
+                  anchor.draw()
+                # register the new constraint with the undo stack
                 new UndoEntry false,
-                  title: 'Added a text field to the canvas'
+                  title: 'created constraint for anchors'
+                  data:
+                    constraint: paletteData.selectedElement
+                    anchors: constrained
+                  backwards: ->
+                    @data.constraint.remove()
+                    # remove the constraint from the anchors
+                    _.each @data.anchors, (anchor) ->
+                      anchor.removeConstraint()
+                      # draw the anchor with the updated constraint
+                      anchor.draw()
+                  forwards: ->
+                    constraint = @data.constraint
+                    constraint.draw()
+                    # add the constraint to the anchors
+                    _.each @data.anchors, (anchor) ->
+                      anchor.addConstraint(constraint)
+                      # draw the anchor with the new constraint
+                      anchor.draw()
+
+              # no anchors need constraining
+              else
+                # register the free constraint with the undo stack
+                new UndoEntry false,
+                  title: 'Added a circular constraint to the canvas'
                   data:
                     element: paletteData.selectedElement
                   forwards: ->
                     @data.element.draw()
                   backwards: ->
                     @data.element.remove()
-
-              # when its a circular constraint
-              when "circle"
-                # check if any anchors needs to be constrained
-                constrained = $(document).attr('canvas').checkAnchorsForConstraint(paletteData.selectedElement)
-                # if any anchors were there
-                if constrained.length > 0
-                  # go over each of the constrained anchors
-                  _.each constrained, (anchor) ->
-                    # apply the constrain
-                    anchor.addConstraint(paletteData.selectedElement)
-                    # draw the anchor with the new constrain
-                    anchor.draw()
-                  # register the new constraint with the undo stack
-                  new UndoEntry false,
-                    title: 'created constraint for anchors'
-                    data:
-                      constraint: paletteData.selectedElement
-                      anchors: constrained
-                    backwards: ->
-                      @data.constraint.remove()
-                      # remove the constraint from the anchors
-                      _.each @data.anchors, (anchor) ->
-                        anchor.removeConstraint()
-                        # draw the anchor with the updated constraint
-                        anchor.draw()
-                    forwards: ->
-                      constraint = @data.constraint
-                      constraint.draw()
-                      # add the constraint to the anchors
-                      _.each @data.anchors, (anchor) ->
-                        anchor.addConstraint(constraint)
-                        # draw the anchor with the new constraint
-                        anchor.draw()
-                    
-                # no anchors need constraining
-                else
-                  # register the free constraint with the undo stack
-                  new UndoEntry false,
-                    title: 'Added a circular constraint to the canvas'
-                    data:
-                      element: paletteData.selectedElement
-                    forwards: ->
-                      @data.element.draw()
-                    backwards: ->
-                      @data.element.remove()
         
         # clear the palette data so the next drag is fresh
         paletteData = {}

@@ -74,7 +74,8 @@ class Text
 
   onDrag: (deltaX, deltaY, x, y, event) =>
     # compute the coordinates with the canvas transforms
-    coords = $(document).attr('canvas').getCanvasCoordinates(@origin.x + deltaX, @origin.y + deltaY)
+    coords = $(document).attr('canvas').getCanvasCoordinates(@origin.x + deltaX,
+                                                             @origin.y + deltaY)
     # move the text to the new coordinates
     @handleMove(coords.x, coords.y)
 

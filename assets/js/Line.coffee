@@ -58,6 +58,8 @@ class Line
     @anchor2.removeLine this
     # remove this line from the paper's list
     @paper.lines =  _.without @paper.lines, this
+    # remove the arrow as well
+    @removeArrow()
 
 
   # safely remove any elements on the DOM associated with this line
@@ -851,11 +853,6 @@ class Line
           @data[5].handleMove(@data[7], @data[9])
           
     @newAnchor = undefined
-
-
-  # check if either of the lines anchors should be merged onto a line or anchor
-  checkForMerges: =>
-    return false
 
 
   # return if the given coordiantes fall on the line joining the two anchors
