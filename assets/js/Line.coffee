@@ -60,6 +60,8 @@ class Line
     @paper.lines =  _.without @paper.lines, this
     # remove the arrow as well
     @removeArrow()
+    # and the label
+    @removeLabel()
 
 
   # safely remove any elements on the DOM associated with this line
