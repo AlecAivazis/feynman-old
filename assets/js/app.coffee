@@ -299,7 +299,51 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
               # only one split
               else if (anchor1OnLine and not anchor2Merged) or (anchor2OnLine and not anchor1Merged)
-                console.log 'only one split'
+                split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
+
+                # merge the split anchor with the appopriate one
+                if anchor1OnLine
+                  splitAnchor = anchor1.merge(split.anchor)
+                else
+                  splitAnchor = anchor2.merge(split.anchor)
+
+                # save a reference to the lines
+                splitLine = split.line
+                newLine = paletteData.selectedElement
+
+                if splitLine.anchor1 == splitAnchor
+                  otherAnchor = splitLine.anchor2
+                else
+                  otherAnchor = splitLine.anchor1
+
+                # register the split with the undo stack
+                new UndoEntry false,
+                  title: 'added branch to propagator'
+                  data:
+                    originalLine: split.originalLine
+                    splitLine: splitLine
+                    splitAnchor: splitAnchor
+                    otherAnchor: otherAnchor
+                    newLine: newLine
+                    newAnchor: if newLine.anchor1 == splitAnchor then newLine.anchor2 else newLine.anchor1
+                  backwards: ->
+                    @data.originalLine.replaceAnchor(@data.splitAnchor, @data.otherAnchor)
+                    @data.otherAnchor.addLine(@data.originalLine)
+                    @data.newAnchor.remove()
+                    @data.newLine.remove()
+                    @data.splitLine.remove()
+                    @data.splitAnchor.remove()
+                    @data.otherAnchor.draw()
+                  forwards: ->
+                    @data.originalLine.replaceAnchor(@data.otherAnchor, @data.splitAnchor)
+                    @data.otherAnchor.removeLine(@data.originalLine)
+                    @data.splitAnchor.ressurect()
+                    @data.splitAnchor.addLine(@data.originalLine)
+                    @data.splitLine.ressurect()
+                    @data.newAnchor.ressurect()
+                    @data.newLine.ressurect()
+                    @data.newAnchor.draw()
+                    @data.splitAnchor.draw()
 
               # both sides were a split
               else if anchor1OnLine and anchor2OnLine

@@ -911,6 +911,7 @@ class Line
       # return the newly created elements
       anchor: anch
       line: l
+      originalLine: this
 
     
     
