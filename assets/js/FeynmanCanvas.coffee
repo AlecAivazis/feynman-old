@@ -54,9 +54,13 @@ class FeynmanCanvas
 
       # if they pressed ctrl + z
       if evt.which == 90 and evt.ctrlKey
+        # if they actually pressed shift + ctrl + z
         if evt.shiftKey
+          # move forward one step in the history
           $(document).trigger('goForwardOneUndo')
+        # if they pressed ctrl + z
         else
+          # step back in history
           $(document).trigger('goBackOneUndo')
       
 
