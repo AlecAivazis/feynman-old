@@ -299,6 +299,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
               # only one split
               else if (anchor1OnLine and not anchor2Merged) != (anchor2OnLine and not anchor1Merged)
+                console.log 'only one'
+                # split the appropriate line
                 split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
 
                 # merge the split anchor with the appopriate one
@@ -347,7 +349,56 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
               # both sides were a split
               else if anchor1OnLine and anchor2OnLine
+                # split the line at the anchor
+                anchor1split = anchor1OnLine.split(anchor1.x, anchor1.y)
+                # merge the anchor with the split
+                anchor1.merge(anchor1split.anchor)
+
+                # split the other line
+                anchor2split = anchor2OnLine.split(anchor2.x, anchor2.y)
+                # merge anchor2 with the split anchor
+                anchor2.merge(anchor2split.anchor)
+
                 console.log 'both split'
+                # register the double split with the undo stack
+                new UndoEntry false,
+                  title: 'added internal propagator'
+                  data:
+                    anchor1: anchor1split
+                    anchor2: anchor2split
+                    line: paletteData.selectedElement
+                  backwards: ->
+                    @data.anchor1.originalLine.replaceAnchor(@data.anchor1.anchor,
+                                                             @data.anchor1.otherAnchor)
+                    @data.anchor1.anchor.remove()
+                    @data.anchor1.otherAnchor.addLine(@data.anchor1.originalLine)
+                    @data.anchor1.otherAnchor.draw()
+                    @data.anchor1.line.remove()
+                    @data.line.remove()
+                    @data.anchor2.originalLine.replaceAnchor(@data.anchor2.anchor,
+                                                             @data.anchor2.otherAnchor)
+                    @data.anchor2.anchor.remove()
+                    @data.anchor2.otherAnchor.addLine(@data.anchor2.originalLine)
+                    @data.anchor2.otherAnchor.draw()
+                    @data.anchor2.line.remove()
+                  forwards: ->
+                    @data.anchor1.otherAnchor.removeLine(@data.anchor1.originalLine)
+                    @data.anchor1.anchor.ressurect()
+                    @data.anchor1.line.ressurect()
+                    @data.anchor1.originalLine.replaceAnchor(@data.anchor1.otherAnchor,
+                                                             @data.anchor1.anchor)
+                    @data.anchor1.anchor.draw()
+        
+                    @data.anchor2.otherAnchor.removeLine(@data.anchor2.originalLine)
+                    @data.anchor2.anchor.ressurect()
+                    @data.anchor2.line.ressurect()
+                    @data.anchor2.originalLine.replaceAnchor(@data.anchor2.otherAnchor,
+                                                             @data.anchor2.anchor)
+                    @data.line.ressurect()
+                    @data.anchor2.anchor.draw()
+                    
+                    console.log 'forwards'
+                    
 
               # nothing happened with the line
               else

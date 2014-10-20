@@ -912,6 +912,7 @@ class Line
       anchor: anch
       line: l
       originalLine: this
+      otherAnchor: if l.anchor1 == anch then l.anchor2 else l.anchor1
 
     
     
