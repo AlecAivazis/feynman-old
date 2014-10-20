@@ -37,6 +37,13 @@ undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope, $timeout) ->
       entry.forwards()
 
 
+  $(document).on 'goBackOneUndo', ->
+    # check that we have a step behind us
+    if $scope.current <= 0
+      return
+    # if we have a step behind us, go to the step current - 1
+    $scope.goTo($scope.current - 1)
+
   # perform the necessary steps to go to a specific event
   $scope.goTo = (id) ->
 

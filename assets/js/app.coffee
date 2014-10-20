@@ -543,6 +543,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       # dont do anything
       return
 
+    # use the scope variable for the element type
     type = $scope.type
     # if the element is a line
     if type == 'line'

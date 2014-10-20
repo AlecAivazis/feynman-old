@@ -52,6 +52,10 @@ class FeynmanCanvas
       if evt.which in [8, 46]
         $(document).trigger('deleteSelectedElement')
 
+      # if they pressed ctrl + z
+      if evt.which == 90 and evt.ctrlKey
+        $(document).trigger('goBackOneUndo')
+
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>
       # prevent the browser from scrolling
