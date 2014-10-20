@@ -37,7 +37,7 @@ block content
 
         .diagramProperty
           .label
-            | grid size
+            | grid 
             span.propertyValue(ng-hide="gridSize == 0")
               | {{gridSize}}
             span.propertyValue(ng-show="gridSize == 0")
@@ -115,9 +115,12 @@ block content
                      style="width: 82%")
               | &nbsp; {{radius}}
             .property
-              span.button(ng-click="selectedElement.fixed = !selectedElement.fixed" 
-                          ng-class="{enabled: selectedElement.fixed == false, disabled: selectedElement.fixed == true}" )
-                | fixed
+              span.button(ng-click="selectedElement.fixed = true" style="width: 148px"
+                          ng-show="selectedElement.fixed == false")
+                | fix anchor to canvas
+              span.button.disabled(ng-click="selectedElement.fixed = false" style="width: 148px"
+                                   ng-show="selectedElement.fixed == true")
+                | unfix anchor from canvas
             .property
               span.button.delete(ng-click="deleteSelectedElement()")
                 | delete this anchor
@@ -262,9 +265,14 @@ block content
               | Drag
           .hotkey
             span.hotkeyTitle
+              | Delete selected element:
+            span.hotkeyDescription
+              | bkspace or delete
+          .hotkey
+            span.hotkeyTitle
               | Constrain element to circle:
             span.hotkeyDescription
-              | Drag from pallet and drop on anchor
+              | Drag from pallet and drop on anchor or alt + drag from existing circle
           .hotkey
             span.hotkeyTitle
               | Undo:
