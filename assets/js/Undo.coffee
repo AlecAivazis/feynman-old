@@ -10,7 +10,7 @@ undo.filter 'reverse', ->
   (items) ->
     items.slice().reverse()
 
-undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope) ->
+undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope, $timeout) ->
 
   # start with an empty queue
   $scope.queue = []
@@ -66,6 +66,8 @@ undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope) ->
         $scope.current--
 
     # tell the canvas to deselect
-    $(document).trigger('clearSelection')
+    $timeout ->
+      $(document).trigger('clearSelection')
+    , 0
 
 ]

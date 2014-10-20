@@ -48,6 +48,9 @@ class FeynmanCanvas
       if evt.which == 32
         # clear the state variable
         @spacebarPressed = false
+      # if they presed delete or backspace
+      if evt.which in [8, 46]
+        $(document).trigger('deleteSelectedElement')
 
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>

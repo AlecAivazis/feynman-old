@@ -530,11 +530,20 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             anchor.element.handleMove(anchor.x, anchor.y, false)
     , 0
 
+  $(document).on 'deleteSelectedElement', ->
+    $scope.deleteSelectedElement()
 
   # assuming the selected element is a line, delete it and register it with the undo stack
-  $scope.deleteSelectedElement = (type) ->
+  $scope.deleteSelectedElement = ->
     # get the selected line
     element = Snap.select('.selectedElement')
+
+    # if the element doesn't exist
+    if not element
+      # dont do anything
+      return
+
+    type = $scope.type
     # if the element is a line
     if type == 'line'
       # remove the line and register it with the undo stack
@@ -571,7 +580,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       , 0
 
     # else if its a constraint
-    else if type == 'constraint'
+    else if type == 'circle'
       $timeout ->
         # remove the constraint and register it with the undo stack
         new UndoEntry true,

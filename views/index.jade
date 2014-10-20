@@ -119,7 +119,7 @@ block content
                           ng-class="{enabled: selectedElement.fixed == false, disabled: selectedElement.fixed == true}" )
                 | fixed
             .property
-              span.button.delete(ng-click="deleteSelectedElement('anchor')")
+              span.button.delete(ng-click="deleteSelectedElement()")
                 | delete this anchor
 
           #lineProperties.propertiesMenu(ng-show="type == 'line'" )
@@ -180,7 +180,7 @@ block content
 
 
             .property
-              span.button.delete(ng-click="deleteSelectedElement('line')")
+              span.button.delete(ng-click="deleteSelectedElement()")
                 | delete this line
 
         #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false")
@@ -211,14 +211,14 @@ block content
             color-picker(model="color")
 
           .property
-            span.button.delete(ng-click="deleteSelectedElement('constraint')")
+            span.button.delete(ng-click="deleteSelectedElement()")
               | delete this constraint
         
         #textProperties.propertiesMenu(ng-show="type == 'text'")
           .property
             input(type="text" ng-model="selectedElement.text" name="label" placeholder="text!")
           .property
-            span.button.delete(ng-click="deleteSelectedElement('text')")
+            span.button.delete(ng-click="deleteSelectedElement()")
               | delete this text field
  
 
