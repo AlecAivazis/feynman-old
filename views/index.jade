@@ -112,8 +112,8 @@ block content
               color-picker(model="color")
             .property
               slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
-                     style="width: 70%")
-              |  {{radius}}
+                     style="width: 82%")
+              | &nbsp; {{radius}}
             .property
               span.button(ng-click="selectedElement.fixed = !selectedElement.fixed" 
                           ng-class="{enabled: selectedElement.fixed == false, disabled: selectedElement.fixed == true}" )
@@ -205,8 +205,8 @@ block content
         #circleProperties.propertiesMenu(ng-show="type == 'circle'")
           .property
             slider(floor="0" ceiling="100" step="5" precision="0"  ng-model="radius" 
-                   style="width: 70%")
-            |  {{radius}}
+                   style="width: 80%")
+            |  &nbsp; {{radius}}
           .property
             color-picker(model="color")
 
