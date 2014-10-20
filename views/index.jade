@@ -208,8 +208,8 @@ block content
                    style="width: 70%")
             |  {{radius}}
           .property
-            input(colorpicker="rgb" type="text" ng-model="color" name="color"
-                  style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+            color-picker(model="color")
+
           .property
             span.button.delete(ng-click="deleteSelectedElement('constraint')")
               | delete this constraint
