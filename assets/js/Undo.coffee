@@ -65,4 +65,7 @@ undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope) ->
         # decrement the counter
         $scope.current--
 
+    # tell the canvas to deselect
+    $(document).trigger('clearSelection')
+
 ]
