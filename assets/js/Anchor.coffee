@@ -12,7 +12,7 @@ class Anchor
     @paper.anchors.push this
 
     # default values
-    @color = 'black'
+    @color = '#000000'
     @fixed = false
 
 

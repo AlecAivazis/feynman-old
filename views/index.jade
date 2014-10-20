@@ -13,6 +13,7 @@ append js
   != js('Line')
   != js('Text')
 
+  != js('feynmanColorpicker')
   != js('UndoEntry')
   != js('undo')
   != js('app')
@@ -108,8 +109,7 @@ block content
 
           #anchorProperties.propertiesMenu(ng-show="type == 'anchor'")
             .property
-              input(colorpicker="rgb" type="text" ng-model="color" name="color"
-                    style="background: {{color}}; color: {{color}}; border: 1px solid {{color}};")
+              color-picker(model="color")
             .property
               slider(floor="1.0" ceiling="10" step="1" precision="1"  ng-model="radius" 
                      style="width: 70%")
@@ -129,10 +129,7 @@ block content
                     placeholder="Enter a label")
 
             .property.colorPicker
-              div
-                div(style="background: {{color}}")
-                  | &nbsp
-              input(colorpicker="hex" type="text" ng-model="color" name="color")
+              color-picker(model="color")
 
             .property
               slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="width" 
