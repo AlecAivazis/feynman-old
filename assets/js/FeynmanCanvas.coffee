@@ -54,7 +54,11 @@ class FeynmanCanvas
 
       # if they pressed ctrl + z
       if evt.which == 90 and evt.ctrlKey
-        $(document).trigger('goBackOneUndo')
+        if evt.shiftKey
+          $(document).trigger('goForwardOneUndo')
+        else
+          $(document).trigger('goBackOneUndo')
+      
 
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>
