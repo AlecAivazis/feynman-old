@@ -299,7 +299,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
               # only one split
               else if (anchor1OnLine and not anchor2Merged) != (anchor2OnLine and not anchor1Merged)
-                console.log 'only one'
                 # split the appropriate line
                 split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
 
@@ -359,7 +358,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 # merge anchor2 with the split anchor
                 anchor2.merge(anchor2split.anchor)
 
-                console.log 'both split'
                 # register the double split with the undo stack
                 new UndoEntry false,
                   title: 'added internal propagator'
@@ -397,9 +395,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.ressurect()
                     @data.anchor2.anchor.draw()
                     
-                    console.log 'forwards'
-                    
-
               # nothing happened with the line
               else
                 # register the element creation with the undo stack
