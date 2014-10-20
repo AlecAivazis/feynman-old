@@ -405,7 +405,11 @@ class FeynmanCanvas
             splitAnch = @newAnchor.merge(split.anchor)
             splitLine = split.line
             # save a reference to the other anchor
-            otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
+            if splitLine.anchor1 == splitAnchor
+              otherAnchor = splitLine.anchor2
+            else
+              otherAnchor = splitLine.anchor1
+
             # register it with the undo stack
             new UndoEntry false,
               title:  'added a branch to propagator'
@@ -432,14 +436,15 @@ class FeynmanCanvas
                 @data.newAnchor.draw()
                 @data.splitAnchor.draw()
               backwards: ->
+                @data.originalLine.replaceAnchor(@data.splitAnchor, @data.otherAnchor)
+                @data.otherAnchor.addLine(@data.originalLine)
+                @data.splitAnchor.remove()
+                @data.otherLine.remove()
+                @data.otherAnchor.draw()
+
                 @data.newAnchor.remove()
                 @data.newLine.remove()
-                @data.otherLine.remove()
-                @data.splitAnchor.remove()
-                @data.otherAnchor.removeLine @data.otherLine
-                @data.originalLine.replaceAnchor @data.splitAnchor, @data.otherAnchor
-                @data.otherAnchor.addLine @data.originalLine
-                @data.otherAnchor.draw()
+
 
           # neither the initial or the other anchor are on a line
           else 
