@@ -539,18 +539,13 @@ class Line
     @hide()
     # what is drawn changes on the style attribute
     switch @style
-      when "line"
-        @element = @drawAsLine()
-      when "dashed"
-        @element = @drawAsDashedLine()
+      when "line" then @element = @drawAsLine()
+      when "dashed" then @element = @drawAsDashedLine()
+      when "gluino" then @element = @drawAsGluino()
+      when "em" then @element = @drawAsEW()
+      when "sfermion" then @element = @drawAsSfermion()
       when "gluon"
         @element = if @drawEndCaps then @drawAsGluonWithEndCaps() else @drawAsGluon()
-      when "gluino"
-        @element = @drawAsGluino()
-      when "em"
-        @element = @drawAsEW()
-      when "sfermion"
-        @element = @drawAsSfermion()
 
     # apply the correct styling
     @element.attr

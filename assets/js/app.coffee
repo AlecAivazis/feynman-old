@@ -24,7 +24,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         $scope.width = element.width
         $scope.labelDistance = element.labelDistance
         $scope.labelLocation = element.labelLocation
-      when 'anchor', 'circle'
+      when 'anchor'
+        $scope.radius = element.radius
+      when 'circle'
         $scope.radius = element.radius
       when 'text'
         $scope.text = element.text

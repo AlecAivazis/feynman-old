@@ -26,8 +26,7 @@ class CircularConstraint
 
     # draw the appropriate styled circle
     switch @style
-      when 'parton'
-        @element = @drawAsParton()
+      when 'parton' then @element = @drawAsParton()
       # default behavior
       else
         @element = @drawAsParton()

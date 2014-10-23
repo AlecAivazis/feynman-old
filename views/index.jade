@@ -204,6 +204,11 @@ block content
 
         #circleProperties.propertiesMenu(ng-show="type == 'circle'")
           .property
+            select(ng-model="selectedElement.style")
+              option(value = 'parton')
+                | parton
+
+          .property
             slider(floor="0" ceiling="100" step="5" precision="0"  ng-model="radius" 
                    style="width: 80%")
             |  &nbsp; {{radius}}
