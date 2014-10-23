@@ -10,6 +10,8 @@ class CircularConstraint
     @paper.constraints.push this
     @anchors = []
     @color = '#000000'
+    @style = 'parton'
+
 
   draw: =>
 
@@ -22,9 +24,15 @@ class CircularConstraint
       # then remove it
       @element.remove()
 
-    # add the circular element to the canvas
-    @element = @paper.circle(@x, @y, @radius)
+    # draw the appropriate styled circle
+    switch @style
+      when 'parton'
+        @element = @drawAsParton()
+      # default behavior
+      else
+        @element = @drawAsParton()
 
+    # set the back reference to this object
     @element.constraint = this
 
     # add the select event handler to the circle
@@ -32,11 +40,13 @@ class CircularConstraint
       event.stopPropagation()
       $(document).trigger 'selectedElement', [this, 'circle']
 
+    # if the element was selected before redrawing
     if isSelected
+      # add the class to the new element
       @element.addClass('selectedElement')
 
+    # add the universal styles
     @element.attr
-      fill: 'transparent'
       stroke: @color
       strokeWidth: 2
 
@@ -52,6 +62,17 @@ class CircularConstraint
       # draw each of the anchors lines
       _.each anchor.lines, (line) ->
         line.draw()
+
+
+  drawAsParton: =>
+    # draw a regular circle centerd at the location
+    element = @paper.circle(@x, @y, @radius)
+    # style the circle
+    element.attr
+      fill: 'transparent'
+
+    return element
+    
 
 
   handleMove: (x, y) =>
