@@ -4,7 +4,7 @@
 // color palette
 $blue = #0091ff
 $grey = #b8b8b8
-$tooltipColor = rgba(50, 50, 50, .65)
+$toolbarColor = rgba(50, 50, 50, .65)
 
 // structure variables
 $sidebarWidth = 210px
@@ -61,7 +61,7 @@ svg
   text-transform: uppercase
   font-weight: bold
 
-#tooltip
+#toolbar
   position: fixed
   top: 0
   right: 0
@@ -72,7 +72,7 @@ svg
   z-index: 20
   color: white
 
-  background: $tooltipColor
+  background: $toolbarColor
   width: 170px
   text-align: center
   height: 100%
@@ -88,10 +88,10 @@ svg
   input
     width: 100%
 
-#tooltip .property
+#toolbar .property
   margin-bottom: 15px
 
-#tooltip .label
+#toolbar .label
   width: 60px
 
 #historyContent

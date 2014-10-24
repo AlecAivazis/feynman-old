@@ -36,29 +36,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
     # apply the change in angular since this is done in the jquery environment
     $scope.$apply()
-    # orient the tooptip on the selected element
-
-
-  # align the tooltip element along an element
-  $scope.orientTooltip = (element, type) ->
-    # compute the coordinates of the event to place the tooltip
-    x = $('#sidebar').width()
-    y = 0
-    switch type
-      when 'line'
-        # use the midpoint of the line
-        x += (element.anchor1.x + element.anchor2.x ) / 2
-        y = (element.anchor1.y + element.anchor2.y ) / 2
-      when 'anchor'
-        # use the anchor's coordinates
-        x += element.x
-        y = element.y
-
-    # set the off set to position the tooltip
-    $("#tooltip").offset
-      # place the tooltip slightly below the target coordinates
-      top: y+10
-      left: x - $('#tooltip').width()/2
 
 
   # add event handler for group selection
@@ -72,7 +49,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.clearSelection()
 
 
-  # add a listener to reorient thee tooltip when things move
+  # add a listener to reorient thee toolbar when things move
   $(document).on 'orientTooltip', ->
     #$scope.orientTooltip($scope.selectedElement, $scope.type)
 
@@ -109,8 +86,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       helper: 'clone'
       # at the beginning of the drag
       start: ->
-        # compute the offset of the tooltip once
-        paletteData.tooltipOffset = $('#tooltip').offset()
+        # compute the offset of the toolbar once
+        paletteData.toolbarOffset = $('#toolbar').offset()
         paletteData.placedElement = false
 
         # save a reference to the element were dragging
@@ -121,9 +98,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         return
       # while the user is dragging
       drag: (event) ->
-        # when the element gets outside of the tooltip
-        if event.pageX < paletteData.tooltipOffset.left
-          # if its the first time we have been past the tooltip
+        # when the element gets outside of the toolbar
+        if event.pageX < paletteData.toolbarOffset.left
+          # if its the first time we have been past the toolbar
           if not paletteData.placedElement
             # grab the paper object from the canvas
             paper = $(document).attr('canvas').paper
@@ -215,7 +192,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               mouseCoords = canvas.getCanvasCoordinates(event.pageX - $('#canvas').offset().left , event.pageY)
               paletteData.selectedElement.handleMove(mouseCoords.x, mouseCoords.y)
 
-          # hide the dragged element past the tooltip
+          # hide the dragged element past the toolbar
           paletteData.draggedElement.hide()
 
         # the cursor is inside the toolbar
