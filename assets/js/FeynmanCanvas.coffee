@@ -547,7 +547,6 @@ class FeynmanCanvas
       for element in selected
         # get the element data
         data = @getClassElement(element)
-        console.log data
         # add it to the list of elements
         elements[data[1]].push data[0]
 

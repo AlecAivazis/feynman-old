@@ -269,7 +269,7 @@ class Anchor
             @data[3].remove()
   
     # grab the selected elements  
-    selected = Snap.selectAll('.selectedElement')
+    selected = Snap.selectAll('.selectedElement.anchor')
 
     @newAnchor = undefined
 
@@ -418,7 +418,7 @@ class Anchor
     # if the user is holding alt
     if event.altKey
       # clear the selection so we can eventually select the new anchor
-      $(document).trigger 'clearSelection', ->
+      $(document).trigger 'clearSelection'
       # then create a new anchor attached to this one
       @newAnchor = @split true
       # and do nothing ele
@@ -427,11 +427,11 @@ class Anchor
     # user is not holding alt
     
     # if im currently selected and there's more than one
-    if @element.hasClass('selectedElement') and Snap.selectAll('.selectedElement').length > 1
+    if @element.hasClass('selectedElement') and Snap.selectAll('.selectedElement.anchor').length > 1
       # flag this move as a group
       @moveAsGroup = true
       # set the origin for each anchor
-      _.each Snap.selectAll('.selectedElement'), (anchor) ->
+      _.each Snap.selectAll('.selectedElement.anchor'), (anchor) ->
         anchor.anchor.origin_x = anchor.anchor.x
         anchor.anchor.origin_y = anchor.anchor.y
     # otherwise we are moving a single anchor
@@ -445,7 +445,7 @@ class Anchor
 
     # check for the flag set on drag start  
     if @moveAsGroup
-      _.each Snap.selectAll('.selectedElement'), (element) ->
+      _.each Snap.selectAll('.selectedElement.anchor'), (element) ->
         anchor = element.anchor
         anchor.handleMove anchor.origin_x + dx, anchor.origin_y + dy
       # we're done here

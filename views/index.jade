@@ -215,34 +215,54 @@ block content
               | {{selectedElements.anchor.length}} anchors selected
             .groupTitle(ng-show="selectedElements.anchor.length == 1")
               | {{selectedElements.anchor.length}} anchor selected
+
             .property
-              input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
-                    style="background: {{displayColor}}; color: {{displayColor}}; \
-                           border: 1px solid {{groupColor}}; color: {{displayColor}};")
+              color-picker(model="groupAnchorColor")
   
             .property
-              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
-                     style="width: 75%")
+              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupAnchorRadius" 
+                     style="width: 75%" ng-init="groupAnchorRadius = -1")
+              span(ng-hide="groupAnchorRadius == -1")
+                | &nbsp; {{groupAnchorRadius}}
             
-            .property
-              span.label
-                | align
-              span.button(ng-click="alignGroup('vertical')")
-                | vertical
-              span.button(ng-click="alignGroup('horizontal')")
-                | horizontal
+            .property(ng-show="selectedElements.anchor.length > 1")
+              span.button(ng-click="alignGroup('vertical')" style="width: 150px")
+                | align vertically
+
+            .property(ng-show="selectedElements.anchor.length > 1")
+              span.button(ng-click="alignGroup('horizontal')" style="width: 150px")
+                | align horizontally
 
           #lineGroup(ng-show="selectedElements.line.length > 0")
             .groupTitle(ng-show="selectedElements.line.length > 1")
               | {{selectedElements.line.length}} lines selected
             .groupTitle(ng-show="selectedElements.line.length == 1")
               | {{selectedElements.line.length}} line selected
+
+            .property.colorPicker
+              color-picker(model="groupLineColor")
+
+            .property
+              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupSize" 
+                     style="width: 75%" ng-init="groupSize = -1")
+              span(ng-show="groupSize != -1")
+                | &nbsp; {{groupSize}}
+              
   
           #constraintGroup(ng-show="selectedElements.circle.length > 0")
-            .groupTitle(ng-show="selectedElements.line.length > 1")
+            .groupTitle(ng-show="selectedElements.circle.length > 1")
               | {{selectedElements.circle.length}} circles selected
-            .groupTitle(ng-show="selectedElements.line.length == 1")
+            .groupTitle(ng-show="selectedElements.circle.length == 1")
               | {{selectedElements.circle.length}} circle selected
+            
+            .property.colorPicker
+              color-picker(model="groupCircleColor")
+
+            .property
+              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupCircleRadius" 
+                     style="width: 75%" ng-init="groupSize = -1")
+              span(ng-show="groupSize != -1")
+                | &nbsp; {{groupCircleRadius}}
  
 
       #footer

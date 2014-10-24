@@ -493,7 +493,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   # align event element in the selected group align the given direction
   $scope.alignGroup = (direction) ->
     # grab the selected anchors
-    selected = (element.anchor for element in Snap.selectAll('.selectedElement').items)
+    selected = $scope.selectedElements.anchor
     # get the appropraite attribute given the direction
     if direction == 'vertical'
       attr = 'x'
@@ -667,17 +667,39 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       if $scope.type in ['line', 'anchor', 'circle']
         $scope.selectedElement.draw()
 
-  $scope.$watch 'groupColor', (newVal, oldVal) ->
-    if $scope.selectedElements
+  $scope.$watch 'groupAnchorColor', (newVal, oldVal) ->
+    if $scope.selectedElements.anchor
       # if its the default value
       if parseInt(newVal) == -1
         return
 
-      $scope.displayColor = newVal
+      _.each $scope.selectedElements.anchor, (element) ->
+        element.color = newVal
+        element.draw()
 
-      _.each $scope.selectedElements, (element) ->
-        if $scope.type == 'anchor'
-          element.color = newVal
+  $scope.$watch 'groupSize', (newVal, oldVal) ->
+    # go over every line
+    if $scope.selectedElements.line
+      # check that its a valid value
+      if parseInt(newVal) == -1
+        return
+      # go over each of the lines
+      _.each $scope.selectedElements.line, (element) ->
+        # set the width
+        element.width = parseInt(newVal)
+        # draw the element
+        element.draw()
+      
+      
+
+  $scope.$watch 'groupLineColor', (newVal, oldVal) ->
+    if $scope.selectedElements.line
+      # if its the default value
+      if parseInt(newVal) == -1
+        return
+
+      _.each $scope.selectedElements.line, (element) ->
+        element.color = newVal
         element.draw()
         
   $scope.$watch 'radius', (newVal, oldVal) ->
@@ -690,13 +712,13 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       $scope.selectedElement.draw()
 
 
-  $scope.$watch 'groupRadius', (newVal, oldVal) ->
+  $scope.$watch 'groupAnchorRadius', (newVal, oldVal) ->
 
     if parseFloat(newVal) < 0 or isNaN newVal
       return
 
-    if $scope.selectedElements and $scope.type == 'anchor'
-      _.each $scope.selectedElements, (sAnchor) ->
+    if $scope.selectedElements.anchor
+      _.each $scope.selectedElements.anchor, (sAnchor) ->
         sAnchor.radius = newVal
         sAnchor.draw()
 
