@@ -909,6 +909,6 @@ class Line
       originalLine: this
       otherAnchor: if l.anchor1 == anch then l.anchor2 else l.anchor1
 
-    
-    
-  
+
+  makeSelected: =>
+    @element.addClass('selectedElement')

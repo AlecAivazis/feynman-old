@@ -62,17 +62,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
 
   # add event handler for group selection
-  $(document).on 'selectedGroup', (event, elements, type) ->
-    # set the type so we get the right properties menu
-    $scope.type = type
-    # grab the type specific attributes for the group
-    switch type
-      when 'anchor'
-        $scope.groupRadius = -1
-        $scope.groupColor = -1
-        $scope.displayColor = "white"
-
-    $scope.selectedGroup = elements
+  $(document).on 'selectedGroup', (event, elements) ->
+    $scope.selectedElements = elements
     $scope.$apply()
 
 
@@ -493,7 +484,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       
     # clear the angular selection
     $scope.selectedElement = false
-    $scope.selectedGroup = false
+    $scope.selectedElements = false
     # apply these changes to angular
     $scope.type = undefined
     $scope.$apply()
@@ -677,14 +668,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         $scope.selectedElement.draw()
 
   $scope.$watch 'groupColor', (newVal, oldVal) ->
-    if $scope.selectedGroup
+    if $scope.selectedElements
       # if its the default value
       if parseInt(newVal) == -1
         return
 
       $scope.displayColor = newVal
 
-      _.each $scope.selectedGroup, (element) ->
+      _.each $scope.selectedElements, (element) ->
         if $scope.type == 'anchor'
           element.color = newVal
         element.draw()
@@ -704,8 +695,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     if parseFloat(newVal) < 0 or isNaN newVal
       return
 
-    if $scope.selectedGroup and $scope.type == 'anchor'
-      _.each $scope.selectedGroup, (sAnchor) ->
+    if $scope.selectedElements and $scope.type == 'anchor'
+      _.each $scope.selectedElements, (sAnchor) ->
         sAnchor.radius = newVal
         sAnchor.draw()
 

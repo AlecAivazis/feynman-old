@@ -589,3 +589,5 @@ class Anchor
     return anchor
   
      
+  makeSelected: =>
+    @element.addClass('selectedElement')

@@ -311,9 +311,24 @@ class FeynmanCanvas
              # ignore the fixed anchors
              not anchor.fixed
 
+    # get the lines
+    lines = _.filter @paper.lines, (line) ->
+      midx = (line.anchor1.x + line.anchor2.x)/2
+      midy = (line.anchor1.y + line.anchor2.y)/2
+      # within this range
+      return bound1x <= midx <= bound2x and
+             bound1y <= midy <= bound2y
+
+    # get the constraints
+    constraints = _.filter @paper.constraints, (constraint) ->
+      # within this range
+      return bound1x <= constraint.x <= bound2x and
+             bound1y <= constraint.y <= bound2y
+      
+
     # add the selectedElement class to each anchor
-    _.each anchors, (anchor) ->
-      anchor.element.addClass('selectedElement')
+    _.each _.union(anchors, lines, constraints), (element) ->
+      element.makeSelected()
 
 
   # after the drag
@@ -518,12 +533,36 @@ class FeynmanCanvas
 
     # if theres only one selected event
     if selected.length == 1
+      element = @getClassElement(selected[0])
       # then select it
-      $(document).trigger 'selectedElement', [Snap.select('.selectedElement').anchor , 'anchor']
+      $(document).trigger 'selectedElement', element
     # there is more than one selected element
     else if selected.length > 1
-      # select each element in the group
-      $(document).trigger 'selectedGroup', [item.anchor for item in selected.items, 'anchor']
+      # build the object of lists
+      elements =
+        anchor: []
+        line: []
+        circle: []
+
+      for element in selected
+        # get the element data
+        data = @getClassElement(element)
+        console.log data
+        # add it to the list of elements
+        elements[data[1]].push data[0]
+
+      # trigger the selection
+      $(document).trigger 'selectedGroup', elements
+
+
+  # figure out the string type of the class
+  getClassElement: (element) =>
+    if element.anchor
+      return [element.anchor, "anchor"]
+    else if element.constraint  
+      return [element.constraint, "circle"]
+    else if element.line
+      return [element.line, "line"]
 
 
   # when the mouse is pressed, regardless of drag or not

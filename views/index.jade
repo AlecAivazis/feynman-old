@@ -80,7 +80,7 @@ block content
       #tooltip
 
         #palette(ng-show="selectedElement == false || selectedElement == undefined "
-                 ng-hide="selectedGroup != false" )
+                 ng-hide="selectedElements != false" )
           #paletteTitle
             | item palette
           #paletteBody
@@ -183,24 +183,6 @@ block content
               span.button.delete(ng-click="deleteSelectedElement()")
                 | delete this line
 
-        #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false")
-          .property
-            input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
-                  style="background: {{displayColor}}; color: {{displayColor}}; \
-                         border: 1px solid {{groupColor}}; color: {{displayColor}};")
-
-          .property
-            slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
-                   style="width: 75%")
-          
-          .property
-            span.label
-              | align
-            span.button(ng-click="alignGroup('vertical')")
-              | vertical
-            span.button(ng-click="alignGroup('horizontal')")
-              | horizontal
-
         #circleProperties.propertiesMenu(ng-show="type == 'circle'")
           .property
             color-picker(model="color")
@@ -226,6 +208,41 @@ block content
           .property
             span.button.delete(ng-click="deleteSelectedElement()")
               | delete this text field
+
+        #groupProperties(ng-hide="selectedElements == false" ng-init="selectedElements = false")
+          #anchorGroup(ng-show="selectedElements.anchor.length > 0")
+            .groupTitle(ng-show="selectedElements.anchor.length > 1")
+              | {{selectedElements.anchor.length}} anchors selected
+            .groupTitle(ng-show="selectedElements.anchor.length == 1")
+              | {{selectedElements.anchor.length}} anchor selected
+            .property
+              input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
+                    style="background: {{displayColor}}; color: {{displayColor}}; \
+                           border: 1px solid {{groupColor}}; color: {{displayColor}};")
+  
+            .property
+              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupRadius" 
+                     style="width: 75%")
+            
+            .property
+              span.label
+                | align
+              span.button(ng-click="alignGroup('vertical')")
+                | vertical
+              span.button(ng-click="alignGroup('horizontal')")
+                | horizontal
+
+          #lineGroup(ng-show="selectedElements.line.length > 0")
+            .groupTitle(ng-show="selectedElements.line.length > 1")
+              | {{selectedElements.line.length}} lines selected
+            .groupTitle(ng-show="selectedElements.line.length == 1")
+              | {{selectedElements.line.length}} line selected
+  
+          #constraintGroup(ng-show="selectedElements.circle.length > 0")
+            .groupTitle(ng-show="selectedElements.line.length > 1")
+              | {{selectedElements.circle.length}} circles selected
+            .groupTitle(ng-show="selectedElements.line.length == 1")
+              | {{selectedElements.circle.length}} circle selected
  
 
       #footer

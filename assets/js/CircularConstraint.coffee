@@ -64,7 +64,7 @@ class CircularConstraint
 
   drawAsParton: (selected) =>
     # make the pattern
-    pattern = @paper.path("M10-5-10,15M15,0,0,15M0-5-20,15").attr
+    @patternElement = pattern = @paper.path("M10-5-10,15M15,0,0,15M0-5-20,15").attr
         fill: "none"
         strokeWidth: 2
 
@@ -372,4 +372,9 @@ class CircularConstraint
     if @pattern
       # remove it
       @pattern.remove()
-    
+
+
+  # add the necessary classes to make the element seemed selected
+  makeSelected: =>
+    @element.addClass('selectedElement')
+    @patternElement.addClass('selectedPattern')
