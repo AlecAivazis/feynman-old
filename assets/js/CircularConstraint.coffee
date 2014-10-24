@@ -19,17 +19,15 @@ class CircularConstraint
     if @element and @element.hasClass('selectedElement')
       isSelected = true
 
-    # if an element already exists on the canvas
-    if @element
-      # then remove it
-      @element.remove()
+    # hide previous elements
+    @hide()
 
     # draw the appropriate styled circle
     switch @style
-      when 'parton' then @element = @drawAsParton()
+      when 'parton' then @element = @drawAsParton(isSelected)
       # default behavior
       else
-        @element = @drawAsParton()
+        @element = @drawAsParton(isSelected)
 
     # set the back reference to this object
     @element.constraint = this
@@ -63,12 +61,26 @@ class CircularConstraint
         line.draw()
 
 
-  drawAsParton: =>
+  drawAsParton: (selected) =>
+    # make the pattern
+    pattern = @paper.path("M10-5-10,15M15,0,0,15M0-5-20,15").attr
+        fill: "none"
+        strokeWidth: 2
+    # add the appropriate css class
+    pattern.addClass('partonLines')
+    # if the element was originally selected 
+    if selected
+      # add the appropriate class
+      pattern.addClass('selectedElement')
+
+    # define the pattern from the path
+    @pattern = pattern.pattern(0,0, 10, 10)
+
     # draw a regular circle centerd at the location
     element = @paper.circle(@x, @y, @radius)
     # style the circle
     element.attr
-      fill: 'transparent'
+      fill: @pattern
 
     return element
     
@@ -344,5 +356,18 @@ class CircularConstraint
     if @element
       # remove it
       @element.remove()
-
+  
     @paper.constraints = _.without @paper.constraints, this
+
+
+  # remove svg elements associated with this constraint
+  hide: =>
+    # if there is an element element
+    if @element
+      # remove it
+      @element.remove()
+    # if there is a pattern
+    if @pattern
+      # remove it
+      @pattern.remove()
+    

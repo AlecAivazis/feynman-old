@@ -184,7 +184,6 @@ block content
                 | delete this line
 
         #groupProperties(ng-hide="selectedGroup == false" ng-init="selectedGroup = false")
-
           .property
             input(colorpicker="rgb" type="text" ng-model="groupColor" name="color"
                   style="background: {{displayColor}}; color: {{displayColor}}; \
@@ -204,16 +203,17 @@ block content
 
         #circleProperties.propertiesMenu(ng-show="type == 'circle'")
           .property
-            select(ng-model="selectedElement.style")
-              option(value = 'parton')
-                | parton
-
+            color-picker(model="color")
+          
           .property
             slider(floor="0" ceiling="100" step="5" precision="0"  ng-model="radius" 
                    style="width: 80%")
             |  &nbsp; {{radius}}
+
           .property
-            color-picker(model="color")
+            select(ng-model="selectedElement.style")
+              option(value = 'parton')
+                | parton
 
           .property
             span.button.delete(ng-click="deleteSelectedElement()")
@@ -222,6 +222,7 @@ block content
         #textProperties.propertiesMenu(ng-show="type == 'text'")
           .property
             input(type="text" ng-model="selectedElement.text" name="label" placeholder="text!")
+
           .property
             span.button.delete(ng-click="deleteSelectedElement()")
               | delete this text field
