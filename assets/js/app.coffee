@@ -486,6 +486,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         element.anchor.moveAsGroup = false
       # and deselect it
       element.removeClass('selectedElement')
+
+    # deselect the patterns aswell
+    _.each Snap.selectAll('.selectedPattern'), (element) ->
+      element.removeClass('selectedPattern')
       
     # clear the angular selection
     $scope.selectedElement = false

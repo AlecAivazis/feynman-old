@@ -29,8 +29,6 @@ class CircularConstraint
       else
         @element = @drawAsParton(isSelected)
 
-    # set the back reference to this object
-    @element.constraint = this
 
     # add the select event handler to the circle
     @element.node.onclick = (event)=>
@@ -46,6 +44,9 @@ class CircularConstraint
     @element.attr
       stroke: @color
       strokeWidth: 2
+
+    # set the back reference to this object
+    @element.constraint = this
 
     # add it to the diagram group aswell
     $(document).attr('canvas').addToDiagram(@element)
@@ -66,12 +67,13 @@ class CircularConstraint
     pattern = @paper.path("M10-5-10,15M15,0,0,15M0-5-20,15").attr
         fill: "none"
         strokeWidth: 2
+
     # add the appropriate css class
     pattern.addClass('partonLines')
     # if the element was originally selected 
     if selected
       # add the appropriate class
-      pattern.addClass('selectedElement')
+        pattern.addClass('selectedPattern')
 
     # define the pattern from the path
     @pattern = pattern.pattern(0,0, 10, 10)
