@@ -1,4 +1,16 @@
+// imports
 @import mixins
+
+// color palette
+$blue = #0091ff
+$grey = #b8b8b8
+$tooltipColor = rgba(50, 50, 50, .65)
+
+// structure variables
+$sidebarWidth = 210px
+
+
+// styling
 
 html
   height: 100%
@@ -24,13 +36,12 @@ a
 svg
   float: left
 
-sidebarWidth = 210px
 
 #sidebar
   z-index: 2
   float: left
   text-align: center
-  width: sidebarWidth
+  width: $sidebarWidth
   height: 100%
   text-align: center
   overflow: hidden
@@ -45,8 +56,6 @@ sidebarWidth = 210px
   border-bottom: 1px solid #eeeeee
   padding-top: 10px
 
-tooltipColor = rgba(50, 50, 50, .65)
-
 #tooltip
   position: fixed
   top: 0
@@ -58,7 +67,7 @@ tooltipColor = rgba(50, 50, 50, .65)
   z-index: 20
   color: white
 
-  background: tooltipColor
+  background: $tooltipColor
   width: 170px
   text-align: center
   height: 100%
@@ -144,16 +153,21 @@ input , select
   fill: #b3b3b3
 
 .partonLines
-  stroke: #b8b8b8
+  stroke: $grey
 
 .selectedPattern
-  stroke: #0091ff
+  stroke: $blue
+
+.selectionRectangle
+  stroke: $blue
+  fill: transparent
+  strokeWidth: 2
 
 .selectedElement
-  stroke: #0091ff
+  stroke: $blue
 
   &.anchor
-    fill: #0091ff
+    fill: $blue
   &.text
     border: 1px solid #009aff
 
@@ -218,7 +232,7 @@ input , select
 #mainContent
   z-index: 1
   position: absolute
-  left: sidebarWidth+40px
+  left: $sidebarWidth+40px
   right: 0
   bottom: 0
   top: 0
@@ -235,7 +249,7 @@ input , select
 .diagramProperty input
   background: #fafafa
   border: 1px solid #bbbbbb
-  width: sidebarWidth
+  width: $sidebarWidth
   box-shadow: none
   -moz-box-shadow: none
   -webkit-box-shadow: none
