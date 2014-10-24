@@ -690,8 +690,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         # draw the element
         element.draw()
       
-      
-
   $scope.$watch 'groupLineColor', (newVal, oldVal) ->
     if $scope.selectedElements.line
       # if its the default value
@@ -700,6 +698,26 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
       _.each $scope.selectedElements.line, (element) ->
         element.color = newVal
+        element.draw()
+
+  $scope.$watch 'groupCircleColor', (newVal, oldVal) ->
+    if $scope.selectedElements.circle
+      # if its the default value
+      if parseInt(newVal) == -1
+        return
+
+      _.each $scope.selectedElements.circle, (element) ->
+        element.color = newVal
+        element.draw()
+
+  $scope.$watch 'groupCircleRadius', (newVal, oldVal) ->
+    if $scope.selectedElements.circle
+      # if its the default value
+      if parseInt(newVal) == -1
+        return
+
+      _.each $scope.selectedElements.circle, (element) ->
+        element.radius = newVal
         element.draw()
         
   $scope.$watch 'radius', (newVal, oldVal) ->

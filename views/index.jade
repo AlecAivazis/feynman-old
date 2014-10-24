@@ -259,9 +259,9 @@ block content
               color-picker(model="groupCircleColor")
 
             .property
-              slider(floor="1.0" ceiling="10" step=".2" precision="1"  ng-model="groupCircleRadius" 
+              slider(floor="0" ceiling="100" step="5" precision="0"  ng-model="groupCircleRadius" 
                      style="width: 75%" ng-init="groupSize = -1")
-              span(ng-show="groupSize != -1")
+              span(ng-show="groupCircleRadius != -1")
                 | &nbsp; {{groupCircleRadius}}
  
 
