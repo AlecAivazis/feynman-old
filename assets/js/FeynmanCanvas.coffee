@@ -278,7 +278,8 @@ class FeynmanCanvas
         transform.translate(0, dy)
 
     # apply the transformation and style the rectangle
-    @selectionRect_element.addClass('selectionRectangle').transform(transform)
+    @selectionRect_element.addClass('selectionRectangle').transform(transform).attr
+      strokeDasharray: '10 '
 
     $(document).attr('canvas').addToDiagram @selectionRect_element
 
