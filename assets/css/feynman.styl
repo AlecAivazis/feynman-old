@@ -8,6 +8,7 @@ $toolbarColor = rgba(50, 50, 50, .65)
 
 // structure variables
 $sidebarWidth = 210px
+$toolbarWidth = 170px
 
 
 // styling
@@ -32,6 +33,15 @@ a
   overflow: hidden
   float: right
   background: #f5f5f5
+
+#canvasTitle
+  position: absolute
+  top: 20px
+  left: $sidebarWidth + 40px
+  right: $toolbarWidth + 50px
+  text-align: center  
+  z-index: 50
+  font-size: 25px
 
 svg
   float: left
@@ -73,7 +83,7 @@ svg
   color: white
 
   background: $toolbarColor
-  width: 170px
+  width: $toolbarWidth
   text-align: center
   height: 100%
 
