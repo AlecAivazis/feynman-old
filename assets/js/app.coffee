@@ -62,6 +62,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $('input').on 'keyup', (event) ->
     # don't do anything else
     event.stopPropagation()
+    # unless its a space
+    if event.which == 32
+      # then clear the state variable
+      $(document).attr('canvas').spacebarPressed = false
     
 
   # store an object for the palette data
