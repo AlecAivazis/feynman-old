@@ -641,6 +641,11 @@ class FeynmanCanvas
     else
       y = event.pageY 
 
+    if navigator.userAgent.toLowerCase().indexOf('firefox') > -1
+      # subtract the width of the sidebar from x
+      x -= $('#sidebar').width()+40
+
+
     return @getCanvasCoordinates(x, y)
 
 
