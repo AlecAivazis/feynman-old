@@ -103,7 +103,6 @@ class FeynmanCanvas
   refresh: =>
     @zoomIn()
     @zoomOut()
-    
 
 
   drawGrid: () =>
