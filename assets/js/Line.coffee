@@ -13,7 +13,7 @@ class Line
     @paper.lines.push this
 
     # default values
-    @width = 2.0
+    @width = 1.4
     @color = '#000000'
     @loopDirection = 1
     @labelDistance = 30
@@ -21,7 +21,7 @@ class Line
     @drawArrow = false
     @drawEndCaps = true
     @flipArrow = false
-    @snapRange = 5
+    @snapRange = 2
 
 
   # clone the anchor's settings to a new line attached to the given anchors
