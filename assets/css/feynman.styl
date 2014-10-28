@@ -6,7 +6,7 @@ $blue = #0091ff
 $grey = #b8b8b8
 $toolbarColor = rgba(50, 50, 50, .65)
 
-// structure variables
+// structure variables (doesn't include margin/padding)
 $sidebarWidth = 210px
 $toolbarWidth = 170px
 
@@ -45,7 +45,6 @@ a
 
 svg
   float: left
-
 
 #sidebar
   z-index: 2
@@ -256,6 +255,7 @@ input , select
 #footer 
   text-align: left
   padding-bottom: 10px
+  overflow: auto
 
 .panelTitle, .diagramProperty .label
   text-align: left

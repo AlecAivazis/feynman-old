@@ -49,11 +49,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $scope.clearSelection()
 
 
-  # add a listener to reorient thee toolbar when things move
-  $(document).on 'orientTooltip', ->
-    #$scope.orientTooltip($scope.selectedElement, $scope.type)
-
-
   # when the window resizes
   $(window).resize ->
     # refresh the grid
@@ -62,6 +57,11 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   refreshCanvas = ->
     $(document).attr('canvas').refresh()
+
+  # prevent the inputs from triggering other keybindings
+  $('input').on 'keyup', (event) ->
+    # don't do anything else
+    event.stopPropagation()
     
 
   # store an object for the palette data
