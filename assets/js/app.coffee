@@ -237,6 +237,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               anchor2Merged = anchor2.checkForMerges()
               anchor1OnLine = $(document).attr('canvas').isAnchorOnLine(anchor1) 
               anchor2OnLine = $(document).attr('canvas').isAnchorOnLine(anchor2) 
+              anchor1OnConstraint = $(document).attr('canvas').isAnchorOnConstraint(anchor1)
+              anchor2OnConstraint = $(document).attr('canvas').isAnchorOnConstraint(anchor2)
+
+              undo = new UndoMulti 'added new line to canvas'
 
               # if only one of them merged
               if ( anchor1Merged and not anchor2OnLine ) or ( anchor2Merged and not anchor1OnLine )
@@ -368,6 +372,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                                                              @data.anchor2.anchor)
                     @data.line.ressurect()
                     @data.anchor2.anchor.draw()
+
+              # if one anchor is only on a constraint
+              else if anchor1OnConstraint != anchor2OnConstraint
+                # 
                     
               # nothing happened with the line
               else
