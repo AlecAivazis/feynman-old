@@ -167,7 +167,7 @@ class CircularConstraint
     # check if we are targetting an anchor
     if @targetAnchor
       # check for merges with other anchors
-      merged = @targetAnchor.checkForMerges(@targetAnchor)
+      merged = @targetAnchor.mergeWithOtherAnchors(@targetAnchor)
       # if such a merge happened
       if merged
         line = @targetAnchor.lines[0]

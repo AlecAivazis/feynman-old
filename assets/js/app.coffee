@@ -233,8 +233,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               anchor1 = paletteData.selectedElement.anchor1
               anchor2 = paletteData.selectedElement.anchor2
               # check the anchors for potential merges
-              anchor1Merged = anchor1.checkForMerges()
-              anchor2Merged = anchor2.checkForMerges()
+              anchor1Merged = anchor1.mergeWithOtherAnchors()
+              anchor2Merged = anchor2.mergeWithOtherAnchors()
               anchor1OnLine = $(document).attr('canvas').isAnchorOnLine(anchor1) 
               anchor2OnLine = $(document).attr('canvas').isAnchorOnLine(anchor2) 
               anchor1OnConstraint = $(document).attr('canvas').isAnchorOnConstraint(anchor1)
