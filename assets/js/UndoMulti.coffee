@@ -7,14 +7,14 @@ class UndoMulti
 
 
   # take an object as an agrument to pass attribute values in a clean way
-  constructor: (@transparent, @title) ->
+  constructor: (@title, @transparent = false) ->
     # instantiate the method stacks
     @forwardStack = []
     @backwardStack = []
 
 
   # finalize the undo transcation and add it to the stack
-  save:
+  save: =>
     # add the entry to the undo stack
     $(document).trigger 'addEntryToUndo', [@transparent, this]
 
@@ -34,14 +34,19 @@ class UndoMulti
 
 
   # call all of the methods in the forwards stack
-  forwards:
+  forwards: =>
     # go over each entry in the stack
     _.each @forwardStack, (entry) ->
       entry.function(entry.data)
 
 
   # call all of the methods in the forwards stack
-  backwards:
+  backwards: =>
     # go over each entry in the stack
     _.each @backwardStack, (entry) ->
       entry.function(entry.data)
+
+
+  # check wether or not both of the stacks have contents
+  isValid: =>
+    return @forwardStack.length > 0 and @backwardStack.length > 0
