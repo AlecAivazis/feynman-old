@@ -37,5 +37,11 @@ class UndoMulti
   forwards:
     # go over each entry in the stack
     _.each @forwardStack, (entry) ->
-      return
-      
+      entry.function(entry.data)
+
+
+  # call all of the methods in the forwards stack
+  backwards:
+    # go over each entry in the stack
+    _.each @backwardStack, (entry) ->
+      entry.function(entry.data)
