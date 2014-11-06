@@ -20,14 +20,14 @@ class UndoMulti
 
 
   # add the specified function and its data to the forward stack
-  addToForward: (data, func) =>
+  addToForwards: (data, func) =>
     @forwardStack.push
       function: func
       data: data
 
 
   # add the specified function and its data to the backward stack
-  addToBackward: (data, func) =>
+  addToBackwards: (data, func) =>
     @backwardStack.push
       function: func
       data: data

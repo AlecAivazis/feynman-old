@@ -245,6 +245,62 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
               undo = new UndoMulti('added line from palette')
 
+              # before we do anything else we need to have the forward action ressurect
+              # the two anchors
+              undo.addToForwards
+                anchor1: anchor1
+                anchor2: anchor2
+              , (data) ->
+                anchor1.ressurect()
+                anchor2.ressurect()
+
+              # go through the checks and apply the necessary actions
+              #
+              # these actions should include a backwards function that undoes the
+              # specific action but does not remove the anchors themselves and a
+              # forwards function that applies the action in an undo safe way
+              
+              # check for potential anchor merges first 
+              if anchor1OnAnchor
+                # merge anchor1 onto the other
+                anchor1.merge(anchor1OnAnchor)
+              else if anchor1OnLine
+                console.log 'anchor 1 on a line'
+              else if anchor1OnConstraint
+                console.log 'anchor1 on constraint'
+
+              # forward stack includes ressurecting the line and drawing both anchors
+              # regardless of potential merges
+              undo.addToForwards
+                line: paletteData.selectedElement
+                anchor1: anchor1
+                anchor2: anchor2
+              , (data) ->
+                data.line.ressurect()
+                data.anchor1.draw()
+                data.anchor2.draw()
+        
+
+              # backward stack includes removing the line and two anchors
+              # regardless of potential merges
+              undo.addToBackwards line: paletteData.selectedElement , (data) ->
+                data.line.remove()
+
+              # only remove the anchor in the backwards action if it wasn't merged
+              if not !!anchor1OnAnchor
+                undo.addToBackwards
+                  anchor1: anchor1
+                  anchor2: anchor2
+                , (data) ->
+                  data.anchor1.remove()
+                  data.anchor2.remove()
+        
+              # save the multi undo to the stack
+              #undo.save()
+
+
+
+
               # if only one of them merged
               if (anchor1OnAnchor and not anchor2OnLine and not anchor2OnConstraint) or
                  (anchor2OnAnchor and not anchor1OnLine and not anchor1OnConstraint)

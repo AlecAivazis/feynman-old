@@ -22,7 +22,8 @@ undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope, $timeout) ->
   $(document).on 'addEntryToUndo', ( event, transparent, entry ) ->  
     # increment the counter
     $scope.current++ 
-
+    # set the id of the entry to the current count
+    entry.id = $scope.current
     # remove all of the undo entries past current
     $scope.queue = $scope.queue.splice(0, $scope.current)
 
