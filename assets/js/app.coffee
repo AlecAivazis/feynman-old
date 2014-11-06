@@ -232,18 +232,27 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               # save references to the two anchors
               anchor1 = paletteData.selectedElement.anchor1
               anchor2 = paletteData.selectedElement.anchor2
-              # check the anchors for potential merges
-              anchor1Merged = anchor1.mergeWithNearbyAnchors()
-              anchor2Merged = anchor2.mergeWithNearbyAnchors()
-              anchor1OnLine = $(document).attr('canvas').isAnchorOnLine(anchor1) 
-              anchor2OnLine = $(document).attr('canvas').isAnchorOnLine(anchor2) 
+              # save a reference to the canvas
+              canvas = $(document).attr('canvas')
+              # check the first anchor for potential merges
+              anchor1OnAnchor = canvas.isAnchorOnAnchor(anchor1) 
+              anchor1OnLine = canvas.isAnchorOnLine(anchor1) 
+              anchor1OnConstraint = canvas.isAnchorOnConstraint(anchor1) 
+              # check the second anchor for merges
+              anchor2OnAnchor = canvas.isAnchorOnAnchor(anchor2) 
+              anchor2OnLine = canvas.isAnchorOnLine(anchor2) 
+              anchor2OnConstraint = canvas.isAnchorOnConstraint(anchor2) 
 
               undo = new UndoMulti('added line from palette')
 
               # if only one of them merged
-              if ( anchor1Merged and not anchor2OnLine ) or ( anchor2Merged and not anchor1OnLine )
+              if (anchor1OnAnchor and not anchor2OnLine and not anchor2OnConstraint) or
+                 (anchor2OnAnchor and not anchor1OnLine and not anchor1OnConstraint)
                 # save the references to the meaning elements
-                merged = if anchor1Merged then anchor1Merged else anchor2Merged
+                if anchor1OnAnchor
+                  merged = anchor1.merge(anchor1OnAnchor)
+                else
+                  merged = anchor2.merge(anchor2OnAnchor)
                 line = paletteData.selectedElement
                 otherAnchor = if line.anchor1 == merged then line.anchor2 else line.anchor1
                 # register the branch with the undo stack
@@ -260,8 +269,12 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.ressurect()
                     @data.otherAnchor.draw()
 
-              # both merged
-              else if anchor1Merged and anchor2Merged 
+              # both anchors need to be merged
+              else if anchor1OnAnchor and anchor2OnAnchor
+                # merge the two anchors
+                anchor1.merge(anchor1OnAnchor)
+                anchor2.merge(anchor2OnAnchor)
+
                 # register the line creation with the undo stack
                 new UndoEntry false,
                   title: 'added internal propagator'
@@ -274,7 +287,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.remove()
 
               # only one split
-              else if (!!anchor1OnLine and not !!anchor2Merged) != (!!anchor2OnLine and not !!anchor1Merged)
+              else if (!!anchor1OnLine and not !!anchor2OnAnchor and not !!anchor2OnConstraint) !=
+                      (!!anchor2OnLine and not !!anchor1OnAnchor and not !!anchor1OnConstraint)
                 # split the appropriate line
                 split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
 
@@ -370,6 +384,69 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                                                              @data.anchor2.anchor)
                     @data.line.ressurect()
                     @data.anchor2.anchor.draw()
+  
+              # if only one of them was on a constraint
+              if (anchor1OnConstraint and not anchor2OnLine and not anchor2OnAnchor) or
+                 (anchor2OnConstraint and not anchor1OnLine and not anchor1OnAnchor)
+                # figure out which anchor needs to be constrained
+                constrainedAnchor = if anchor1OnConstraint then anchor1 else anchor2
+                constraint = if anchor1OnConstraint then anchor1OnConstraint else anchor2OnConstraint
+
+                # apply the constraint to the anchor
+                constrainedAnchor.addConstraint(constraint)
+                # draw the anchor with the constraint
+                constrainedAnchor.draw()
+
+                # register the action with the undo stack
+                new UndoEntry false,
+                  title: 'added branch to circle'
+                  data:
+                    constrainedAnchor: constrainedAnchor
+                    otherAnchor: if anchor1OnConstraint then anchor2 else anchor1
+                    constraint: constraint
+                    line: paletteData.selectedElement
+                  forwards: ->
+                    @data.constrainedAnchor.ressurect()
+                    @data.constrainedAnchor.addConstraint(@data.constraint)
+                    @data.otherAnchor.ressurect()
+                    @data.line.ressurect()
+                    @data.constrainedAnchor.draw()
+                    @data.otherAnchor.draw()
+                  backwards: ->
+                    @data.constrainedAnchor.remove()
+                    @data.otherAnchor.remove()
+                    @data.line.remove()
+  
+              # both anchors were on a constraint
+              else if anchor1OnConstraint and anchor2OnConstraint
+                # apply the constraint
+                anchor1.addConstraint(anchor1OnConstraint)
+                anchor2.addConstraint(anchor2OnConstraint)
+                # redraw the anchors with the new constraint
+                anchor1.draw()
+                anchor2.draw()
+
+                # register the action with the undo stack
+                new UndoEntry false,
+                  title: 'added internal line'
+                  data:
+                    anchor1: anchor1
+                    anchor1Constraint: anchor1OnConstraint
+                    anchor2: anchor2
+                    anchor2Constraint: anchor2OnConstraint
+                    line: paletteData.selectedElement
+                  forwards: ->
+                    @data.anchor1.ressurect()
+                    @data.anchor1.addConstraint(@data.anchor1Constraint)
+                    @data.anchor2.ressurect()
+                    @data.anchor2.addConstraint(@data.anchor2Constraint)
+                    @data.line.ressurect()
+                    @data.anchor1.draw()
+                    @data.anchor2.draw()
+                  backwards: ->
+                    @data.anchor1.remove()
+                    @data.anchor2.remove()
+                    @data.line.remove()
                     
               # nothing happened with the line
               else
