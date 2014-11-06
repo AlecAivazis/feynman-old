@@ -233,10 +233,12 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               anchor1 = paletteData.selectedElement.anchor1
               anchor2 = paletteData.selectedElement.anchor2
               # check the anchors for potential merges
-              anchor1Merged = anchor1.checkForMerges()
-              anchor2Merged = anchor2.checkForMerges()
+              anchor1Merged = anchor1.mergeWithNearbyAnchors()
+              anchor2Merged = anchor2.mergeWithNearbyAnchors()
               anchor1OnLine = $(document).attr('canvas').isAnchorOnLine(anchor1) 
               anchor2OnLine = $(document).attr('canvas').isAnchorOnLine(anchor2) 
+
+              undo = new UndoMulti('added line from palette')
 
               # if only one of them merged
               if ( anchor1Merged and not anchor2OnLine ) or ( anchor2Merged and not anchor1OnLine )
@@ -272,7 +274,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                     @data.line.remove()
 
               # only one split
-              else if (anchor1OnLine and not anchor2Merged) != (anchor2OnLine and not anchor1Merged)
+              else if (!!anchor1OnLine and not !!anchor2Merged) != (!!anchor2OnLine and not !!anchor1Merged)
                 # split the appropriate line
                 split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
 

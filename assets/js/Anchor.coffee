@@ -93,24 +93,24 @@ class Anchor
       line.draw()
 
 
-  checkForMerges: (targetAnchor = this)=>
+  mergeWithNearbyAnchors: ()=>
     merge = false
     # check if there is any anchor that it within snapRange of me
     _.each @paper.anchors, (compare) =>
       # make sure we dont compare us with ourselves
-      if compare == targetAnchor
+      if compare == this
         return
 
       # compute the distance etween me and the other anchor
-      dx = targetAnchor.x - compare.x
-      dy = targetAnchor.y - compare.y
+      dx = @x - compare.x
+      dy = @y - compare.y
 
       snapRange = @snapRange
 
       # check if the other anchor is within snap range
       if snapRange * snapRange >= dx*dx + dy*dy
         # if it is then merge the two
-        targetAnchor.merge compare
+        @merge compare
         # save the element we merged onto
         merge = compare
     # if we performed a merge
@@ -137,7 +137,7 @@ class Anchor
     # grab the lines before we potentially remove them by merging
     lines = targetAnchor.lines
     # this is a check for internal line construction with targetAnchor
-    merged = @checkForMerges(targetAnchor)
+    merged = @mergeWithNearbyAnchors(targetAnchor)
     if merged
       # grab the lines associated with the target anchor
       if @newAnchor

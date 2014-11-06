@@ -346,7 +346,7 @@ class FeynmanCanvas
     # if the user was holding the alt key
     if event.altKey
       # check for merges for the new 
-      merged = @currentAnchor.checkForMerges()
+      merged = @currentAnchor.mergeWithNearbyAnchors()
       # if the newly created anchor was merged
       if merged
         # register it with the undo stack
