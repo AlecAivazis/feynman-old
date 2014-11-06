@@ -229,48 +229,19 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           switch paletteData.type
             # when it is a line 
             when "line", "em", "gluon", "dashed"
+              # create an undo entry for this action
+              undo = new UndoMulti('added line from palette')
               # save references to the two anchors
               anchor1 = paletteData.selectedElement.anchor1
               anchor2 = paletteData.selectedElement.anchor2
-              # save a reference to the canvas
-              canvas = $(document).attr('canvas')
-              # check the first anchor for potential merges
-              anchor1OnAnchor = canvas.isAnchorOnAnchor(anchor1) 
-              anchor1OnLine = canvas.isAnchorOnLine(anchor1) 
-              anchor1OnConstraint = canvas.isAnchorOnConstraint(anchor1) 
-              # check the second anchor for merges
-              anchor2OnAnchor = canvas.isAnchorOnAnchor(anchor2) 
-              anchor2OnLine = canvas.isAnchorOnLine(anchor2) 
-              anchor2OnConstraint = canvas.isAnchorOnConstraint(anchor2) 
 
-              undo = new UndoMulti('added line from palette')
+              # perform the appropriate merges and fill the undo entry
+              performMergesFromPalette(anchor1, undo)
+              performMergesFromPalette(anchor2, undo)
 
-              # before we do anything else we need to have the forward action ressurect
-              # the two anchors
-              undo.addToForwards
-                anchor1: anchor1
-                anchor2: anchor2
-              , (data) ->
-                anchor1.ressurect()
-                anchor2.ressurect()
-
-              # go through the checks and apply the necessary actions
-              #
-              # these actions should include a backwards function that undoes the
-              # specific action but does not remove the anchors themselves and a
-              # forwards function that applies the action in an undo safe way
-              
-              # check for potential anchor merges first 
-              if anchor1OnAnchor
-                # merge anchor1 onto the other
-                anchor1.merge(anchor1OnAnchor)
-              else if anchor1OnLine
-                console.log 'anchor 1 on a line'
-              else if anchor1OnConstraint
-                console.log 'anchor1 on constraint'
-
-              # forward stack includes ressurecting the line and drawing both anchors
-              # regardless of potential merges
+              # add the bits that happen regardless of potential merges
+    
+              # forward stack ressurects the line and draws both anchors to update the diagram
               undo.addToForwards
                 line: paletteData.selectedElement
                 anchor1: anchor1
@@ -279,250 +250,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 data.line.ressurect()
                 data.anchor1.draw()
                 data.anchor2.draw()
-        
-
-              # backward stack includes removing the line and two anchors
-              # regardless of potential merges
+      
+              # backward stack removes the line and two anchors to finalize the undo
               undo.addToBackwards line: paletteData.selectedElement , (data) ->
                 data.line.remove()
 
-              # only remove the anchor in the backwards action if it wasn't merged
-              if not !!anchor1OnAnchor
-                undo.addToBackwards
-                  anchor1: anchor1
-                  anchor2: anchor2
-                , (data) ->
-                  data.anchor1.remove()
-                  data.anchor2.remove()
-        
-              # save the multi undo to the stack
-              #undo.save()
+              # save the entry to the stack
+              undo.save()
 
-
-
-
-              # if only one of them merged
-              if (anchor1OnAnchor and not anchor2OnLine and not anchor2OnConstraint) or
-                 (anchor2OnAnchor and not anchor1OnLine and not anchor1OnConstraint)
-                # save the references to the meaning elements
-                if anchor1OnAnchor
-                  merged = anchor1.merge(anchor1OnAnchor)
-                else
-                  merged = anchor2.merge(anchor2OnAnchor)
-                line = paletteData.selectedElement
-                otherAnchor = if line.anchor1 == merged then line.anchor2 else line.anchor1
-                # register the branch with the undo stack
-                new UndoEntry false,
-                  title: 'added propragator to vertex'
-                  data:
-                    line: line
-                    otherAnchor: otherAnchor
-                  backwards: ->
-                    @data.otherAnchor.remove()
-                    @data.line.remove()
-                  forwards: ->
-                    @data.otherAnchor.ressurect()
-                    @data.line.ressurect()
-                    @data.otherAnchor.draw()
-
-              # both anchors need to be merged
-              else if anchor1OnAnchor and anchor2OnAnchor
-                # merge the two anchors
-                anchor1.merge(anchor1OnAnchor)
-                anchor2.merge(anchor2OnAnchor)
-
-                # register the line creation with the undo stack
-                new UndoEntry false,
-                  title: 'added internal propagator'
-                  data:
-                    line: paletteData.selectedElement
-                  forwards: ->
-                    @data.line.ressurect()
-                    @data.line.draw()
-                  backwards: ->
-                    @data.line.remove()
-
-              # only one split
-              else if (!!anchor1OnLine and not !!anchor2OnAnchor and not !!anchor2OnConstraint) !=
-                      (!!anchor2OnLine and not !!anchor1OnAnchor and not !!anchor1OnConstraint)
-                # split the appropriate line
-                split = if anchor1OnLine then anchor1OnLine.split(anchor1.x, anchor1.y) else anchor2OnLine.split(anchor2.x, anchor2.y)
-
-                # merge the split anchor with the appopriate one
-                if anchor1OnLine
-                  splitAnchor = anchor1.merge(split.anchor)
-                else
-                  splitAnchor = anchor2.merge(split.anchor)
-
-                # save a reference to the lines
-                splitLine = split.line
-                newLine = paletteData.selectedElement
-
-                if splitLine.anchor1 == splitAnchor
-                  otherAnchor = splitLine.anchor2
-                else
-                  otherAnchor = splitLine.anchor1
-
-                # register the split with the undo stack
-                new UndoEntry false,
-                  title: 'added branch to propagator'
-                  data:
-                    originalLine: split.originalLine
-                    splitLine: splitLine
-                    splitAnchor: splitAnchor
-                    otherAnchor: otherAnchor
-                    newLine: newLine
-                    newAnchor: if newLine.anchor1 == splitAnchor then newLine.anchor2 else newLine.anchor1
-                  backwards: ->
-                    @data.originalLine.replaceAnchor(@data.splitAnchor, @data.otherAnchor)
-                    @data.otherAnchor.addLine(@data.originalLine)
-                    @data.newAnchor.remove()
-                    @data.newLine.remove()
-                    @data.splitLine.remove()
-                    @data.splitAnchor.remove()
-                    @data.otherAnchor.draw()
-                  forwards: ->
-                    @data.originalLine.replaceAnchor(@data.otherAnchor, @data.splitAnchor)
-                    @data.otherAnchor.removeLine(@data.originalLine)
-                    @data.splitAnchor.ressurect()
-                    @data.splitAnchor.addLine(@data.originalLine)
-                    @data.splitLine.ressurect()
-                    @data.newAnchor.ressurect()
-                    @data.newLine.ressurect()
-                    @data.newAnchor.draw()
-                    @data.splitAnchor.draw()
-
-              # both sides were a split
-              else if anchor1OnLine and anchor2OnLine
-                # split the line at the anchor
-                anchor1split = anchor1OnLine.split(anchor1.x, anchor1.y)
-                # merge the anchor with the split
-                anchor1.merge(anchor1split.anchor)
-
-                # split the other line
-                anchor2split = anchor2OnLine.split(anchor2.x, anchor2.y)
-                # merge anchor2 with the split anchor
-                anchor2.merge(anchor2split.anchor)
-
-                # register the double split with the undo stack
-                new UndoEntry false,
-                  title: 'added internal propagator'
-                  data:
-                    anchor1: anchor1split
-                    anchor2: anchor2split
-                    line: paletteData.selectedElement
-                  backwards: ->
-                    @data.anchor1.originalLine.replaceAnchor(@data.anchor1.anchor,
-                                                             @data.anchor1.otherAnchor)
-                    @data.anchor1.anchor.remove()
-                    @data.anchor1.otherAnchor.addLine(@data.anchor1.originalLine)
-                    @data.anchor1.otherAnchor.draw()
-                    @data.anchor1.line.remove()
-                    @data.line.remove()
-                    @data.anchor2.originalLine.replaceAnchor(@data.anchor2.anchor,
-                                                             @data.anchor2.otherAnchor)
-                    @data.anchor2.anchor.remove()
-                    @data.anchor2.otherAnchor.addLine(@data.anchor2.originalLine)
-                    @data.anchor2.otherAnchor.draw()
-                    @data.anchor2.line.remove()
-                  forwards: ->
-                    @data.anchor1.otherAnchor.removeLine(@data.anchor1.originalLine)
-                    @data.anchor1.anchor.ressurect()
-                    @data.anchor1.line.ressurect()
-                    @data.anchor1.originalLine.replaceAnchor(@data.anchor1.otherAnchor,
-                                                             @data.anchor1.anchor)
-                    @data.anchor1.anchor.draw()
-        
-                    @data.anchor2.otherAnchor.removeLine(@data.anchor2.originalLine)
-                    @data.anchor2.anchor.ressurect()
-                    @data.anchor2.line.ressurect()
-                    @data.anchor2.originalLine.replaceAnchor(@data.anchor2.otherAnchor,
-                                                             @data.anchor2.anchor)
-                    @data.line.ressurect()
-                    @data.anchor2.anchor.draw()
-  
-              # if only one of them was on a constraint
-              if (anchor1OnConstraint and not anchor2OnLine and not anchor2OnAnchor) or
-                 (anchor2OnConstraint and not anchor1OnLine and not anchor1OnAnchor)
-                # figure out which anchor needs to be constrained
-                constrainedAnchor = if anchor1OnConstraint then anchor1 else anchor2
-                constraint = if anchor1OnConstraint then anchor1OnConstraint else anchor2OnConstraint
-
-                # apply the constraint to the anchor
-                constrainedAnchor.addConstraint(constraint)
-                # draw the anchor with the constraint
-                constrainedAnchor.draw()
-
-                # register the action with the undo stack
-                new UndoEntry false,
-                  title: 'added branch to circle'
-                  data:
-                    constrainedAnchor: constrainedAnchor
-                    otherAnchor: if anchor1OnConstraint then anchor2 else anchor1
-                    constraint: constraint
-                    line: paletteData.selectedElement
-                  forwards: ->
-                    @data.constrainedAnchor.ressurect()
-                    @data.constrainedAnchor.addConstraint(@data.constraint)
-                    @data.otherAnchor.ressurect()
-                    @data.line.ressurect()
-                    @data.constrainedAnchor.draw()
-                    @data.otherAnchor.draw()
-                  backwards: ->
-                    @data.constrainedAnchor.remove()
-                    @data.otherAnchor.remove()
-                    @data.line.remove()
-  
-              # both anchors were on a constraint
-              else if anchor1OnConstraint and anchor2OnConstraint
-                # apply the constraint
-                anchor1.addConstraint(anchor1OnConstraint)
-                anchor2.addConstraint(anchor2OnConstraint)
-                # redraw the anchors with the new constraint
-                anchor1.draw()
-                anchor2.draw()
-
-                # register the action with the undo stack
-                new UndoEntry false,
-                  title: 'added internal line'
-                  data:
-                    anchor1: anchor1
-                    anchor1Constraint: anchor1OnConstraint
-                    anchor2: anchor2
-                    anchor2Constraint: anchor2OnConstraint
-                    line: paletteData.selectedElement
-                  forwards: ->
-                    @data.anchor1.ressurect()
-                    @data.anchor1.addConstraint(@data.anchor1Constraint)
-                    @data.anchor2.ressurect()
-                    @data.anchor2.addConstraint(@data.anchor2Constraint)
-                    @data.line.ressurect()
-                    @data.anchor1.draw()
-                    @data.anchor2.draw()
-                  backwards: ->
-                    @data.anchor1.remove()
-                    @data.anchor2.remove()
-                    @data.line.remove()
-                    
-              # nothing happened with the line
-              else
-                # register the element creation with the undo stack
-                new UndoEntry false,
-                  title: "Added a standalone propagator from the palette"
-                  data:
-                    line: paletteData.selectedElement
-                    anchor1: paletteData.anchor1
-                    anchor2: paletteData.anchor2
-                  forwards: ->
-                    @data.anchor1.ressurect() 
-                    @data.anchor2.ressurect() 
-                    @data.line.ressurect()
-                    @data.anchor1.draw()
-                    @data.anchor2.draw()
-                  backwards: ->
-                    @data.line.remove()
-                    @data.anchor1.remove()
-                    @data.anchor2.remove()
             # when its a text field
             when 'text'
               new UndoEntry false,
@@ -582,6 +317,70 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         
         # clear the palette data so the next drag is fresh
         paletteData = {}
+
+
+  # perform the necessary actions to merge an anchor and add them to an instance of UndoMulti
+  performMergesFromPalette = (anchor, undo) ->
+    # save a reference to the canvas
+    canvas = $(document).attr('canvas')
+    # check the anchor for merges
+    onAnchor = canvas.isAnchorOnAnchor(anchor) 
+    onLine = canvas.isAnchorOnLine(anchor) 
+    onConstraint = canvas.isAnchorOnConstraint(anchor) 
+
+    # before we do anything else we need to have the forward action ressurect the anchor
+    undo.addToForwards anchor: anchor , (data) ->
+      anchor.ressurect()
+  
+    # go through the checks and apply the necessary actions
+    #
+    # these actions should include a backwards function that undoes the
+    # specific action but does not remove the anchors themselves and a
+    # forwards function that applies the action in an undo safe way
+              
+    # check for potential anchor merges first 
+    if onAnchor
+      # merge anchor1 onto the other
+      anchor = anchor.merge(onAnchor)
+
+    else if onLine
+      # split the line and merge anchor1 onto the split anchor
+      split = onLine.split(anchor.x, anchor.y, false, anchor)
+      # backwards action is to undo the merge and then the split
+      undo.addToBackwards split, (data) ->
+        data.originalLine.replaceAnchor(data.anchor, data.otherAnchor)
+        data.otherAnchor.addLine(data.originalLine)
+        data.line.remove()
+        data.otherAnchor.draw()
+        data.anchor.remove()
+
+      # the forwards action is to perform the split with the elements
+      undo.addToForwards split, (data) ->
+        data.originalLine.replaceAnchor(data.otherAnchor, data.anchor)
+        data.otherAnchor.removeLine(data.originalLine)
+        data.anchor.addLine(data.originalLine)
+        data.line.ressurect()
+
+    else if onConstraint
+      # apply the constraint to the anchor
+      anchor.addConstraint(onConstraint)
+      # draw the anchor with the new constraint
+      anchor.draw()
+
+      # the forwards action is to ressurect the anchor constrained to the constraint
+      undo.addToForwards
+        anchor: anchor
+        constraint: onConstraint
+      , (data) ->
+        data.anchor.addConstraint(data.constraint)
+
+    # only remove the anchor in the backwards action if it wasn't merged
+    if not onAnchor
+      undo.addToBackwards
+        anchor: anchor
+      , (data) ->
+        data.anchor.remove()
+
 
   # clear the selection
   $scope.clearSelection = ->

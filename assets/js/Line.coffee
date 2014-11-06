@@ -879,12 +879,12 @@ class Line
 
 
   # create an anchor at the given coordinates and 
-  split: (x, y, createAttachedNode = false) =>
+  split: (x, y, createAttachedNode = false, mergeAnchor = undefined) =>
 
     # find the closest point on the line to the requested point
     m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
-    anchorX = ( m * y + x + m* (m* @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
-    anchorY = ( m * ( x + m * y ) - (m* @anchor1.x - @anchor1.y) ) / (m*m + 1)
+    anchorX = ( m * y + x + m * (m * @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
+    anchorY = ( m * ( x + m * y ) - (m * @anchor1.x - @anchor1.y) ) / (m*m + 1)
     
     # create the new elements
     anch = new Anchor(@paper, anchorX, anchorY)
@@ -908,7 +908,7 @@ class Line
     # if they didn't tell use to create a new node
     else
       # return the newly created elements
-      anchor: anch
+      anchor: if mergeAnchor then mergeAnchor.merge(anch) else anch
       line: l
       originalLine: this
       otherAnchor: if l.anchor1 == anch then l.anchor2 else l.anchor1
