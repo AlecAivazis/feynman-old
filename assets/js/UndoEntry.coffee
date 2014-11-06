@@ -3,6 +3,8 @@
 #
 # author: alec aivazis
 
+i = 0
+
 class UndoEntry
 
   # take an object as the argument and uses that for data then automatically
@@ -13,6 +15,9 @@ class UndoEntry
     @data = info.data if info.data?
     @forwards = info.forwards if info.forwards?
     @title = info.title if info.title?
+
+    # grab the appropriate id
+    @id = parseInt($('#undoHistory').attr('current')) + 1
 
     # add the entry to the undo stack
     $(document).trigger 'addEntryToUndo', [transparent, this]

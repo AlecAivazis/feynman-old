@@ -346,7 +346,7 @@ class FeynmanCanvas
     # if the user was holding the alt key
     if event.altKey
       # check for merges for the new 
-      merged = @currentAnchor.mergeWithOtherAnchors()
+      merged = @currentAnchor.checkForMerges()
       # if the newly created anchor was merged
       if merged
         # register it with the undo stack
@@ -640,7 +640,6 @@ class FeynmanCanvas
     else
       y = event.pageY 
 
-    # if its firefox
     if navigator.userAgent.toLowerCase().indexOf('firefox') > -1
       # subtract the width of the sidebar from x
       x -= $('#sidebar').width()+40
@@ -651,6 +650,7 @@ class FeynmanCanvas
 
   # turn page coordinates into canvas coordinates (ie take into account zoom and pan) 
   getCanvasCoordinates: (x, y) =>
+
     # grab the current transformation
     transformInfo =  @diagramGroup.transform().globalMatrix.split()
     # apply the transformations to the location we started the drag

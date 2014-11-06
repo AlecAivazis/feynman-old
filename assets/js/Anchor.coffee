@@ -93,7 +93,7 @@ class Anchor
       line.draw()
 
 
-  mergeWithOtherAnchors: (targetAnchor = this)=>
+  checkForMerges: (targetAnchor = this)=>
     merge = false
     # check if there is any anchor that it within snapRange of me
     _.each @paper.anchors, (compare) =>
@@ -137,7 +137,7 @@ class Anchor
     # grab the lines before we potentially remove them by merging
     lines = targetAnchor.lines
     # this is a check for internal line construction with targetAnchor
-    merged = @mergeWithOtherAnchors(targetAnchor)
+    merged = @checkForMerges(targetAnchor)
     if merged
       # grab the lines associated with the target anchor
       if @newAnchor

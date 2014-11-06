@@ -631,7 +631,7 @@ class Line
       newLine = @newAnchor.lines[0]
 
       # merge this anchor with 
-      merged = @newAnchor.mergeWithOtherAnchors()
+      merged = @newAnchor.checkForMerges()
       # check if the new anchor was merged
       if merged
         # we can figure out the split anchor

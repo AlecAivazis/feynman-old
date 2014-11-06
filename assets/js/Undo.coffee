@@ -18,15 +18,13 @@ undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope, $timeout) ->
   $scope.current = -1
   
   # listen to the dom for events to add to the que
+  #$(document).on 'addEntryToUndo', ( event, title, transparent = true, data,
   $(document).on 'addEntryToUndo', ( event, transparent, entry ) ->  
     # increment the counter
     $scope.current++ 
 
     # remove all of the undo entries past current
     $scope.queue = $scope.queue.splice(0, $scope.current)
-
-    # add the appropriate id to the entry
-    entry.id = $scope.current
 
     # add the event to the queue
     $scope.queue.push entry
@@ -52,7 +50,6 @@ undo.controller 'undoCtrl', [ '$scope', '$timeout', ($scope, $timeout) ->
     if $scope.queue.length - 1 > $scope.current
       # we have a step ahead, go to current + 1
       $scope.goTo($scope.current + 1)
-
 
   # perform the necessary steps to go to a specific event
   $scope.goTo = (id) ->
