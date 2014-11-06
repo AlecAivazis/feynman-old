@@ -631,9 +631,11 @@ class Line
       newLine = @newAnchor.lines[0]
 
       # merge this anchor with 
-      merged = @newAnchor.mergeWithNearbyAnchors()
+      onAnchor = $(document).attr('canvas').isAnchorOnAnchor(@newAnchor)
       # check if the new anchor was merged
-      if merged
+      if onAnchor
+        # merge the two anchors
+        merged = @newAnchor.merge(onAnchor)
         # we can figure out the split anchor
         splitAnch = if newLine == @newAnchor then newLine.anchor2 else newLine.anchor1
         # the other line is the only line left if you remove me from the lines of the split anchor

@@ -23,6 +23,7 @@ class FeynmanCanvas
     @deltaZoom = .1
     @hideAnchors = false
     @hideGrid = false
+    @anchorSnapRange = 5
 
     # register the canvas on the document
     $(document).attr('canvas', this)
@@ -346,9 +347,10 @@ class FeynmanCanvas
     # if the user was holding the alt key
     if event.altKey
       # check for merges for the new 
-      merged = @currentAnchor.mergeWithNearbyAnchors()
+      onAnchor = @isAnchorOnAnchor(@currentAnchor)
       # if the newly created anchor was merged
-      if merged
+      if onAnchor
+        merged = @currentAnchor.merge(onAnchor)
         # register it with the undo stack
         new UndoEntry false ,
           title: "created vertex at #{@newAnchor.x}, #{@newAnchor.y}"
@@ -626,6 +628,30 @@ class FeynmanCanvas
     return targetLine
 
 
+  # check if a particular anchor falls on another line in the canvas
+  isAnchorOnAnchor: (targetAnchor) =>
+    # start with a false response
+    onAnchor = false
+
+    snapRange = @anchorSnapRange
+    # go over each anchor
+    _.each @paper.anchors, (anchor) ->
+      # make sure we dont compare the target anchor to itself
+      if anchor == targetAnchor
+        return
+
+      # compute the distances between the two anchors
+      dx = anchor.x - targetAnchor.x
+      dy = anchor.y - targetAnchor.y
+      # if they are less than the anchor snap width
+      if dx*dx + dy*dy <= snapRange * snapRange
+        # set the local variable to this anchor
+        onAnchor = anchor
+
+    # return the response
+    return onAnchor
+      
+      
   # compute the event coordinates bsaed on a mouse event
   getMouseEventCoordinates: (event) =>
     # compute the coordinates of the event using the offset coordinates if they exists

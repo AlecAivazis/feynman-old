@@ -167,9 +167,10 @@ class CircularConstraint
     # check if we are targetting an anchor
     if @targetAnchor
       # check for merges with other anchors
-      merged = @targetAnchor.mergeWithNearbyAnchors()
+      onAnchor = $(document).attr('canvas').isAnchorOnAnchor(@targetAnchor)
       # if such a merge happened
-      if merged
+      if onAnchor
+        merged = @targetAnchor.merge(onAnchor)
         line = @targetAnchor.lines[0]
         # register it with the undo stack
         new UndoEntry false,

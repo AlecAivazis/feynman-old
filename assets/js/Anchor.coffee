@@ -133,12 +133,14 @@ class Anchor
       # we are dragging this so target me
       targetAnchor = this
 
-    # check for merges around the targetAnchor that will look to create elements from me
     # grab the lines before we potentially remove them by merging
     lines = targetAnchor.lines
-    # this is a check for internal line construction with targetAnchor
-    merged = @mergeWithNearbyAnchors(targetAnchor)
-    if merged
+    # check for merges around the targetAnchor 
+    onAnchor = $(document).attr('canvas').isAnchorOnAnchor(targetAnchor)
+    # if such an anchor exists
+    if onAnchor
+      # merge the two anchors
+      merged = targetAnchor.merge(onAnchor)
       # grab the lines associated with the target anchor
       if @newAnchor
         # regsiter it with the undo stack
