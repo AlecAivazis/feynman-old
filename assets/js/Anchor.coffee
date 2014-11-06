@@ -92,35 +92,6 @@ class Anchor
     _.each @lines, (line) ->
       line.draw()
 
-
-  mergeWithNearbyAnchors: ()=>
-    merge = false
-    # check if there is any anchor that it within snapRange of me
-    _.each @paper.anchors, (compare) =>
-      # make sure we dont compare us with ourselves
-      if compare == this
-        return
-
-      # compute the distance etween me and the other anchor
-      dx = @x - compare.x
-      dy = @y - compare.y
-
-      snapRange = @snapRange
-
-      # check if the other anchor is within snap range
-      if snapRange * snapRange >= dx*dx + dy*dy
-        # if it is then merge the two
-        @merge compare
-        # save the element we merged onto
-        merge = compare
-    # if we performed a merge
-    if merge
-      # return the element
-      return merge
-    # otherwise we did not perform a merge
-    else
-      return false
-
       
   # at the end of the drag
   dragEnd: (x, y, event) =>
