@@ -21,7 +21,6 @@ class Line
     @drawArrow = false
     @drawEndCaps = true
     @flipArrow = false
-    @snapRange = 2
 
 
   # clone the anchor's settings to a new line attached to the given anchors
@@ -37,7 +36,6 @@ class Line
     line.drawArrow = @drawArrow
     line.drawEndCaps = @drawEndCaps
     line.flipArrow = @flipArrow
-    line.snapRanhge = @snapRange
     # return the clone
     return line
 
@@ -766,14 +764,16 @@ class Line
               backwards: ->
                 @data.line.remove()
                 # undo the split surrounding the split anchor created first
-                @data.anchor1.originalLine.replaceAnchor(@data.anchor1.splitAnchor, @data.anchor1.otherAnchor)
+                @data.anchor1.originalLine.replaceAnchor(@data.anchor1.splitAnchor,
+                                                         @data.anchor1.otherAnchor)
                 @data.anchor1.otherAnchor.removeLine(@data.anchor1.otherLine)
                 @data.anchor1.otherAnchor.addLine(@data.anchor1.originalLine)
                 @data.anchor1.splitAnchor.remove()
                 @data.anchor1.otherLine.remove()
                 @data.anchor1.otherAnchor.draw()
                 # do the same for anchor2
-                @data.anchor2.originalLine.replaceAnchor(@data.anchor2.splitAnchor, @data.anchor2.otherAnchor)
+                @data.anchor2.originalLine.replaceAnchor(@data.anchor2.splitAnchor,
+                                                         @data.anchor2.otherAnchor)
                 @data.anchor2.otherAnchor.removeLine(@data.anchor2.otherLine)
                 @data.anchor2.otherAnchor.addLine(@data.anchor2.originalLine)
                 @data.anchor2.splitAnchor.remove()
@@ -783,12 +783,14 @@ class Line
               forwards: ->
                 # redo the split
                 @data.anchor1.splitAnchor.ressurect()
-                @data.anchor1.originalLine.replaceAnchor(@data.anchor1.otherAnchor, @data.anchor1.splitAnchor)
+                @data.anchor1.originalLine.replaceAnchor(@data.anchor1.otherAnchor,
+                                                         @data.anchor1.splitAnchor)
                 @data.anchor1.splitAnchor.addLine(@data.anchor1.originalLine)
                 @data.anchor1.otherLine.ressurect() 
                 # same thing for the second line
                 @data.anchor2.splitAnchor.ressurect()
-                @data.anchor2.originalLine.replaceAnchor(@data.anchor2.otherAnchor, @data.anchor2.splitAnchor)
+                @data.anchor2.originalLine.replaceAnchor(@data.anchor2.otherAnchor,
+                                                         @data.anchor2.splitAnchor)
                 @data.anchor2.splitAnchor.addLine(@data.anchor2.originalLine)
                 @data.anchor2.otherLine.ressurect() 
                 # bring the internal line back
@@ -873,7 +875,7 @@ class Line
     distance = Math.abs(m * x - y - m * @anchor1.x + @anchor1.y) / Math.sqrt(m*m + 1)
 
     # a point should be considered on the line if the distance is less than snapRange
-    return distance <= @snapRange
+    return distance <= @width + 3
 
 
   # create an anchor at the given coordinates and 
