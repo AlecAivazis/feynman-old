@@ -413,16 +413,20 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $scope.alignGroup = (direction) ->
     # grab the selected anchors
     selected = $scope.selectedElements.anchor
-    # get the appropraite attribute given the direction
+    # if they asked for a vertical alignment
     if direction == 'vertical'
+      # that corresponds to aligning along the x axis
       attr = 'x'
+    # if they asked for a horizontal alignment
     else if direction == 'horizontal'
+      # that corresponds to aligning along the y axis
       attr = 'y'
 
-    # compute the sum over the appropriate attribute and its average
+    # compute the sum over the appropriate attribute
     sum = _.reduce selected, (runningTotal, element) ->
       return runningTotal + parseFloat(element[attr])
     , 0
+    # the average is the total sum divided by the number of entries
     avg = sum / selected.length
 
     # store the origin so we can move back
