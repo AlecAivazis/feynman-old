@@ -352,6 +352,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
       # the forwards action is to perform the split with the elements
       undo.addToForwards split, (data) ->
+        data.anchor.ressurect()
         data.originalLine.replaceAnchor(data.otherAnchor, data.anchor)
         data.otherAnchor.removeLine(data.originalLine)
         data.anchor.addLine(data.originalLine)
