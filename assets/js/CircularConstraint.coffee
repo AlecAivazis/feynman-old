@@ -40,6 +40,8 @@ class CircularConstraint
       # add the class to the new element
       @element.addClass('selectedElement')
 
+    @element.addClass('circle')
+
     # add the universal styles
     @element.attr
       stroke: @color
@@ -379,3 +381,10 @@ class CircularConstraint
   makeSelected: =>
     @element.addClass('selectedElement')
     @patternElement.addClass('selectedPattern')
+
+
+  # move the constraint to a specified location
+  handleMove: (x,y) =>
+    @x = x 
+    @y = y
+    @draw()

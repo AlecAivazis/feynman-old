@@ -242,7 +242,8 @@ class Anchor
             @data[3].remove()
   
     # grab the selected elements  
-    selected = Snap.selectAll('.selectedElement.anchor')
+    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
+                       Snap.selectAll('.selectedElement.circle').items)
 
     @newAnchor = undefined
 
@@ -344,36 +345,42 @@ class Anchor
     # there is more than one selected element
     else
       # build the position data for the group of elements
-      anchor_data = []
+      element_data = []
       # go over every selected element
-      for element in selected
+      for selectedElement in selected
         # grab its anchor
-        anchor = element.anchor
+        feynElement = if selectedElement.anchor then selectedElement.anchor else selectedElement.constraint
 
         # check that we actually went somewhere
-        if anchor.x == anchor.origin_x and anchor.y == anchor.origin_y
+        if feynElement.x == feynElement.origin_x and feynElement.y == feynElement.origin_y
           return
 
         # save the important data
-        anchor_data.push
-          anchor: anchor
-          x: anchor.x
-          y: anchor.y
-          origin_x: anchor.origin_x
-          origin_y: anchor.origin_y
+        element_data.push
+          element: feynElement
+          x: feynElement.x
+          y: feynElement.y
+          origin_x: feynElement.origin_x
+          origin_y: feynElement.origin_y
 
       # register the move with the undo stack but do not waste the time performing it again
       new UndoEntry false,
-        title: 'moved vertices as a group'
-        data: [anchor_data]
+        title: 'moved elements as a group'
+        data: [element_data]
         # the forward action is to move the group to its current location
         forwards: ->
-          _.each @data[0], (element) ->
-            element.anchor.handleMove element.x, element.y
+          _.each @data[0], (entry) ->
+            if entry.element.anchor
+              entry.element.anchor.handleMove entry.x, entry.y
+            else
+              entry.element.handleMove entry.x, entry.y
         # the backwards action is to move the group to the origin as defined when the drag started
         backwards: ->
-          _.each @data[0], (element) ->
-            element.anchor.handleMove element.origin_x, element.origin_y
+          _.each @data[0], (entry) ->
+            if entry.element.anchor
+              entry.element.anchor.handleMove entry.origin_x, entry.origin_y
+            else
+              entry.element.handleMove entry.origin_x, entry.origin_y
 
     # draw any labels that need to be
     _.each _.compact(@lines), (line)->
@@ -400,13 +407,19 @@ class Anchor
     # user is not holding alt
     
     # if im currently selected and there's more than one
-    if @element.hasClass('selectedElement') and Snap.selectAll('.selectedElement.anchor').length > 1
+    elements = _.union(Snap.selectAll('.selectedElement.ancor'), Snap.selectAll('.selectedElement.circle'))
+    if @element.hasClass('selectedElement') and elements.length > 1
       # flag this move as a group
       @moveAsGroup = true
       # set the origin for each anchor
       _.each Snap.selectAll('.selectedElement.anchor'), (anchor) ->
         anchor.anchor.origin_x = anchor.anchor.x
         anchor.anchor.origin_y = anchor.anchor.y
+      # set the origin for selected constraints
+      _.each Snap.selectAll('.selectedElement.circle'), (circle) ->
+        constraint = circle.constraint
+        constraint.origin_x = constraint.x
+        constraint.origin_y = constraint.y
     # otherwise we are moving a single anchor
     else
       # so select it
@@ -421,6 +434,10 @@ class Anchor
       _.each Snap.selectAll('.selectedElement.anchor'), (element) ->
         anchor = element.anchor
         anchor.handleMove anchor.origin_x + dx, anchor.origin_y + dy
+
+      _.each Snap.selectAll('.selectedElement.circle'), (element) ->
+        circle = element.constraint
+        circle.handleMove circle.origin_x + dx, circle.origin_y + dy
       # we're done here
       return
 
