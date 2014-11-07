@@ -82,6 +82,13 @@ class FeynmanCanvas
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
 
+    $(document).on 'startMove', (event) =>
+      @startMove(event)
+
+    # add an event handler for moving objects as a group
+    $(document).on 'moveSelectedElements', (event, dx, dy) =>
+      @moveSelectedElements(event, dx, dy)
+
     # render the canvas with the starting pattern and register it as item 0 in the history
     new UndoEntry true,
       title: "rendered canvas with '" + startingPattern + "' pattern"
@@ -95,6 +102,34 @@ class FeynmanCanvas
 
     # tell the angular app to load the canvas properties
     $(document).trigger 'doneWithInit'
+
+
+  startMove: (event) ->
+    # get a list of all of the selected elements
+    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
+                        Snap.selectAll('.selectedElement.circle').items)
+    # go to each of the selected elements
+    _.each selected, (element) ->
+      # grab the appropriate feynman element
+      feynElement = if element.anchor then element.anchor else element.constraint
+      # set its origin
+      feynElement.origin =
+        x: feynElement.x
+        y: feynElement.y
+
+
+
+  moveSelectedElements: (event, dx, dy) ->
+    # save the canvas's zoom level
+    zoom = $(document).attr('canvas').zoomLevel
+    # get a list of all of the selected elements
+    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
+                        Snap.selectAll('.selectedElement.circle').items)
+    # move each of them
+    _.each selected, (element) ->
+      feynElement = if element.anchor then element.anchor else element.constraint
+      # move the text to the new coordinates
+      feynElement.handleMove(feynElement.origin.x + dx/zoom, feynElement.origin.y + dy/zoom)
 
 
   addToDiagram: (element) ->

@@ -134,17 +134,16 @@ class CircularConstraint
       @targetAnchor.handleMove(@origin.x + deltaX/zoom, @origin.y + deltaY/zoom)
     # nothing was held down
     else
-      # move the text to the new coordinates
-      @handleMove(@origin.x + deltaX/zoom, @origin.y + deltaY/zoom)
+      $(document).trigger 'moveSelectedElements', [deltaX, deltaY] 
 
 
   dragStart: (x, y, event) =>
     # stop propagation
     event.stopPropagation()
-    # save the original location
-    @origin =
-      x: @x
-      y: @y
+
+    # grab the selected elements  
+    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
+                       Snap.selectAll('.selectedElement.circle').items)
 
     # check if the alt key was held down
     if event.altKey
@@ -161,8 +160,12 @@ class CircularConstraint
       @origin =
         x: coords.x
         y: coords.y
-    else
-      $(document).trigger 'selectedElement', [this, 'circle']
+
+    if selected.length == 0
+      $(document).trigger 'selectedElement', [this, 'constraint']
+
+    # go set up whatever we need for the move
+    $(document).trigger 'startMove'
       
 
   dragEnd: =>
@@ -339,6 +342,7 @@ class CircularConstraint
             
 
     else
+      # NEED TO MAKE AN UNDO FOR GROUP MOVES BASED ON CONSTRAINTS (maybe move it over to a third party?)
       # check that we actually moved somewhere
       if @x != @origin.x and @y != @origin.y
         # register the drag with the undo stack

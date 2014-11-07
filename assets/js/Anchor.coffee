@@ -133,7 +133,7 @@ class Anchor
         # we are merging a pre-existing anchor - register it with the undo stack
         new UndoEntry false,
           title: 'merged two vertices together'
-          data: [targetAnchor, merged, lines, @origin_x, @origin_y]
+          data: [targetAnchor, merged, lines, @origin.x, @origin.y]
           # the forwards action is to merge target anchor with compare
           forwards: ->
             @data[0].merge @data[1]
@@ -256,7 +256,7 @@ class Anchor
     if selected.length == 1
 
       # check that we actually moved it
-      if @x == @origin_x and @y == @origin_y
+      if @x == @origin.x and @y == @origin.y
         return
 
       # check if the anchor was moved onto a line
@@ -334,7 +334,7 @@ class Anchor
         new UndoEntry false,
           title: 'moved vertex' 
           data: [@paper, targetAnchor, targetAnchor.x, targetAnchor.y,
-                         targetAnchor.origin_x, targetAnchor.origin_y]
+                         targetAnchor.origin.x, targetAnchor.origin.y]
           # the forward action is to move to the current location
           forwards: ->
             @data[1].handleMove(@data[2], @data[3], false)
@@ -352,7 +352,7 @@ class Anchor
         feynElement = if selectedElement.anchor then selectedElement.anchor else selectedElement.constraint
 
         # check that we actually went somewhere
-        if feynElement.x == feynElement.origin_x and feynElement.y == feynElement.origin_y
+        if feynElement.x == feynElement.origin.x and feynElement.y == feynElement.origin.y
           return
 
         # save the important data
@@ -360,8 +360,8 @@ class Anchor
           element: feynElement
           x: feynElement.x
           y: feynElement.y
-          origin_x: feynElement.origin_x
-          origin_y: feynElement.origin_y
+          origin_x: feynElement.origin.x
+          origin_y: feynElement.origin.y
 
       # register the move with the undo stack but do not waste the time performing it again
       new UndoEntry false,
@@ -392,8 +392,9 @@ class Anchor
     event.stopPropagation()
 
     # record the location before the drag
-    @origin_x = @x
-    @origin_y = @y
+    @origin =
+      x: @x
+      y: @y
 
     # if the user is holding alt
     if event.altKey
@@ -406,40 +407,18 @@ class Anchor
       
     # user is not holding alt
     
-    # if im currently selected and there's more than one
-    elements = _.union(Snap.selectAll('.selectedElement.ancor'), Snap.selectAll('.selectedElement.circle'))
-    if @element.hasClass('selectedElement') and elements.length > 1
-      # flag this move as a group
-      @moveAsGroup = true
-      # set the origin for each anchor
-      _.each Snap.selectAll('.selectedElement.anchor'), (anchor) ->
-        anchor.anchor.origin_x = anchor.anchor.x
-        anchor.anchor.origin_y = anchor.anchor.y
-      # set the origin for selected constraints
-      _.each Snap.selectAll('.selectedElement.circle'), (circle) ->
-        constraint = circle.constraint
-        constraint.origin_x = constraint.x
-        constraint.origin_y = constraint.y
-    # otherwise we are moving a single anchor
-    else
-      # so select it
+    # get a list of all of the selected elements
+    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
+                        Snap.selectAll('.selectedElement.circle').items)
+
+    if selected.length == 0
       $(document).trigger 'selectedElement', [this, 'anchor']
+
+    $(document).trigger 'startMove'
 
 
   dragMove: (dx, dy, mouse_x, mouse_y, event) =>
     event.stopPropagation()
-
-    # check for the flag set on drag start  
-    if @moveAsGroup
-      _.each Snap.selectAll('.selectedElement.anchor'), (element) ->
-        anchor = element.anchor
-        anchor.handleMove anchor.origin_x + dx, anchor.origin_y + dy
-
-      _.each Snap.selectAll('.selectedElement.circle'), (element) ->
-        circle = element.constraint
-        circle.handleMove circle.origin_x + dx, circle.origin_y + dy
-      # we're done here
-      return
 
     # go to each line
     _.each @lines, (line) ->
@@ -447,8 +426,8 @@ class Anchor
       line.removeLabel()
 
     # compute the new location
-    x = @origin_x + dx
-    y = @origin_y + dy
+    x = @origin.x + dx
+    y = @origin.y + dy
 
     # if they are holding down the alt key
     if event.altKey
@@ -461,7 +440,7 @@ class Anchor
       
     # default case
     else
-      @handleMove x, y
+      $(document).trigger 'moveSelectedElements', [dx, dy]
 
 
   # merge with another anchor by replacing all of my references with other
