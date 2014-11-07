@@ -242,14 +242,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               # add the bits that happen regardless of potential merges
     
               # forward stack ressurects the line and draws both anchors to update the diagram
-              undo.addToForwards
-                line: paletteData.selectedElement
-                anchor1: anchor1
-                anchor2: anchor2
-              , (data) ->
+              undo.addToForwards line: paletteData.selectedElement, (data) ->
                 data.line.ressurect()
-                data.anchor1.draw()
-                data.anchor2.draw()
+                data.line.draw()
       
               # backward stack removes the line and two anchors to finalize the undo
               undo.addToBackwards line: paletteData.selectedElement , (data) ->
@@ -328,9 +323,11 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     onLine = canvas.isAnchorOnLine(anchor) 
     onConstraint = canvas.isAnchorOnConstraint(anchor) 
 
-    # before we do anything else we need to have the forward action ressurect the anchor
-    undo.addToForwards anchor: anchor , (data) ->
-      anchor.ressurect()
+    # if the anchor is not on a line (ie it was not replaced by something else)
+    if not onLine
+      # before we do anything else the forward action needs to ressurect the anchor
+      undo.addToForwards anchor: anchor , (data) ->
+        anchor.ressurect()
   
     # go through the checks and apply the necessary actions
     #
@@ -361,26 +358,34 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         data.anchor.addLine(data.originalLine)
         data.line.ressurect()
 
+      anchor = split.anchor
+
     else if onConstraint
       # apply the constraint to the anchor
       anchor.addConstraint(onConstraint)
       # draw the anchor with the new constraint
       anchor.draw()
 
-      # the forwards action is to ressurect the anchor constrained to the constraint
+      # the forwards action 
       undo.addToForwards
         anchor: anchor
         constraint: onConstraint
+      # applies the constraint to the anchor
       , (data) ->
         data.anchor.addConstraint(data.constraint)
 
-    # only remove the anchor in the backwards action if it wasn't merged
+    # if the anchor was not replaced by one that already existed
     if not onAnchor
-      undo.addToBackwards
-        anchor: anchor
-      , (data) ->
+      # the backwards action 
+      undo.addToBackwards anchor: anchor , (data) ->
+        # removes the anchor from the canvas
         data.anchor.remove()
 
+    # the forwards action 
+    undo.addToForwards anchor: anchor, (data) ->
+      # draws the anchor
+      data.anchor.draw()
+  
 
   # clear the selection
   $scope.clearSelection = ->
