@@ -48,6 +48,10 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $(document).on 'clearSelection', ->
     $scope.clearSelection()
 
+  # add the event handler for deleting elements
+  $(document).on 'removeSelectedElements', =>
+    $scope.removeSelectedElements()
+
 
   # when the window resizes
   $(window).resize ->
@@ -235,8 +239,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               selectedElement = paletteData.selectedElement
 
               # perform the appropriate merges on both anchors and fill the undo entry
-              performMergesFromPalette(selectedElement.anchor1, undo)
-              performMergesFromPalette(selectedElement.anchor2, undo)
+              performAnchorMergesFromPalette(selectedElement.anchor1, undo)
+              performAnchorMergesFromPalette(selectedElement.anchor2, undo)
 
               # add the bits that happen regardless of potential merges
     
@@ -314,7 +318,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
 
   # perform the necessary actions to merge an anchor and add them to an instance of UndoMulti
-  performMergesFromPalette = (anchor, undo) ->
+  performAnchorMergesFromPalette = (anchor, undo) ->
     # save a reference to the canvas
     canvas = $(document).attr('canvas')
     # check the anchor for merges
@@ -451,98 +455,20 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             anchor.element.handleMove(anchor.x, anchor.y, false)
     , 0
 
-  $(document).on 'deleteSelectedElement', ->
-    $scope.deleteSelectedElement()
 
-  # assuming the selected element is a line, delete it and register it with the undo stack
-  $scope.deleteSelectedElement = ->
-    # get the selected line
-    element = Snap.select('.selectedElement')
+  # go over every selected element and delete it along with creating an appropriate undo entry
+  $scope.removeSelectedElements = ->
 
-    # if the element doesn't exist
-    if not element
-      # dont do anything
-      return
+    console.log 'removing selected elements'
+    # create an undo entry to accompany this action
+    undo = new UndoMulti('removed element from canvas')
 
-    # use the scope variable for the element type
-    type = $scope.type
-    # if the element is a line
-    if type == 'line'
-      # remove the line and register it with the undo stack
-      $timeout ->
-        new UndoEntry true,
-          title: 'removed line'
-          data: [element.line]
-          forwards: ->
-            @data[0].remove()
-          backwards: ->
-            @data[0].ressurect().draw()
-      , 0
-    # if they asked for an anchor
-    else if type == 'anchor'
-      # remove the anchor and register it with the undo stack
-      $timeout ->
-        new UndoEntry true,
-          title: 'removed anchor'
-          data: [element.anchor, element.anchor.lines]
-          forwards: ->
-            # remove the anchor
-            @data[0].remove()
-            # and the lines associated with the anchor
-            _.each @data[1], (line) ->
-              line.remove()
-          backwards: ->
-            # ressurect the anchor
-            @data[0].ressurect()
-            # all of the lines
-            _.each @data[1], (line) ->
-              line.ressurect()
-            # draw the anchor
-            @data[0].draw()
-      , 0
+    # for each selected element
+    _.each $(document).attr('canvas').getSelectedElements(), (element) ->
+      console.log element
 
-    # else if its a constraint
-    else if type == 'circle'
-      $timeout ->
-        # remove the constraint and register it with the undo stack
-        new UndoEntry true,
-          title: 'removed constraint'
-          data:
-            constraint: element.constraint
-            anchors: element.constraint.anchors
-          backwards: ->
-            constraint = @data.constraint
-            # draw the constraint
-            @data.constraint.draw()
-            # go to each of the anchors
-            _.each @data.anchors, (anchor) ->
-              # add the constraint
-              anchor.addConstraint(constraint)
-              # draw with the new constraint
-              anchor.draw()
-          forwards: ->
-            _.each @data.anchors, (anchor) ->
-              # remove the constraint
-              anchor.removeConstraint()
-              # redraw with the anchor
-              anchor.draw()
-            @data.constraint.remove()
-
-      , 0
-    else if type == 'text'
-      $timeout ->
-        new UndoEntry true,
-          title: 'removed text field'
-          data:
-            element: element.text
-          backwards: ->
-            @data.element.draw()
-          forwards: ->
-            @data.element.remove()
-      , 0
-    # clear the element selection
     $timeout ->
-      $(document).trigger('clearSelection')
+      $(document).trigger 'clearSelection'
     , 0
 
 

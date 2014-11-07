@@ -51,7 +51,7 @@ class FeynmanCanvas
         @spacebarPressed = false
       # if they presed delete or backspace
       if evt.which in [8, 46]
-        $(document).trigger('deleteSelectedElement')
+        $(document).trigger('removeSelectedElements')
 
       # if they pressed ctrl + z
       if evt.which == 90 and evt.ctrlKey
@@ -85,9 +85,10 @@ class FeynmanCanvas
     $(document).on 'startMove', (event) =>
       @startMove(event)
 
-    # add an event handler for moving objects as a group
+    # add an event handler for moving elements
     $(document).on 'moveSelectedElements', (event, dx, dy) =>
       @moveSelectedElements(event, dx, dy)
+
 
     # render the canvas with the starting pattern and register it as item 0 in the history
     new UndoEntry true,
@@ -104,6 +105,12 @@ class FeynmanCanvas
     $(document).trigger 'doneWithInit'
 
 
+  # return the selected elements
+  getSelectedElements: ->
+    _.union(Snap.selectAll('.selectedElement.anchor').items,
+            Snap.selectAll('.selectedElement.circle').items)
+
+
   startMove: (event) ->
     # get a list of all of the selected elements
     selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
@@ -116,7 +123,6 @@ class FeynmanCanvas
       feynElement.origin =
         x: feynElement.x
         y: feynElement.y
-
 
 
   moveSelectedElements: (event, dx, dy) ->
