@@ -44,6 +44,7 @@ class Line
   ressurect: =>
     @anchor1.addLine this
     @anchor2.addLine this
+    @paper.lines.push this
     return this
 
 
