@@ -241,13 +241,13 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
               # add the bits that happen regardless of potential merges
     
               # forward stack ressurects the line and draws both anchors to update the diagram
-              undo.addToForwards line: selectedElement, (data) ->
-                data.line.ressurect()
-                data.line.draw()
+              undo.addToForwards selectedElement, (line) ->
+                line.ressurect()
+                line.draw()
       
               # backward stack removes the line and two anchors to finalize the undo
-              undo.addToBackwards line: selectedElement , (data) ->
-                data.line.remove()
+              undo.addToBackwards selectedElement , (line) ->
+                line.remove()
 
               # save the entry to the stack
               undo.save()
@@ -325,8 +325,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # if the anchor is not on a line (ie it was not replaced by something else)
     if not onLine
       # before we do anything else the forward action needs to ressurect the anchor
-      undo.addToForwards anchor: anchor , (data) ->
-        anchor.ressurect()
+      undo.addToForwards anchor , (element) ->
+        element.ressurect()
   
     # go through the checks and apply the necessary actions
     #
@@ -376,14 +376,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # if the anchor was not replaced by one that already existed
     if not onAnchor
       # the backwards action 
-      undo.addToBackwards anchor: anchor , (data) ->
+      undo.addToBackwards anchor , (element) ->
         # removes the anchor from the canvas
-        data.anchor.remove()
+        element.remove()
 
     # the forwards action 
-    undo.addToForwards anchor: anchor, (data) ->
+    undo.addToForwards anchor, (element) ->
       # draws the anchor
-      data.anchor.draw()
+      element.draw()
   
 
   # clear the selection
