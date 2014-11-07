@@ -231,23 +231,22 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             when "line", "em", "gluon", "dashed"
               # create an undo entry for this action
               undo = new UndoMulti('added line from palette')
-              # save references to the two anchors
-              anchor1 = paletteData.selectedElement.anchor1
-              anchor2 = paletteData.selectedElement.anchor2
+              # save references to the selected data
+              selectedElement = paletteData.selectedElement
 
-              # perform the appropriate merges and fill the undo entry
-              performMergesFromPalette(anchor1, undo)
-              performMergesFromPalette(anchor2, undo)
+              # perform the appropriate merges on both anchors and fill the undo entry
+              performMergesFromPalette(selectedElement.anchor1, undo)
+              performMergesFromPalette(selectedElement.anchor2, undo)
 
               # add the bits that happen regardless of potential merges
     
               # forward stack ressurects the line and draws both anchors to update the diagram
-              undo.addToForwards line: paletteData.selectedElement, (data) ->
+              undo.addToForwards line: selectedElement, (data) ->
                 data.line.ressurect()
                 data.line.draw()
       
               # backward stack removes the line and two anchors to finalize the undo
-              undo.addToBackwards line: paletteData.selectedElement , (data) ->
+              undo.addToBackwards line: selectedElement , (data) ->
                 data.line.remove()
 
               # save the entry to the stack
