@@ -604,7 +604,6 @@ class Line
       @anchor2.origin_x = @anchor2.x
       @anchor2.origin_y = @anchor2.y
     else
-      console.log 'is group move'
       @isGroupMove = true
       $(document).trigger 'startMove'
 
@@ -894,7 +893,6 @@ class Line
                 entry.element.anchor.handleMove entry.origin_x, entry.origin_y
               else
                 entry.element.handleMove entry.origin_x, entry.origin_y
-          
 
       else
         # register the move on the undo stack

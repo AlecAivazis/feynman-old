@@ -129,8 +129,7 @@ class FeynmanCanvas
     # save the canvas's zoom level
     zoom = $(document).attr('canvas').zoomLevel
     # get a list of all of the selected elements
-    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
-                        Snap.selectAll('.selectedElement.circle').items)
+    selected = $(document).attr('canvas').getSelectedElements()
     # move each of them
     _.each selected, (element) ->
       feynElement = if element.anchor then element.anchor else element.constraint
