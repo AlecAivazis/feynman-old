@@ -294,6 +294,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                       anchor.draw()
                   forwards: ->
                     constraint = @data.constraint
+                    constraint.ressurect()
                     constraint.draw()
                     # add the constraint to the anchors
                     _.each @data.anchors, (anchor) ->
