@@ -161,6 +161,7 @@ class CircularConstraint
         x: coords.x
         y: coords.y
 
+    # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or not @element.hasClass('selectedElement')
       $(document).trigger 'selectedElement', [this, 'constraint']
 
@@ -346,6 +347,8 @@ class CircularConstraint
       selected = $(document).attr('canvas').getSelectedElements()
       # if there is more than one element selected
       if selected.length > 0
+        # clean up the move
+        $(document).trigger 'finalizeMove'
        # build the position data for the group of elements
         element_data = []
         # go over every selected element

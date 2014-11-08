@@ -344,6 +344,8 @@ class Anchor
         
     # there is more than one selected element
     else
+      # clean up the move
+      $(document).trigger 'finalizeMove'
       # build the position data for the group of elements
       element_data = []
       # go over every selected element
@@ -414,9 +416,9 @@ class Anchor
     # user is not holding alt
     
     # get a list of all of the selected elements
-    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
-                        Snap.selectAll('.selectedElement.circle').items)
+    selected = $(document).attr('canvas').getSelectedElements()
 
+    # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or not @element.hasClass('selectedElement')
       $(document).trigger 'selectedElement', [this, 'anchor']
 
@@ -431,15 +433,11 @@ class Anchor
       # and tell it to hide its label
       line.removeLabel()
 
-    # compute the new location
-    x = @origin.x + dx
-    y = @origin.y + dy
-
     # if they are holding down the alt key
     if event.altKey
       # if a new anchor was created at the beginning
       if @newAnchor
-        @newAnchor.handleMove x, y
+        @newAnchor.handleMove @origin.x + dx, @origin.y + dy
       # the user pressed alt in the middle of the drag
       else
         @newAnchor = @split true

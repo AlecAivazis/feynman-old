@@ -598,7 +598,7 @@ class Line
       # do nothing else
       return
 
-    # if there are no selected elements other than this one
+    # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or now @element.hasClass('selectedElement')
       # select this element
       $(document).trigger 'selectedElement', [this, 'line']
@@ -858,6 +858,8 @@ class Line
         return
 
       if @isGroupMove
+        # clean up the move
+        $(document).trigger 'finalizeMove'
         # save a list of the selected elements
         selected = $(document).attr('canvas').getSelectedElements()
         # build the position data for the group of elements

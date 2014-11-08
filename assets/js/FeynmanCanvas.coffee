@@ -87,6 +87,8 @@ class FeynmanCanvas
       @startMove(event)
     $(document).on 'moveSelectedElements', (event, dx, dy) =>
       @moveSelectedElements(event, dx, dy)
+    $(document).on 'finalizeMove', (event) =>
+      @finalizeMove(event)
 
     # render the canvas with the starting pattern and register it as item 0 in the history
     new UndoEntry true,
@@ -133,6 +135,10 @@ class FeynmanCanvas
     _.each selected, (element) ->
       if element.anchor
         feynElement = element.anchor
+        # go over every line connected to this anchor
+        _.each feynElement.lines, (line) ->
+          # hide its label
+          line.removeLabel()
       else if element.constraint
         feynElement = element.constraint
 
@@ -140,6 +146,16 @@ class FeynmanCanvas
       if feynElement
         # move it to the new coordinates
         feynElement.handleMove(feynElement.origin.x + dx/zoom, feynElement.origin.y + dy/zoom)
+
+
+  finalizeMove: (event) ->
+    # get a list of all of the selected elements
+    selected = $(document).attr('canvas').getSelectedElements()
+    # go over every anchor
+    _.each _.filter(selected, (element) -> selected.anchor), (element) ->
+      # draw the element to update it
+      element.draw()
+    
 
 
   addToDiagram: (element) ->
