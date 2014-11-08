@@ -108,6 +108,7 @@ class FeynmanCanvas
   # return the selected elements
   getSelectedElements: ->
     _.union(Snap.selectAll('.selectedElement.anchor').items,
+            Snap.selectAll('.selectedElement.line').items,
             Snap.selectAll('.selectedElement.circle').items)
 
 

@@ -469,6 +469,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         return 0
       else if element.anchor
         return 1
+      else if element.line
+        return 1
 
     # for each selected element
     _.each selected, (element) ->
@@ -546,12 +548,15 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       else if element.line
         # save a reference to the line
         line = element.line
-        # the backwards action needs to delete the line
-        undo.addToBackwards line, (element) ->
+        # remove the line
+        line.remove()
+
+        # the forwards action needs to delete the line
+        undo.addToForwards line, (element) ->
           element.remove()
 
-        # the forwards action needs to ressurect the line and draw it
-        undo.addToForwards line, (element) ->
+        # the backwards action needs to ressurect the line and draw it
+        undo.addToBackwards line, (element) ->
           element.ressurect()
           element.draw()
   

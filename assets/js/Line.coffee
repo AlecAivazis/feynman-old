@@ -22,6 +22,8 @@ class Line
     @drawEndCaps = true
     @flipArrow = false
 
+    @line = this
+
 
   # clone the anchor's settings to a new line attached to the given anchors
   clone: (anchor1, anchor2) =>
@@ -559,6 +561,8 @@ class Line
 
     if isSelected
       @element.addClass('selectedElement')
+
+    @element.addClass('line')
 
     # on drag move
     @element.drag @onDrag, @dragStart, @dragEnd
