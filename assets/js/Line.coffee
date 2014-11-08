@@ -604,6 +604,7 @@ class Line
       @anchor2.origin_x = @anchor2.x
       @anchor2.origin_y = @anchor2.y
     else
+      console.log 'is group move'
       @isGroupMove = true
       $(document).trigger 'startMove'
 
@@ -708,7 +709,7 @@ class Line
           # register this with the undo stack
           new UndoEntry false,
             title: 'added internal constrained propagator'
-            data:
+           data:
               newAnchor: @newAnchor
               constraint: onConstraint
               newLine: newLine
@@ -852,19 +853,63 @@ class Line
       # only continue if it was an actual move
       if @anchor1.x == @anchor1.origin_x and @anchor1.y == @anchor1.origin_y
         return
-      # register the move on the undo stack
-      new UndoEntry false,
-        title: 'moved propagator'
-        data: [@anchor1, @anchor1.x, @anchor1.origin_x, @anchor1.y, @anchor1.origin_y, 
-               @anchor2, @anchor2.x, @anchor2.origin_x, @anchor2.y, @anchor2.origin_y]
-        # the forwards action is to move both anchors to the stored location
-        forwards: ->
-          @data[0].handleMove(@data[1], @data[3])
-          @data[5].handleMove(@data[6], @data[8])
-        backwards: ->
-          @data[0].handleMove(@data[2], @data[4])
-          @data[5].handleMove(@data[7], @data[9])
+
+      if @isGroupMove
+        # save a list of the selected elements
+        selected = $(document).attr('canvas').getSelectedElements()
+        # build the position data for the group of elements
+        element_data = []
+        # go over every selected element
+        for selectedElement in selected
+          # grab its anchor
+          feynElement = if selectedElement.anchor then selectedElement.anchor else selectedElement.constraint
+
+          # check that we actually went somewhere
+          if feynElement.x == feynElement.origin.x and feynElement.y == feynElement.origin.y
+            return
+
+          # save the important data
+          element_data.push
+            element: feynElement
+            x: feynElement.x
+            y: feynElement.y
+            origin_x: feynElement.origin.x
+            origin_y: feynElement.origin.y
+
+        # register the move with the undo stack but do not waste the time performing it again
+        new UndoEntry false,
+          title: 'moved elements as a group'
+          data: element_data
+          # the forward action is to move the group to its current location
+          forwards: ->
+            _.each @data, (entry) ->
+              if entry.element.anchor
+                entry.element.anchor.handleMove entry.x, entry.y
+              else
+                entry.element.handleMove entry.x, entry.y
+          # the backwards action is to move the group to the origin as defined when the drag started
+          backwards: ->
+            _.each @data, (entry) ->
+              if entry.element.anchor
+                entry.element.anchor.handleMove entry.origin_x, entry.origin_y
+              else
+                entry.element.handleMove entry.origin_x, entry.origin_y
           
+
+      else
+        # register the move on the undo stack
+        new UndoEntry false,
+          title: 'moved propagator'
+          data: [@anchor1, @anchor1.x, @anchor1.origin_x, @anchor1.y, @anchor1.origin_y, 
+                 @anchor2, @anchor2.x, @anchor2.origin_x, @anchor2.y, @anchor2.origin_y]
+        # the forwards action is to move both anchors to the stored location
+          forwards: ->
+            @data[0].handleMove(@data[1], @data[3])
+            @data[5].handleMove(@data[6], @data[8])
+          backwards: ->
+            @data[0].handleMove(@data[2], @data[4])
+            @data[5].handleMove(@data[7], @data[9])
+            
     @newAnchor = undefined
 
 
