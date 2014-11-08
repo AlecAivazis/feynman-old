@@ -417,7 +417,7 @@ class Anchor
     selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
                         Snap.selectAll('.selectedElement.circle').items)
 
-    if selected.length == 0
+    if selected.length == 0 or not @element.hasClass('selectedElement')
       $(document).trigger 'selectedElement', [this, 'anchor']
 
     $(document).trigger 'startMove'

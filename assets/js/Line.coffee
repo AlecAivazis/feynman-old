@@ -599,7 +599,7 @@ class Line
       return
 
     # if there are no selected elements other than this one
-    if selected.length == 0
+    if selected.length == 0 or now @element.hasClass('selectedElement')
       # select this element
       $(document).trigger 'selectedElement', [this, 'line']
 

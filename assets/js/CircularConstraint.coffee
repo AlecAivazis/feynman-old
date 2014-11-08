@@ -161,7 +161,7 @@ class CircularConstraint
         x: coords.x
         y: coords.y
 
-    if selected.length == 0
+    if selected.length == 0 or not @element.hasClass('selectedElement')
       $(document).trigger 'selectedElement', [this, 'constraint']
 
     # go set up whatever we need for the move
