@@ -342,9 +342,50 @@ class CircularConstraint
             
 
     else
-      # NEED TO MAKE AN UNDO FOR GROUP MOVES BASED ON CONSTRAINTS (maybe move it over to a third party?)
+      # save a list of the selected elements
+      selected = $(document).attr('canvas').getSelectedElements()
+      # if there is more than one element selected
+      if selected.length > 0
+       # build the position data for the group of elements
+        element_data = []
+        # go over every selected element
+        for selectedElement in selected
+          # grab its anchor
+          feynElement = if selectedElement.anchor then selectedElement.anchor else selectedElement.constraint
+
+          # check that we actually went somewhere
+          if feynElement.x == feynElement.origin.x and feynElement.y == feynElement.origin.y
+            return
+
+          # save the important data
+          element_data.push
+            element: feynElement
+            x: feynElement.x
+            y: feynElement.y
+            origin_x: feynElement.origin.x
+            origin_y: feynElement.origin.y
+
+        # register the move with the undo stack but do not waste the time performing it again
+        new UndoEntry false,
+          title: 'moved elements as a group'
+          data: element_data
+          # the forward action is to move the group to its current location
+          forwards: ->
+            _.each @data, (entry) ->
+              if entry.element.anchor
+                entry.element.anchor.handleMove entry.x, entry.y
+              else
+                entry.element.handleMove entry.x, entry.y
+          # the backwards action is to move the group to the origin as defined when the drag started
+          backwards: ->
+            _.each @data, (entry) ->
+              if entry.element.anchor
+                entry.element.anchor.handleMove entry.origin_x, entry.origin_y
+              else
+                entry.element.handleMove entry.origin_x, entry.origin_y
+          
       # check that we actually moved somewhere
-      if @x != @origin.x and @y != @origin.y
+      else if @x != @origin.x and @y != @origin.y
         # register the drag with the undo stack
         new UndoEntry false,
           title: "moved circular constraint"
