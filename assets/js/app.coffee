@@ -465,7 +465,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # sort the selected elements so the ressurects maintain constraints
     selected = _.sortBy $(document).attr('canvas').getSelectedElements(), (element) ->
       # remove constraints before anchors so their references to anchors are maintained
-      else if element.constraint
+      if element.constraint
         return 0
       else if element.anchor
         return 1
@@ -560,6 +560,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       # apply it to the stack
       undo.save()
 
+    # clear the selection
     $timeout ->
       $(document).trigger 'clearSelection'
     , 0

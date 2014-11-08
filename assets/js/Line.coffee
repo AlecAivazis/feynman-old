@@ -572,11 +572,11 @@ class Line
   # when you start dragging a line
   dragStart: (x , y, event) =>
     event.stopPropagation()
-    # deselect the previous selection
-    $(document).trigger 'clearSelection'
 
     # not sure why you need this, should investigate
     @newAnchor = undefined
+
+    selected = $(document).attr("canvas").getSelectedElements()
 
     # check if the alt key is being pressed
     if event.altKey
@@ -594,15 +594,20 @@ class Line
       # do nothing else
       return
 
-    # go set the origins for both anchors
-    @anchor1.origin_x = @anchor1.x
-    @anchor1.origin_y = @anchor1.y
-    @anchor2.origin_x = @anchor2.x
-    @anchor2.origin_y = @anchor2.y
+    # if there are no selected elements other than this one
+    if selected.length == 0
+      # select this element
+      $(document).trigger 'selectedElement', [this, 'line']
 
-    # select this element
-    $(document).trigger 'selectedElement', [this, 'line']
+      @anchor1.origin_x = @anchor1.x
+      @anchor1.origin_y = @anchor1.y
+      @anchor2.origin_x = @anchor2.x
+      @anchor2.origin_y = @anchor2.y
+    else
+      @isGroupMove = true
+      $(document).trigger 'startMove'
 
+    # remove the label of the line we are moving
     @removeLabel()
 
 
@@ -615,10 +620,16 @@ class Line
       @newAnchor.handleMove(@newAnchor.origin_x + dx, @newAnchor.origin_y + dy)
       # do nothing else
       return
-    # we did not make a new anchor this drag
-    # move the two anchors associated with this line
-    @anchor1.handleMove(@anchor1.origin_x + dx, @anchor1.origin_y + dy)
-    @anchor2.handleMove(@anchor2.origin_x + dx, @anchor2.origin_y + dy)
+
+    # if there is more than one selected element
+    if @isGroupMove
+      # tell the app to move all of the selected elements
+      $(document).trigger 'moveSelectedElements', [dx, dy]
+    else
+      # we did not make a new anchor this drag
+      # move the two anchors associated with this line
+      @anchor1.handleMove(@anchor1.origin_x + dx, @anchor1.origin_y + dy)
+      @anchor2.handleMove(@anchor2.origin_x + dx, @anchor2.origin_y + dy)
 
 
   dragEnd: =>
