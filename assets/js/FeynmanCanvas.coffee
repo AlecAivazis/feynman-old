@@ -54,7 +54,7 @@ class FeynmanCanvas
         $(document).trigger('removeSelectedElements')
 
       # if they pressed ctrl + z
-      if evt.which == 90 and evt.ctrlKey
+      if evt.ctrlKey and evt.which == 90
         # if they actually pressed shift + ctrl + z
         if evt.shiftKey
           # move forward one step in the history
@@ -82,13 +82,11 @@ class FeynmanCanvas
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
 
+    # add event handlers for the move actions
     $(document).on 'startMove', (event) =>
       @startMove(event)
-
-    # add an event handler for moving elements
     $(document).on 'moveSelectedElements', (event, dx, dy) =>
       @moveSelectedElements(event, dx, dy)
-
 
     # render the canvas with the starting pattern and register it as item 0 in the history
     new UndoEntry true,
@@ -133,9 +131,15 @@ class FeynmanCanvas
     selected = $(document).attr('canvas').getSelectedElements()
     # move each of them
     _.each selected, (element) ->
-      feynElement = if element.anchor then element.anchor else element.constraint
-      # move the text to the new coordinates
-      feynElement.handleMove(feynElement.origin.x + dx/zoom, feynElement.origin.y + dy/zoom)
+      if element.anchor
+        feynElement = element.anchor
+      else if element.constraint
+        feynElement = element.constraint
+
+      # if the element is one we care about
+      if feynElement
+        # move it to the new coordinates
+        feynElement.handleMove(feynElement.origin.x + dx/zoom, feynElement.origin.y + dy/zoom)
 
 
   addToDiagram: (element) ->

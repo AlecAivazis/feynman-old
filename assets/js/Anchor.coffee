@@ -348,8 +348,14 @@ class Anchor
       element_data = []
       # go over every selected element
       for selectedElement in selected
-        # grab its anchor
-        feynElement = if selectedElement.anchor then selectedElement.anchor else selectedElement.constraint
+        # save a reference to the appropriate element
+        if selectedElement.anchor
+          feynElement = selectedElement.anchor
+        else if selectedElement.constraint
+          feynElement = selectedElement.constraint
+
+        if not feynElement
+          continue
 
         # check that we actually went somewhere
         if feynElement.x == feynElement.origin.x and feynElement.y == feynElement.origin.y
