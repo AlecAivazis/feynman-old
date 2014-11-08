@@ -459,13 +459,106 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   # go over every selected element and delete it along with creating an appropriate undo entry
   $scope.removeSelectedElements = ->
 
-    console.log 'removing selected elements'
     # create an undo entry to accompany this action
     undo = new UndoMulti('removed element from canvas')
 
+    # sort the selected elements so the ressurects maintain constraints
+    selected = _.sortBy $(document).attr('canvas').getSelectedElements(), (element) ->
+      # remove constraints before anchors so their references to anchors are maintained
+      else if element.constraint
+        return 0
+      else if element.anchor
+        return 1
+
     # for each selected element
-    _.each $(document).attr('canvas').getSelectedElements(), (element) ->
-      console.log element
+    _.each selected, (element) ->
+      # if the element is an anchor
+      if element.anchor
+        # build the object for the undo actions
+        undoData =
+          anchor: element.anchor
+          lines: element.anchor.lines
+
+        # remove all of the lines
+        _.each undoData.lines, (line) ->
+          line.remove()
+        # and the anchor
+        undoData.anchor.remove()
+
+        # add the necessary undo actions
+        undo.addToBackwards undoData, (data) ->
+          # ressurect the anchor
+          data.anchor.ressurect()
+          # ressurect each of the lines
+          _.each data.lines, (line) ->
+            line.ressurect()
+          # draw the anchor
+          data.anchor.draw()
+
+        # add the necessary backwards action
+        undo.addToForwards undoData, (data) ->
+          # remove all of the lines
+          _.each data.lines, (line) ->
+            line.remove()
+          # remove the anchor
+          data.anchor.remove()
+
+      # otherwise if its a constraint
+      else if element.constraint
+        # save the data that's necessary for the undo
+        undoData =
+          constraint: element.constraint
+          anchors: element.constraint.anchors
+
+        # remove the constraint from all of the anchors
+        _.each undoData.anchors, (anchor) ->
+          anchor.removeConstraint()
+          # draw the anchor with the lack of constraint
+          anchor.draw()
+        # remove the constraint from the canvas
+        undoData.constraint.remove()
+
+        # the backwards action needs to ressurect the constraint and apply it to the anchors
+        undo.addToBackwards undoData, (data) ->
+          # ressurect the constraint
+          data.constraint.ressurect()
+          data.constraint.draw() 
+
+          # go over all of the anchors
+          _.each data.anchors, (anchor) ->
+            # apply the constraint
+            anchor.addConstraint(data.constraint)
+            # draw the anchor with the new constraint
+            anchor.draw()
+
+        # the forwards action needs to remove the constraint and redraw the anchors
+        undo.addToForwards undoData, (data) ->
+          # remove the constraint from the anchors
+          _.each data.anchors, (anchor) ->
+            anchor.removeConstraint()
+            # draw the anchors with the lack of constraint
+            anchor.draw()
+          # remove the constraint from the canvas
+          data.constraint.remove()
+          
+
+      # otherwise if its a line
+      else if element.line
+        # save a reference to the line
+        line = element.line
+        # the backwards action needs to delete the line
+        undo.addToBackwards line, (element) ->
+          element.remove()
+
+        # the forwards action needs to ressurect the line and draw it
+        undo.addToForwards line, (element) ->
+          element.ressurect()
+          element.draw()
+  
+    # if the undo actually performs an action
+    if undo.isValid()
+      # apply it to the stack
+      undo.save()
 
     $timeout ->
       $(document).trigger 'clearSelection'

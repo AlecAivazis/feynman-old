@@ -369,6 +369,11 @@ class CircularConstraint
     @paper.constraints = _.without @paper.constraints, this
 
 
+  # implement a ressurect function to conform to other element implementation
+  ressurect: =>
+    @paper.constraints.push this
+
+
   # remove svg elements associated with this constraint
   hide: =>
     # if there is an element element
