@@ -357,11 +357,11 @@ class CircularConstraint
             feynElement = selectedElement.constraint
 
           if not feynElement
-            return
+            continue
 
           # check that we actually went somewhere
           if feynElement.x == feynElement.origin.x and feynElement.y == feynElement.origin.y
-            continue
+            return
 
           # save the important data
           element_data.push
