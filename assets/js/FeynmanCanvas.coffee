@@ -114,16 +114,28 @@ class FeynmanCanvas
 
   startMove: (event) ->
     # get a list of all of the selected elements
-    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
-                        Snap.selectAll('.selectedElement.circle').items)
+    selected = $(document).attr('canvas').getSelectedElements()
+
     # go to each of the selected elements
     _.each selected, (element) ->
       # grab the appropriate feynman element
-      feynElement = if element.anchor then element.anchor else element.constraint
-      # set its origin
-      feynElement.origin =
-        x: feynElement.x
-        y: feynElement.y
+      if element.anchor
+        feynElement = element.anchor
+      else if element.constraint
+        feynElement = element.constraint
+        # go to each of the constraints anchors
+        _.each element.anchors, (anchor) ->
+          # go to each of the anchors lines
+          _.each anchor.lines, (line) ->
+            # hide the label
+            line.removeLabel()
+
+      # if the feynElement is valid
+      if feynElement
+        # set its origin
+        feynElement.origin =
+          x: feynElement.x
+          y: feynElement.y
 
 
   moveSelectedElements: (event, dx, dy) ->
@@ -150,11 +162,15 @@ class FeynmanCanvas
 
   finalizeMove: (event) ->
     # get a list of all of the selected elements
-    selected = $(document).attr('canvas').getSelectedElements()
+    selectedAnchors = _.filter $(document).attr('canvas').getSelectedElements(), (element) ->
+      return element.anchor
+
     # go over every anchor
-    _.each _.filter(selected, (element) -> selected.anchor), (element) ->
-      # draw the element to update it
-      element.draw()
+    _.each selectedAnchors, (element) ->
+      # go over every line
+      _.each element.anchor.lines, (line) ->
+        # and draw the label
+        line.drawLabel()
     
 
 

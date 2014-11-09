@@ -142,8 +142,7 @@ class CircularConstraint
     event.stopPropagation()
 
     # grab the selected elements  
-    selected = _.union(Snap.selectAll('.selectedElement.anchor').items,
-                       Snap.selectAll('.selectedElement.circle').items)
+    selected = $(document).attr('canvas').getSelectedElements()
 
     # check if the alt key was held down
     if event.altKey
