@@ -428,11 +428,6 @@ class Anchor
   dragMove: (dx, dy, mouse_x, mouse_y, event) =>
     event.stopPropagation()
 
-    # go to each line
-    _.each @lines, (line) ->
-      # and tell it to hide its label
-      line.removeLabel()
-
     # if they are holding down the alt key
     if event.altKey
       # if a new anchor was created at the beginning
