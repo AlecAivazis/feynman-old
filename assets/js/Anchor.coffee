@@ -84,11 +84,8 @@ class Anchor
     @element.node.onclick = =>
       event.stopPropagation()
       $(document).trigger 'selectedElement', [this, 'anchor']
-      # draw the labels of the lines sincewe just selected an anchor
-      _.each @lines, (line) ->
-        line.drawLabel()
 
-    # update the associated lines before drawing the circle
+    # update the associated lines after drawing the anchor
     _.each @lines, (line) ->
       line.draw()
 
@@ -439,7 +436,7 @@ class Anchor
       
     # default case
     else
-      $(document).trigger 'moveSelectedElements', [dx, dy]
+      $(document).trigger 'moveSelectedElements', [ dx, dy, event]
 
 
   # merge with another anchor by replacing all of my references with other

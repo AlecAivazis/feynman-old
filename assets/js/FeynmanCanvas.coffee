@@ -85,8 +85,8 @@ class FeynmanCanvas
     # add event handlers for the move actions
     $(document).on 'startMove', (event) =>
       @startMove(event)
-    $(document).on 'moveSelectedElements', (event, dx, dy) =>
-      @moveSelectedElements(event, dx, dy)
+    $(document).on 'moveSelectedElements', (event, dx, dy, mouseEvent) =>
+      @moveSelectedElements(mouseEvent, dx, dy)
     $(document).on 'finalizeMove', (event) =>
       @finalizeMove(event)
 
@@ -138,26 +138,91 @@ class FeynmanCanvas
           y: feynElement.y
 
 
-  moveSelectedElements: (event, dx, dy) ->
+  # check if the coordinates are visible in the current window
+  # and return a description of the transform required to make it visible if its not
+  isLocationVisible: (x, y)  ->
+    # get the current transform on the diagram group
+    xform = @diagramGroup.transform().globalMatrix.split()
+    scalex = xform.scalex
+    scaley = xform.scaley
+    # compute the location of the upper left corner
+    x0 = - xform.dx / scalex
+    y0 = - xform.dy / scaley
+    # compute the effective dimensions of the canvas
+    width = $('#canvas').width() - $('#toolbar').innerWidth() 
+    height = $('#canvas').height()
+    # compute the lower right corner coordinates
+    x1 = x0 + width
+    y1 = y0 + height
+
+    # if the location is in the bounding box created by the four points
+    return  x0 < x  and x1 > x and y0 <= y and y1 > y
+
+
+  moveSelectedElements: (event,  dx, dy) ->
     # save the canvas's zoom level
     zoom = $(document).attr('canvas').zoomLevel
     # get a list of all of the selected elements
     selected = $(document).attr('canvas').getSelectedElements()
     # move each of them
-    _.each selected, (element) ->
+    _.each selected, (element) =>
+      # if the element is anchor
       if element.anchor
+        # save a reference to the anchor
         feynElement = element.anchor
         # go over every line connected to this anchor
         _.each feynElement.lines, (line) ->
           # hide its label
           line.removeLabel()
+      # else if its a constraint
       else if element.constraint
+        # save a reference to the constraint
         feynElement = element.constraint
 
       # if the element is one we care about
       if feynElement
+        # compute the coordinates we are moving the element to 
+        x = feynElement.origin.x + dx/zoom
+        y = feynElement.origin.y + dy/zoom
+        # if the coordinates are not visible
+        if not @isLocationVisible(x,y)
+          # get the current transform on the diagram group
+          xform = @diagramGroup.transform().globalMatrix.split()
+          scalex = xform.scalex
+          scaley = xform.scaley
+          # compute the location of the upper left corner
+          x0 = - xform.dx / scalex
+          y0 = - xform.dy / scaley
+          # compute the effective dimensions of the canvas
+          width = $('#canvas').width() - $('#toolbar').innerWidth() 
+          height = $('#canvas').height()
+          # compute the lower right corner coordinates
+          x1 = x0 + width
+          y1 = y0 + height
+
+          x2 = if x0 > x then x - x0 else x1 - x
+          y2 = if y0 > y then y - y0 else y1 - y
+
+          transform = new Snap.Matrix()
+          # check for necssary x translations
+          if x0 > x
+            transform.add new Snap.Matrix().translate(x0 - x, 0)
+          else if x1 < x
+            transform.add new Snap.Matrix().translate(x1 - x, 0)
+          # for necessary y translations
+          if y0 > y
+            transform.add new Snap.Matrix().translate(0, y0 - y)
+          else if y1 < y
+            transform.add new Snap.Matrix().translate(0, y1 - y)
+
+          # apply this transformation to the diagram group
+          @diagramGroup.transform(@diagramGroup.transform().totalMatrix.add(transform))
+
+          # draw the grid
+          @draw()
+
         # move it to the new coordinates
-        feynElement.handleMove(feynElement.origin.x + dx/zoom, feynElement.origin.y + dy/zoom)
+        feynElement.handleMove(x,y)
 
 
   finalizeMove: (event) ->
