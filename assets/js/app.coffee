@@ -471,7 +471,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       else if element.anchor
         return 1
       else if element.line
-        return 1
+        return 2
 
     # for each selected element
     _.each selected, (element) ->

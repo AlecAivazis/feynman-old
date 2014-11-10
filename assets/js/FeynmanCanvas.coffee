@@ -148,15 +148,12 @@ class FeynmanCanvas
     # compute the location of the upper left corner
     x0 = - xform.dx / scalex
     y0 = - xform.dy / scaley
-    # compute the effective dimensions of the canvas
-    width = $('#canvas').width() - $('#toolbar').innerWidth() 
-    height = $('#canvas').height()
     # compute the lower right corner coordinates
-    x1 = x0 + width
-    y1 = y0 + height
+    x1 = x0 + ( $('#canvas').width() - $('#toolbar').innerWidth() ) / scalex
+    y1 = y0 + ( $('#canvas').height() ) / scaley
 
     # if the location is in the bounding box created by the four points
-    return  x0 < x  and x1 > x and y0 <= y and y1 > y
+    return x0 < x < x1 and y0 < y < y1
 
 
   moveSelectedElements: (event,  dx, dy) ->
