@@ -140,7 +140,7 @@ class FeynmanCanvas
 
   # check if the coordinates are visible in the current window
   # and return a description of the transform required to make it visible if its not
-  isLocationVisible: (x, y)  ->
+  isLocationVisible: (x, y)  =>
     # get the current transform on the diagram group
     xform = @diagramGroup.transform().globalMatrix.split()
     scalex = xform.scalex
@@ -149,18 +149,18 @@ class FeynmanCanvas
     x0 = - xform.dx / scalex
     y0 = - xform.dy / scaley
     # compute the lower right corner coordinates
-    x1 = x0 + ( $('#canvas').width() - $('#toolbar').innerWidth() ) / scalex
-    y1 = y0 + ( $('#canvas').height() ) / scaley
+    x1 = x0 + ( $(@selector).width() - $('#toolbar').innerWidth() ) / scalex
+    y1 = y0 + ( $(@selector).height() ) / scaley
 
     # if the location is in the bounding box created by the four points
     return x0 < x < x1 and y0 < y < y1
 
 
-  moveSelectedElements: (event,  dx, dy) ->
+  moveSelectedElements: (event,  dx, dy) =>
     # save the canvas's zoom level
-    zoom = $(document).attr('canvas').zoomLevel
+    zoom = @zoomLevel
     # get a list of all of the selected elements
-    selected = $(document).attr('canvas').getSelectedElements()
+    selected = @getSelectedElements()
     # move each of them
     _.each selected, (element) =>
       # if the element is anchor
@@ -192,8 +192,8 @@ class FeynmanCanvas
           x0 = - currentTransform.dx / scalex
           y0 = - currentTransform.dy / scaley
           # compute the lower right corner coordinates
-          x1 = x0 + ( $('#canvas').width() - $('#toolbar').innerWidth()  ) / scalex
-          y1 = y0 + ( $('#canvas').height() ) / scaley
+          x1 = x0 + ( $(@selector).width() - $('#toolbar').innerWidth()  ) / scalex
+          y1 = y0 + ( $(@selector).height() ) / scaley
           
           # instantiate the variables that will store the distance to translate
           [x2, y2] = [0, 0]
@@ -218,7 +218,7 @@ class FeynmanCanvas
 
         # target location is visible
 
-        # move it to the new coordinates
+        # move the element to the new coordinates
         feynElement.handleMove(x,y)
 
 
@@ -308,13 +308,13 @@ class FeynmanCanvas
       # if they meant to hide the grid
       if @hideGrid
         # hide the grey background
-        $('#canvas').css('background', 'white')
+        $(@selector).css('background', 'white')
     # otherwise
     else
       # show them the grid
       @drawGrid()
       # with the right color background
-      $('#canvas').css('background', '#f5f5f5')
+      $(@selector).css('background', '#f5f5f5')
     
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->

@@ -7,6 +7,8 @@ append js
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
   script(type="text/javascript" src="/angular-slider/slider.js")
 
+  != js('overlay')
+
   != js('Anchor')
   != js('CircularConstraint')
   != js('FeynmanCanvas')
@@ -18,11 +20,15 @@ append js
   != js('UndoMulti')
   != js('undo')
   != js('app')
+
+
   
 
 append css
   link(href="/thirdparty/angular-bootstrap-colorpicker/css/colorpicker.css" rel="stylesheet")
   link(href="/angular-slider/slider.css" rel="stylesheet")
+  
+  != css('overlay')
 
 block content
   body(ng-app="feynman")
