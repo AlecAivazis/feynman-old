@@ -893,7 +893,7 @@ class FeynmanCanvas
 $(document).ready ->
   # create a canvas out of the appropriate DOM element
   new FeynmanCanvas("#canvas") 
-  overlay('hello')
+  #overlay('hello')
 
 
 # end of file
