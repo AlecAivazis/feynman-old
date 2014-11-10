@@ -187,39 +187,39 @@ class FeynmanCanvas
         # if the coordinates are not visible
         if not @isLocationVisible(x,y)
           # get the current transform on the diagram group
-          xform = @diagramGroup.transform().globalMatrix.split()
-          scalex = xform.scalex
-          scaley = xform.scaley
+          currentTransform = @diagramGroup.transform().globalMatrix.split()
+          scalex = currentTransform.scalex
+          scaley = currentTransform.scaley
+
           # compute the location of the upper left corner
-          x0 = - xform.dx / scalex
-          y0 = - xform.dy / scaley
-          # compute the effective dimensions of the canvas
-          width = $('#canvas').width() - $('#toolbar').innerWidth() 
-          height = $('#canvas').height()
+          x0 = - currentTransform.dx / scalex
+          y0 = - currentTransform.dy / scaley
           # compute the lower right corner coordinates
-          x1 = x0 + width
-          y1 = y0 + height
-
-          x2 = if x0 > x then x - x0 else x1 - x
-          y2 = if y0 > y then y - y0 else y1 - y
-
-          transform = new Snap.Matrix()
-          # check for necssary x translations
+          x1 = x0 + ( $('#canvas').width() - $('#toolbar').innerWidth()  ) / scalex
+          y1 = y0 + ( $('#canvas').height() ) / scaley
+          
+          # instantiate the variables that will store the distance to translate
+          [x2, y2] = [0, 0]
+          # set the  necssary x translations
           if x0 > x
-            transform.add new Snap.Matrix().translate(x0 - x, 0)
+            x2 = x0 - x
           else if x1 < x
-            transform.add new Snap.Matrix().translate(x1 - x, 0)
-          # for necessary y translations
+            x2 = x1 - x
+          # set the  necssary y translations
           if y0 > y
-            transform.add new Snap.Matrix().translate(0, y0 - y)
+            y2 = y0 - y
           else if y1 < y
-            transform.add new Snap.Matrix().translate(0, y1 - y)
+            y2 = y1 - y
 
-          # apply this transformation to the diagram group
-          @diagramGroup.transform(@diagramGroup.transform().totalMatrix.add(transform))
+          # add the appropriate transformation to the diagram groups current
+          transform = new Snap.Matrix().translate(x2, y2).add @diagramGroup.transform().totalMatrix
+          # apply this transformation to the diagram
+          @diagramGroup.transform(transform)
 
-          # draw the grid
+          # update the grid
           @draw()
+
+        # target location is visible
 
         # move it to the new coordinates
         feynElement.handleMove(x,y)
