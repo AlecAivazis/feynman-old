@@ -4,8 +4,6 @@ function overlay(content){
     
     var gutter = $('<div/>').attr({
         id: 'overlayGutter'
-    }).click(function(){
-        closeOverlay();
     });
     
     var overlay = $('<div/>').attr({
@@ -20,12 +18,6 @@ function overlay(content){
 
     
     gutter.appendTo('body');
-    
-    $(document).keypress(function(e){
-        if (e.keyCode == 27){
-            closeOverlay();
-        }
-    });
     
 }
 
