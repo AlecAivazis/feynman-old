@@ -226,7 +226,7 @@ class FeynmanCanvas
 
 
   finalizeMove: (event) ->
-    # get a list of all of the selected elements
+    # get a list of all of the selected anchors
     selectedAnchors = _.filter $(document).attr('canvas').getSelectedElements(), (element) ->
       return element.anchor
 
