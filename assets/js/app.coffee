@@ -9,9 +9,9 @@ context =
     pattern: 'blank'
     image: 'blank.png'
   ,
-    title: 'paritcle anti-particle anhil'
+    title: 'Drell-Yan'
     pattern: 'pap'
-    image: 'dy_plus.png'
+    image: 'dy.png'
  ]
 
 
