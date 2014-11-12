@@ -833,16 +833,24 @@ class FeynmanCanvas
     # handle each pattern 
     switch pattern
       when 'dy'
-       # define the anchors for the particle, anti particle patterns
-        a = new Anchor(@paper, 50, 100)
-        b = new Anchor(@paper, 150, 200)
-        c = new Anchor(@paper, 50, 300)
-        d = new Anchor(@paper, 250, 200)
+        # the incoming fermion
+        leftAnchorTop = new Anchor(@paper, 50, 100)
+        leftAnchorMid = new Anchor(@paper, 150, 200)
+        leftAnchorLow = new Anchor(@paper, 50, 300)
+        # and propagators connecting them
+        upperLeftFermion = new Line(@paper, leftAnchorTop, leftAnchorMid)
+        lowerLeftFermion = new Line(@paper, leftAnchorLow, leftAnchorMid)
+
+        # the outgoing fermion
+        rightAnchorTop = new Anchor(@paper, 400, 100)
+        rightAnchorMid = new Anchor(@paper, 300, 200)
+        rightAnchorLow = new Anchor(@paper, 400, 300)
+        # and propagators connecting them
+        upperRightFermion = new Line(@paper, rightAnchorTop, rightAnchorMid)
+        lowerRightFermion = new Line(@paper, rightAnchorLow, rightAnchorMid)
     
-        # and the lines connecting them
-        k = new Line(@paper, a, b)
-        l = new Line(@paper, c, b, 'gluon')
-        m = new Line(@paper, b, d, 'em')
+
+        propagator = new Line(@paper, leftAnchorMid, rightAnchorMid, 'em')
 
     # draw the anchors
     @draw()
