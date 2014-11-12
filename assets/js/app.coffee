@@ -45,8 +45,8 @@ Handlebars.registerHelper 'pattern', ->
 $(document).ready ->
   console.log context
   # create a canvas out of the appropriate DOM element
-  #new FeynmanCanvas("#canvas") 
+  new FeynmanCanvas("#canvas") 
   # render the template for the pattern select view
   template = Handlebars.compile $('#patternSelect_template').html()
   # display the result in an overlay
-  overlay template(context)
+  #overlay template(context)

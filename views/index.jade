@@ -35,10 +35,10 @@ append css
 block content
   body(ng-app="feynman")
 
-    #canvasTitle
+    #canvasTitle(ng-cloak)
       | {{title}}
 
-    #sidebar(ng-controller="sidebar")
+    #sidebar(ng-controller="sidebar" ng-cloak)
       
       #diagramProperties
         .diagramProperty
@@ -89,7 +89,7 @@ block content
             span.title
               | {{event.title}}
      
-      #toolbar
+      #toolbar(ng-cloak)
 
         #palette(ng-show="selectedElement == false || selectedElement == undefined "
                  ng-hide="selectedElements != false" )
