@@ -885,15 +885,8 @@ class FeynmanCanvas
     scale = new Snap.Matrix().translate(prevInfo.dx, prevInfo.dy).scale(@zoomLevel)
     # apply the transformation
     @diagramGroup.transform(scale)
-    # update the digram
+    # update the diagram
     @draw()
-
-
-# when the document is loaded
-$(document).ready ->
-  # create a canvas out of the appropriate DOM element
-  new FeynmanCanvas("#canvas") 
-  #overlay('hello')
 
 
 # end of file
