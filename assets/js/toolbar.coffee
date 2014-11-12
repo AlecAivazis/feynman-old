@@ -317,6 +317,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         # clear the palette data so the next drag is fresh
         paletteData = {}
 
+    # apply the changes we made
+    $scope.$apply()
+
 
   # perform the necessary actions to merge an anchor and add them to an instance of UndoMulti
   performAnchorMergesFromPalette = (anchor, undo) ->
