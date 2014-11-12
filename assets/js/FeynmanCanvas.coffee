@@ -830,27 +830,20 @@ class FeynmanCanvas
   # draw the sepecified pattern
   drawPattern: (pattern) =>
 
-    # store the current set of anchors for the history
-    old = @paper.anchors
+    # handle each pattern 
+    switch pattern
+      when 'pap'
+       # define the anchors for the particle, anti particle patterns
+        a = new Anchor(@paper, 50, 100)
+        b = new Anchor(@paper, 150, 200)
+        c = new Anchor(@paper, 50, 300)
+        d = new Anchor(@paper, 250, 200)
+    
+        # and the lines connecting them
+        k = new Line(@paper, a, b)
+        l = new Line(@paper, c, b, 'gluon')
+        m = new Line(@paper, b, d, 'em')
 
-    # if they asked for nothing,
-    if pattern == ''
-      # just drop an anchor to get things going
-      new Anchor(@paper, 0, 0)
-    
-    # if they asked for the particle / antiparticle pattern
-    if pattern == 'pap'
-      # define the anchors for the particle, anti particle patterns
-      a = new Anchor(@paper, 50, 100)
-      b = new Anchor(@paper, 150, 200)
-      c = new Anchor(@paper, 50, 300)
-      d = new Anchor(@paper, 250, 200)
-  
-      # and the lines connecting them
-      k = new Line(@paper, a, b)
-      l = new Line(@paper, c, b, 'gluon')
-      m = new Line(@paper, b, d, 'em')
-    
     # draw the anchors
     @draw()
 

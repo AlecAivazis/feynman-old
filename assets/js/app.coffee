@@ -9,18 +9,19 @@ context =
     pattern: 'blank'
     image: ''
   ,
-    title: 'blank'
-    pattern: 'blank'
-    image: ''
-  ,
-    title: 'blank'
-    pattern: 'blank'
-    image: ''
-  ,
     title: 'paritcle anti-particle anhil'
     pattern: 'pap'
     image: ''
   ]
+
+
+# start up the app with the designated pattern
+startCanvasWithPattern = (pattern="pap") ->
+  # create a new canvas with the designated pattern
+  new FeynmanCanvas("#canvas", pattern)
+  # close the overlay
+  closeOverlay()
+
 
 # register a helper with handlebars for the pattern select
 Handlebars.registerHelper 'pattern', ->
@@ -31,20 +32,21 @@ Handlebars.registerHelper 'pattern', ->
 
   # define the html for the pattern
   pattern = """
-    <div class="pattern">
-      <div>#{title}</div>
-      <div> #{pattern}</div>
+    <div class="pattern" onclick="startCanvasWithPattern('#{pattern}')">
+      <div class="title">#{title}</div>
+      <img src="#{image}">
     </div>
   """
   # return the string in a handlebar safe manner
   return new Handlebars.SafeString(pattern)
 
+
 # when the document is loaded
 $(document).ready ->
   console.log context
   # create a canvas out of the appropriate DOM element
-  new FeynmanCanvas("#canvas") 
+  #new FeynmanCanvas("#canvas") 
   # render the template for the pattern select view
   template = Handlebars.compile $('#patternSelect').html()
   # display the result in an overlay
-  #overlay template(context)
+  overlay template(context)
