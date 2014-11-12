@@ -43,7 +43,6 @@ Handlebars.registerHelper 'pattern', ->
 
 # when the document is loaded
 $(document).ready ->
-  console.log context
   # create a canvas out of the appropriate DOM element
   #new FeynmanCanvas("#canvas") 
   # render the template for the pattern select view
