@@ -354,9 +354,13 @@ block content
       svg#canvas
       
     // the pattern for the starting pattern select window
-    script#patternSelect(type="text/x-handlebars-template")
-      {{#each patterns}}
-      | {{pattern}}
-      {{/each}}
+    script#patternSelect_template(type="text/x-handlebars-template")
+      #patternSelect
+        #patternSelectTitle
+          | select starting template...
+        #patternSelectBody
+          {{#each patterns}}
+          | {{pattern}}
+          {{/each}}
             
               

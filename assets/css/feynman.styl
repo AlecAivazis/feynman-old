@@ -323,11 +323,59 @@ input , select
 .paletteItem
   cursor: pointer
 
+
+$patternTopRadius = 4px
+
 .pattern
-  width: 32.3%
+  width: 30.1%
   height: @width
-  background: blue
   float: left
-  margin: 1% 0 0 1%
   display: inline-block
+  margin: 1.5%
+  border-radius($patternTopRadius $patternTopRadius 0 0 )
+  cursor: pointer
+  background: white
+
+  box-shadow: 0px 2px 5px 0px rgba(208, 208, 208, 0.75)
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(208, 208, 208, 0.75)
+  -moz-box-box-shadow: 0px 2px 5px 0px rgba(208, 208, 208, 0.75)
+
+  box-sizing: border-box
+  -moz-box-sizing: border-box
+  -webkit-box-sizing: border-box
+
+  &:hover
+    border: 2px solid #078fff
+
+  img
+    width: 100%
+
+  .title
+    background: white
+    border-bottom: 1px solid #dddddd
+    padding: 10px
+    border-radius($patternTopRadius $patternTopRadius 0 0 )
+    color: #333333
+    text-transform: capitalize
+    font-size: 14px
+
+$patternSelectBorderRadius = 5px
+
+#patternSelectBody
+  background: #eeeeee
+  float: left
+  width: 97%
+  text-align: center
+  padding: 1.5%
+  border-radius(0 0 $patternSelectBorderRadius $patternSelectBorderRadius)
+
+#patternSelectTitle 
+  padding: 2%
+  border-radius($patternSelectBorderRadius $patternSelectBorderRadius 0 0)
+  background:#5a768e  
+  width: 96%
+  font-size: 18px
+  color: white
+  font-weight: bold
+  text-transform: capitalize
 
