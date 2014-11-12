@@ -6,7 +6,7 @@
 class FeynmanCanvas
 
   # when a canvas is created
-  constructor: (@selector, startingPattern = 'pap') ->
+  constructor: (@selector, startingPattern = 'dy') ->
     # create the snap object around the specified selector
     @paper = Snap(selector)
     @diagramGroup = @paper.g().addClass('diagram')
@@ -92,7 +92,7 @@ class FeynmanCanvas
 
     # render the canvas with the starting pattern and register it as item 0 in the history
     new UndoEntry true,
-      title: "rendered canvas with '" + startingPattern + "' pattern"
+      title: "rendered canvas with " + startingPattern + " pattern"
       data: [this, startingPattern]
       # the forward action is to move to the current location
       forwards: ->
@@ -832,7 +832,7 @@ class FeynmanCanvas
 
     # handle each pattern 
     switch pattern
-      when 'pap'
+      when 'dy'
        # define the anchors for the particle, anti particle patterns
         a = new Anchor(@paper, 50, 100)
         b = new Anchor(@paper, 150, 200)

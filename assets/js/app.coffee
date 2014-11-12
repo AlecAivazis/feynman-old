@@ -10,7 +10,7 @@ context =
     image: 'blank.png'
   ,
     title: 'Drell-Yan'
-    pattern: 'pap'
+    pattern: 'dy'
     image: 'dy.png'
  ]
 
