@@ -6,15 +6,17 @@ $blue = #0091ff
 $grey = #b8b8b8
 $toolbarColor = rgba(50, 50, 50, .65)
 
-// structure variables (doesn't include margin/padding)
+// size variables
 $sidebarWidth = 210px
 $toolbarWidth = 170px
+$patternSelectRadius = 6px
 
 
 // styling
 
 html
   height: 100%
+
 
 body
   font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif
@@ -24,8 +26,10 @@ body
 
   color: #333333
 
+
 a
   color: #00B7FF
+
 
 #canvas
   height: 100%
@@ -33,6 +37,7 @@ a
   overflow: hidden
   float: right
   background: #f5f5f5
+
 
 #canvasTitle
   position: absolute
@@ -43,8 +48,10 @@ a
   z-index: 50
   font-size: 25px
 
+
 svg
   float: left
+
 
 #sidebar
   z-index: 2
@@ -61,14 +68,17 @@ svg
   -moz-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
   box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
 
+
 #sidebar > div
   border-bottom: 1px solid #eeeeee
   padding-top: 10px
+
 
 .groupTitle
   padding: 10px
   text-transform: uppercase
   font-weight: bold
+
 
 #toolbar
   position: fixed
@@ -97,22 +107,28 @@ svg
   input
     width: 100%
 
+
 #toolbar .property
   margin-bottom: 15px
 
+
 #toolbar .label
   width: 60px
+
 
 #historyContent
   max-height: 100px
   overflow: auto
   padding-bottom: 10px
 
+
 #historyTitle
   margin-bottom: 10px
 
+
 .bubble .value 
   display: none
+
 
 .property
   margin-bottom: 15px
@@ -158,25 +174,31 @@ input , select
 
   text-indent: 10px
 
+
 .colorpicker
   background: white
   border: 1px solid black
   border-radius: 2px
 
+
 .fixed 
   fill: #b3b3b3
+
 
 .partonLines
   stroke: $grey
 
+
 .selectedPattern
   stroke: $blue
+
 
 .selectionRectangle
   stroke: $blue
   // fill: rgba(233, 240, 246, .9)
   fill: transparent
   strokeWidth: 2
+
 
 .selectedElement
   stroke: $blue
@@ -186,8 +208,10 @@ input , select
   &.text
     border: 1px solid #009aff
 
+
 .gridLine
   stroke: #e5e5e5
+
 
 .historyItem
   color: black
@@ -218,11 +242,14 @@ input , select
 .lineDecoration
   fill: black
 
+
 .hidden
   display: none
 
+
 .anchor 
   z-index: 5
+
 
 .colorContainer
   width: 30px
@@ -249,6 +276,7 @@ input , select
   border-radius(0px)
   border: none
 
+
 #mainContent
   z-index: 1
   position: absolute
@@ -257,15 +285,18 @@ input , select
   bottom: 0
   top: 0
 
+
 #footer 
   text-align: left
   padding-bottom: 10px
   overflow-y: auto
 
+
 .panelTitle, .diagramProperty .label
   text-align: left
   font-weight: bold
   text-transform: capitalize
+
 
 .diagramProperty input
   background: #fafafa
@@ -275,16 +306,19 @@ input , select
   -moz-box-shadow: none
   -webkit-box-shadow: none
 
+
 .propertyValue
   float: right
   font-weight: normal
   color: #8d8d8d
   font-weight: bold
 
+
 .hidePanel, .showPanel
   float: right
   cursor: pointer
   color: #2d89d3
+
 
 .hotkey
   padding: 7px
@@ -296,16 +330,19 @@ input , select
   .hotkeyDescription
     margin-left: 5px
 
+
 #paletteTitle
   color: white
   text-transform: uppercase
   font-weight: bold
   margin-bottom: 10px
 
+
 #paletteBody
   color: #959595
   font-weight: bold
   margin-bottom: 10px
+
 
 #paletteItems
         
@@ -320,11 +357,10 @@ input , select
     -moz-box-shadow: inset 1px 1px 5px 0px rgba(204,204,204,.2), 0px 1px 5px 0px rgba(50, 50, 50, 0.3)
     box-shadow: inset 1px 1px 5px 0px rgba(204,204,204,.2), 0px 2px 1px 0px rgba(50, 50, 50, 0.3)
 
+
 .paletteItem
   cursor: pointer
 
-
-$patternSelectRadius = 6px
 
 .pattern
   width: 30.1%
@@ -359,6 +395,7 @@ $patternSelectRadius = 6px
     text-transform: capitalize
     font-size: 14px
 
+
 #patternSelectBody
   background: #eeeeee
   float: left
@@ -367,10 +404,11 @@ $patternSelectRadius = 6px
   padding: 1.5%
   border-radius(0 0 $patternSelectRadius $patternSelectRadius)
 
+
 #patternSelectTitle 
   padding: 2%
   border-radius($patternSelectRadius $patternSelectRadius 0 0)
-  background:#5a768e  
+  background: #5a768e  
   width: 96%
   font-size: 18px
   color: white
