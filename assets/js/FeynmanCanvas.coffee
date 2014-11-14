@@ -51,6 +51,9 @@ class FeynmanCanvas
         @spacebarPressed = false
       # if they presed delete or backspace
       if evt.which in [8, 46]
+        # prevent the default action
+        evt.preventDefault()
+        # remove the selected elements
         $(document).trigger('removeSelectedElements')
 
       # if they pressed ctrl + z
