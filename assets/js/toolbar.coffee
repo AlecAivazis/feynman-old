@@ -10,7 +10,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   # add event handler for element selection
   $(document).on 'selectedElement', (event, element, type) ->
-
+    console.log "selecting element #{type}"
     # clear the previous selection
     $(document).trigger('clearSelection')
     # and add the class to the selected element

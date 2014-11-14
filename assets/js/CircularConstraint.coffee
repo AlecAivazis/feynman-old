@@ -162,7 +162,7 @@ class CircularConstraint
 
     # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or not @element.hasClass('selectedElement')
-      $(document).trigger 'selectedElement', [this, 'constraint']
+      $(document).trigger 'selectedElement', [this, 'circle']
 
     # go set up whatever we need for the move
     $(document).trigger 'startMove'
