@@ -41,11 +41,28 @@ Handlebars.registerHelper 'pattern', ->
   return new Handlebars.SafeString(pattern)
 
 
+toggleShowStartingPatterns = ->
+  # grab the current value for the cookie
+  showStartingPatterns = $.cookie('feynmanCanvas_showStartingPatterns') == 'true'
+  # set its value to the correct boolean rep
+  $.cookie 'feynmanCanvas_showStartingPatterns', !showStartingPatterns
+  # toggle the checkbox elements property
+  $('#patternsOnStartup').prop 'checked', !showStartingPatterns
+
+
 # when the document is loaded
 $(document).ready ->
   # create a canvas out of the appropriate DOM element
-  #new FeynmanCanvas("#canvas") 
-  # render the template for the pattern select view
-  template = Handlebars.compile $('#patternSelect_template').html()
-  # display the result in an overlay
-  overlay template(context)
+  cookieVal =  $.cookie('feynmanCanvas_showStartingPatterns')
+  if cookieVal in [undefined, "true"]
+    #new FeynmanCanvas("#canvas") 
+    # render the template for the pattern select view
+    template = Handlebars.compile $('#patternSelect_template').html()
+    # display the result in an overlay
+    overlay template(context)
+  else
+    # create a blank canvas based on #canvas
+    new FeynmanCanvas("#canvas", 'blank')
+
+  # set the value of the checkbox elements to the cookie value
+  $('#patternsOnStartup').prop 'checked', cookieVal

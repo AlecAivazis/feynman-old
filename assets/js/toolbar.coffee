@@ -6,11 +6,13 @@
 # create the angular module 
 app = angular.module 'feynman', [ 'ui.slider', 'undo', 'feynman.colorpicker']
 # define the controller for the properties menu
-app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout) ->
+app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout, $cookies) ->
+
+  # load the cookie value
+  $rootScope.showStartingPatterns = $.cookie('feynmanCanvas_showStartingPatterns') == "true"
 
   # add event handler for element selection
   $(document).on 'selectedElement', (event, element, type) ->
-    console.log "selecting element #{type}"
     # clear the previous selection
     $(document).trigger('clearSelection')
     # and add the class to the selected element
@@ -393,7 +395,15 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     undo.addToForwards anchor, (element) ->
       # draws the anchor
       element.draw()
+
   
+  # show the starting pattern selection
+  $scope.showStartingPatterns = ->
+    # render the template for the pattern select view
+    template = Handlebars.compile $('#patternSelect_template').html()
+    # display the result in an overlay
+    overlay template(context)
+
 
   # clear the selection
   $scope.clearSelection = ->
@@ -582,6 +592,9 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $rootScope.$watch 'title', (newVal, oldVal) ->
     if $(document).attr 'canvas'
       $(document).attr('canvas').title = newVal
+
+  $rootScope.watch 'showStartingPatterns', (newVal, oldVal) ->
+    $cookies.feynmanCanvas_showStartingPatterns = newVal
 
   $scope.$watch 'snapToGrid', (newVal, oldVal) ->
     # grab the canvas

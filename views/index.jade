@@ -7,6 +7,7 @@ append js
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
   script(type="text/javascript" src="/angular-slider/slider.js")
   script(type="text/javascript" src="/thirdparty/handlebars/handlebars.js")
+  script(type="text/javascript" src="/thirdparty/jquery-cookie/jquery.cookie.js")
 
   != js('overlay')
 
@@ -113,6 +114,8 @@ block content
                 img.paletteItem(element="dashed" src="/images/dashed.png")
               td
                 img.paletteItem(element="text" src="/images/text.png")
+          #showStartingPatterns.button(ng-click="showStartingPatterns()")
+            | patterns...
                   
         #selectedElementProperties(ng-show="selectedElement != false")
 
@@ -358,6 +361,10 @@ block content
       #patternSelect
         #patternSelectTitle
           | select starting template...
+          span#togglePatternsOnStartup(onclick="toggleShowStartingPatterns()")
+            input#patternsOnStartup(type="checkbox")
+            | show at startup
+            
         #patternSelectBody
           {{#each patterns}}
           | {{pattern}}
