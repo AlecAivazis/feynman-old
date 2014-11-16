@@ -21,6 +21,7 @@
     "angular-bootstrap-colorpicker": "~3.0.8",
     "snap.svg": "~0.3.0",
     "jquery-ui": "~1.11.2",
-    "handlebars": "~2.0.0"
+    "handlebars": "~2.0.0",
+    "jquery-cookie": "~1.4.1"
   }
 }
