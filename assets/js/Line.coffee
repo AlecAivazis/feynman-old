@@ -197,6 +197,7 @@ class Line
   labelDrag: (deltaX, deltaY, x, y, event) =>
     event.stopPropagation()
 
+    # grab the new coordinates for the label
     labelCoords =
       x: @labelOrigin.x + deltaX
       y: @labelOrigin.y + deltaY
@@ -208,9 +209,14 @@ class Line
     # compute the angle formed by the lengths
     theta =  -( Math.atan2(dy, dx) - Math.atan((@anchor1.y - @anchor2.y )/ (@anchor1.x - @anchor2.x) ))
 
+    # save a reference to the distances between anchors
+    anchorDx = @anchor1.x - @anchor2.x
+    anchorDy = @anchor1.y - @anchor2.y
+
     # set the label distance attributes
     @labelDistance = r * Math.sin(theta)
-    @labelLocation = r * Math.cos(theta) / (@anchor2.x - @anchor1.x)
+    #@labelLocation = r * Math.cos(theta) / (@anchor2.x - @anchor1.x)
+    @labelLocation = r * Math.cos(theta) / Math.sqrt(anchorDx*anchorDx + anchorDy*anchorDy)
 
     # redraw the label at the new location
     @createLabel(labelCoords.x, labelCoords.y)
