@@ -593,8 +593,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     if $(document).attr 'canvas'
       $(document).attr('canvas').title = newVal
 
-  $rootScope.watch 'showStartingPatterns', (newVal, oldVal) ->
-    $cookies.feynmanCanvas_showStartingPatterns = newVal
+  $rootScope.$watch 'showStartingPatterns', (newVal, oldVal) ->
+    $.cookie.feynmanCanvas_showStartingPatterns = newVal
 
   $scope.$watch 'snapToGrid', (newVal, oldVal) ->
     # grab the canvas

@@ -167,22 +167,13 @@ class Line
 
     labelCoords = @getLabelCoordinates()
 
-    # create the label at the appropriate location
-    @createLabel(labelCoords.x, labelCoords.y)
+    # create the element
+    @labelElement = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, labelCoords.x,
+                                                                                  labelCoords.y)
+    # add it to the diagram
+    $(document).attr('canvas').addToDiagram @labelElement
 
-
-  # render the label in and add it in the right place
-  createLabel: (x, y) =>
-    # remove the previous label
-    @removeLabel()
-    # if there is a label for this line
-    if @label
-      # create the element
-      @labelElement = @paper.image("http://latex.codecogs.com/svg.latex?" + @label, x, y)
-      # add it to the diagram
-      $(document).attr('canvas').addToDiagram @labelElement
-
-      @labelElement.drag @labelDrag, @labelDragStart
+    @labelElement.drag @labelDrag, @labelDragStart
 
 
   # prevent the drag event from propagating
@@ -206,23 +197,25 @@ class Line
     dx = labelCoords.x - @anchor1.x
     dy = labelCoords.y - @anchor1.y
     r = Math.sqrt(dx*dx + dy*dy)
-    # compute the angle formed by the lengths
-    theta =  -( Math.atan2(dy, dx) - Math.atan((@anchor1.y - @anchor2.y )/ (@anchor1.x - @anchor2.x) ))
-
     # save a reference to the distances between anchors
-    anchorDx = @anchor1.x - @anchor2.x
+    anchorDx = @anchor2.x - @anchor1.x
     anchorDy = @anchor1.y - @anchor2.y
+    m = anchorDy / anchorDx
+    # compute the angle formed by the lengths
+    theta = Math.atan2(dy, dx) + Math.atan2(anchorDy, anchorDx)
+    if anchorDx < 0 or (anchorDx == 0 and anchorDy < 0)
+      theta *= -1
 
     # set the label distance attributes
-    @labelDistance = r * Math.sin(theta)
+    @labelDistance = -1 * r * Math.sin(theta)
     #@labelLocation = r * Math.cos(theta) / (@anchor2.x - @anchor1.x)
     @labelLocation = r * Math.cos(theta) / Math.sqrt(anchorDx*anchorDx + anchorDy*anchorDy)
 
     # redraw the label at the new location
-    @createLabel(labelCoords.x, labelCoords.y)
+    @drawLabel()
 
 
-  # get the coordinates for the label
+  # map the local coordinate system to the catesian plane of the canvas
   getLabelCoordinates: =>
     x1 = @anchor1.x
     y1 = @anchor1.y 
@@ -246,13 +239,12 @@ class Line
 
     x = Math.sqrt(r*r / (1 + (m*m)))
     y = m*x
-
     # add these values to the mid point for the appropriate center of the label
     # CAREFUL: these signs take into account the possible minus sign from midx/y calculation
     if m >= 0
       labelx = if r > 0 then midx - x else midx + x
       labely = if r > 0 then midy - y else midy + y
-    if m < 0
+    else
       labelx = if r > 0 then midx + x else midx - x
       labely = if r > 0 then midy + y else midy - y
 
