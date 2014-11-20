@@ -15,10 +15,10 @@ patterns =
  ]
 
 
-# start up the app with the designated pattern
-startCanvasWithPattern = (pattern="pap") ->
-  # create a new canvas with the designated pattern
-  new FeynmanCanvas("#canvas", pattern)
+# render the canvas with the designated pattern and create the appropriate undo element
+renderPattern = (pattern="pap") ->
+  # tell the current canvas to draw the right pattern
+  $(document).attr('canvas').drawPattern(pattern)
   # close the overlay
   closeOverlay()
 
@@ -31,14 +31,14 @@ Handlebars.registerHelper 'pattern', ->
   image = Handlebars.escapeExpression @image
 
   # define the html for the pattern
-  pattern = """
-    <div class="pattern" onclick="startCanvasWithPattern('#{pattern}')">
+  element = """
+    <div class="pattern" onclick="renderPattern('#{pattern}')">
       <div class="title">#{title}</div>
       <img src="/images/patterns/#{image}">
     </div>
   """
   # return the string in a handlebar safe manner
-  return new Handlebars.SafeString(pattern)
+  return new Handlebars.SafeString(element)
 
 
 toggleShowStartingPatterns = ->
@@ -50,18 +50,28 @@ toggleShowStartingPatterns = ->
   $('#patternsOnStartup').prop 'checked', !showStartingPatterns
 
 
+# display the patterns in an overlay
+showPatterns = ->
+  # render the template for the pattern select view
+  template = Handlebars.compile $('#patternSelect_template').html()
+  # display the result in an overlay
+  overlay template(patterns)
+
+
 # when the document is loaded
 $(document).ready ->
+  # create a blank feynman canvas
+  new FeynmanCanvas("#canvas", 'blank')
   # create a canvas out of the appropriate DOM element
   cookieVal =  $.cookie('feynmanCanvas_showStartingPatterns')
+  # if the cookie has yet to be set or is true
   if cookieVal in [undefined, "true"]
-    # render the template for the pattern select view
-    template = Handlebars.compile $('#patternSelect_template').html()
-    # display the result in an overlay
-    overlay template(patterns)
+    # show the patterns
+    showPatterns()
+  # cookie says not to show patterns
   else
-    # create a blank canvas based on #canvas
-    new FeynmanCanvas("#canvas", 'blank')
+    # otherwise just close the overlay
+    closeOverlay()
 
-  # set the value of the checkbox elements to the correct value
+  # check the checkbox according to the cookie value
   $('#patternsOnStartup').prop 'checked', cookieVal in ["true", undefined]
