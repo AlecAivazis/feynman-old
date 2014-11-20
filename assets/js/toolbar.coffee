@@ -136,7 +136,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 anchor2 = new Anchor(paper, upperRight.x, upperRight.y)
 
                 # make a line joining the two anchors with the appropriate style
-                line = new Line(paper, anchor1, anchor2, paletteData.type)
+                line = new Line paper, anchor1, anchor2, style: paletteData.type
               
                 # draw the second anchor
                 anchor2.draw()
@@ -397,14 +397,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       element.draw()
 
   
-  # show the starting pattern selection
-  $scope.showStartingPatterns = ->
-    # render the template for the pattern select view
-    template = Handlebars.compile $('#patternSelect_template').html()
-    # display the result in an overlay
-    overlay template(patterns)
-
-
   # clear the selection
   $scope.clearSelection = ->
     # find every selected element

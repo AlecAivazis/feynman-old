@@ -6,21 +6,22 @@ class Line
 
   element = null
 
-  constructor: (@paper, @anchor1, @anchor2, @style = 'line') ->
+  constructor: (@paper, @anchor1, @anchor2, style={}) ->
     @anchor1.addLine this
     @anchor2.addLine this
     # add this line to the papers list
     @paper.lines.push this
 
     # default values
-    @width = 1.4
-    @color = '#000000'
-    @loopDirection = 1
-    @labelDistance = 30
-    @labelLocation = .5
-    @drawArrow = false
-    @drawEndCaps = true
-    @flipArrow = false
+    @style = if style.style then style.style else 'line'
+    @width = if style.width then style.width else 1.4
+    @color = if style.color then style.color else '#000000'
+    @loopDirection = if style.loopDirection then style.loopDirection else  1
+    @labelDistance = if style.labelDistance then style.labelDistance else  30
+    @labelLocation = if style.labelLocation then style.labelLocation else  .5
+    @drawArrow = if style.drawArrow then style.drawArrow else  false
+    @drawEndCaps = if style.drawEndCaps then style.drawEndCaps else  true
+    @flipArrow = if style.flipArrow then style.flipArrow else  false
 
     @line = this
 

@@ -851,7 +851,7 @@ class FeynmanCanvas
         upperRightFermion = new Line(@paper, rightAnchorTop, rightAnchorMid)
         lowerRightFermion = new Line(@paper, rightAnchorLow, rightAnchorMid)
         # the propagator joining the two fermions
-        propagator = new Line(@paper, leftAnchorMid, rightAnchorMid, 'em')
+        propagator = new Line @paper, leftAnchorMid, rightAnchorMid, style: 'em'
 
     # draw the anchors
     @draw()
