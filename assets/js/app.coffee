@@ -3,7 +3,7 @@
 # author: alec aivazis
 
 # create a list of the patterns for the select template in a context obj
-context = 
+patterns = 
   patterns: [
     title: 'blank'
     pattern: 'blank'
@@ -55,14 +55,13 @@ $(document).ready ->
   # create a canvas out of the appropriate DOM element
   cookieVal =  $.cookie('feynmanCanvas_showStartingPatterns')
   if cookieVal in [undefined, "true"]
-    #new FeynmanCanvas("#canvas") 
     # render the template for the pattern select view
     template = Handlebars.compile $('#patternSelect_template').html()
     # display the result in an overlay
-    overlay template(context)
+    overlay template(patterns)
   else
     # create a blank canvas based on #canvas
     new FeynmanCanvas("#canvas", 'blank')
 
-  # set the value of the checkbox elements to the cookie value
+  # set the value of the checkbox elements to the correct value
   $('#patternsOnStartup').prop 'checked', cookieVal in ["true", undefined]

@@ -402,7 +402,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # render the template for the pattern select view
     template = Handlebars.compile $('#patternSelect_template').html()
     # display the result in an overlay
-    overlay template(context)
+    overlay template(patterns)
 
 
   # clear the selection
