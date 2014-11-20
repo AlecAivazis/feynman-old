@@ -43,7 +43,7 @@ Handlebars.registerHelper 'pattern', ->
 
 toggleShowStartingPatterns = ->
   # grab the current value for the cookie
-  showStartingPatterns = $.cookie('feynmanCanvas_showStartingPatterns') == 'true'
+  showStartingPatterns = $.cookie('feynmanCanvas_showStartingPatterns') in ["true", undefined]
   # set its value to the correct boolean rep
   $.cookie 'feynmanCanvas_showStartingPatterns', !showStartingPatterns
   # toggle the checkbox elements property
@@ -65,4 +65,4 @@ $(document).ready ->
     new FeynmanCanvas("#canvas", 'blank')
 
   # set the value of the checkbox elements to the cookie value
-  $('#patternsOnStartup').prop 'checked', cookieVal
+  $('#patternsOnStartup').prop 'checked', cookieVal in ["true", undefined]
