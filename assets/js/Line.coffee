@@ -22,6 +22,7 @@ class Line
     @drawArrow = if style.drawArrow then style.drawArrow else  false
     @drawEndCaps = if style.drawEndCaps then style.drawEndCaps else  true
     @flipArrow = if style.flipArrow then style.flipArrow else  false
+    @label = if style.label then style.label else undefined
 
     @line = this
 

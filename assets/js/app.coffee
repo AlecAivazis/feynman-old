@@ -62,6 +62,7 @@ showPatterns = ->
 $(document).ready ->
   # create a blank feynman canvas
   new FeynmanCanvas("#canvas", 'blank')
+
   # create a canvas out of the appropriate DOM element
   cookieVal =  $.cookie('feynmanCanvas_showStartingPatterns')
   # if the cookie has yet to be set or is true
@@ -70,7 +71,7 @@ $(document).ready ->
     showPatterns()
   # cookie says not to show patterns
   else
-    # otherwise just close the overlay
+    # close the overlay
     closeOverlay()
 
   # check the checkbox according to the cookie value

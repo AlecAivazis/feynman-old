@@ -136,7 +136,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 anchor2 = new Anchor(paper, upperRight.x, upperRight.y)
 
                 # make a line joining the two anchors with the appropriate style
-                line = new Line paper, anchor1, anchor2, style: paletteData.type
+                line = new Line(paper, anchor1, anchor2, style: paletteData.type)
               
                 # draw the second anchor
                 anchor2.draw()
