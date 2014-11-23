@@ -162,10 +162,8 @@ class FeynmanCanvas
   moveSelectedElements: (event,  dx, dy) =>
     # save the canvas's zoom level
     zoom = @zoomLevel
-    # get a list of all of the selected elements
-    selected = @getSelectedElements()
-    # move each of them
-    _.each selected, (element) =>
+    # go over every selected element
+    _.each @getSelectedElements(), (element) =>
       # if the element is anchor
       if element.anchor
         # save a reference to the anchor
@@ -185,7 +183,7 @@ class FeynmanCanvas
         x = feynElement.origin.x + dx/zoom
         y = feynElement.origin.y + dy/zoom
         # if the coordinates are not visible
-        if not @isLocationVisible(x,y)
+        if not @isLocationVisible(x,y) and false
           # get the current transform on the diagram group
           currentTransform = @diagramGroup.transform().globalMatrix.split()
           scalex = currentTransform.scalex
