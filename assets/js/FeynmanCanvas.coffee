@@ -886,6 +886,7 @@ class FeynmanCanvas
 
     # add the forward action to the undo entry
 
+    # save dereferenced copies of the anchors and lines
     patternData =
       anchors: @paper.anchors.slice()
       lines: @paper.lines.slice()

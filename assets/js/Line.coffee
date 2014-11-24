@@ -29,8 +29,9 @@ class Line
 
   # clone the anchor's settings to a new line attached to the given anchors
   clone: (anchor1, anchor2) =>
-    line = new Line(@paper, anchor2, anchor1, @style)
+    line = new Line(@paper, anchor2, anchor1)
     # set the values for tgghge clone
+    line.style = @style
     line.labelPosition = @labelPosition
     line.width = @width
     line.color = @color
