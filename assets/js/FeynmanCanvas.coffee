@@ -93,17 +93,6 @@ class FeynmanCanvas
     $(document).on 'finalizeMove', (event) =>
       @finalizeMove(event)
 
-    # render the canvas with the starting pattern and register it as item 0 in the history
-    new UndoEntry true,
-      title: "rendered canvas with " + startingPattern + " pattern"
-      data: [this, startingPattern]
-      # the forward action is to move to the current location
-      forwards: ->
-        @data[0].drawPattern(@data[1])
-      # the backwards action is to move to the origin as defined when the drag started
-      backwards: ->
-        console.log 'this is the beginning. there is no before me!'
-
     # tell the angular app to load the canvas properties
     $(document).trigger 'doneWithInit'
 
@@ -833,6 +822,33 @@ class FeynmanCanvas
   # draw the sepecified pattern
   drawPattern: (pattern) =>
 
+    # save references to the lines and anchors that were previously displayed
+    anchors = @paper.anchors.slice()
+    lines = @paper.lines.slice()
+
+    # create an undo entry for the pattern
+    undo = new UndoMulti("rendered canvas with #{pattern} pattern")
+    # the backwards action is to clear the canvas and ressurect the old elements
+    undo.addToBackwards
+        anchors: anchors,
+        lines: lines
+    , (data) ->
+      # clear the diagram
+      $(document).attr('canvas').clear()
+
+      # ressurect the old anchors first
+      _.each data.anchors, (element) ->
+        element.ressurect()
+      # and then the lines
+      _.each data.lines, (element) ->
+        element.ressurect()
+
+      # draw the canvas
+      $(document).attr("canvas").draw()
+
+    # clear the elements on the canvas before drawing the pattern
+    $(document).attr('canvas').clear()
+
     # handle each pattern 
     switch pattern
       when 'dy'
@@ -848,6 +864,7 @@ class FeynmanCanvas
         lowerLeftFermion = new Line @paper, leftAnchorLow, leftAnchorMid,
           label: '\\overline{l}'
           drawArrow: true
+
         # the outgoing fermion
         rightAnchorTop = new Anchor(@paper, 400, 100)
         rightAnchorMid = new Anchor(@paper, 300, 200)
@@ -860,15 +877,37 @@ class FeynmanCanvas
           label: '\\overline{l}'
           drawArrow: true
           flipArrow: true
+
         # the propagator joining the two fermions
         propagator = new Line @paper, leftAnchorMid, rightAnchorMid,
           style: 'em'
           label: '\\mathrm{Z}'
           color: '#55abff'
 
+    # add the forward action to the undo entry
+
+    patternData =
+      anchors: @paper.anchors.slice()
+      lines: @paper.lines.slice()
+
+    # the forward action is to clear the diagram and
+    # ressurect the elements that are currently showing
+    undo.addToForwards patternData, (data) ->
+      # clear the canvas
+      $(document).attr('canvas').clear()
+      # ressurect the anchors first
+      _.each data.anchors, (element) ->
+        element.ressurect()
+      # and then the lines
+      _.each data.lines, (element) ->
+        element.ressurect()
+      # draw the canvas
+      $(document).attr('canvas').draw()
+    
     # draw the anchors
     @draw()
-
+    # save the entry to the stack
+    undo.save()
   
   removeSelectionRect: =>
     if @selectionRect_element
@@ -902,6 +941,16 @@ class FeynmanCanvas
     @diagramGroup.transform(scale)
     # update the diagram
     @draw()
+
+
+  # remove all of the lines anchors and constraints from the canvas
+  clear: =>
+    # get a list of the elements
+    elements = _.union @paper.lines, @paper.anchors, @paper.constraints
+    # go over every element
+    _.each elements, (element) ->
+      # remove the element
+      element.remove()
 
 
 # end of file
