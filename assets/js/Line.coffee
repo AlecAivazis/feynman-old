@@ -734,7 +734,6 @@ class Line
               @data.originalAnchor.draw()
             forwards: ->
               @data.newAnchor.ressurect()
-              @data.newAnchor.addConstraint(@data.constraint)
               @data.newAnchor.draw()
               @data.otherAnchor.removeLine(@data.originalLine)
               @data.splitAnchor.ressurect()

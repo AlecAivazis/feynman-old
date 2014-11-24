@@ -307,6 +307,10 @@ class FeynmanCanvas
       @drawGrid()
       # with the right color background
       $(@selector).css('background', '#f5f5f5')
+
+    # draw each of the constraints
+    _.each @paper.constraints, (constraint) ->
+        constraint.draw()
     
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->
@@ -631,7 +635,6 @@ class FeynmanCanvas
                 forwards: ->
                   @data.otherAnchor.ressurect()
                   @data.constrainedAnchor.ressurect()
-                  @data.constrainedAnchor.addConstraint(@data.constraint)
                   @data.line.ressurect()
                   @data.constrainedAnchor.draw()
                   @data.otherAnchor.draw()
@@ -825,6 +828,7 @@ class FeynmanCanvas
     # save references to the lines and anchors that were previously displayed
     anchors = @paper.anchors.slice()
     lines = @paper.lines.slice()
+    constraints = @paper.constraints.slice()
 
     # create an undo entry for the pattern
     undo = new UndoMulti("rendered canvas with #{pattern} pattern")
@@ -832,11 +836,15 @@ class FeynmanCanvas
     undo.addToBackwards
         anchors: anchors,
         lines: lines
+        constraints: constraints
     , (data) ->
       # clear the diagram
       $(document).attr('canvas').clear()
 
-      # ressurect the old anchors first
+      # ressurect the constraints first
+      _.each data.constraints, (element) ->
+        element.ressurect()
+      # then the old anchors
       _.each data.anchors, (element) ->
         element.ressurect()
       # and then the lines
@@ -909,7 +917,8 @@ class FeynmanCanvas
     @draw()
     # save the entry to the stack
     undo.save()
-  
+
+
   removeSelectionRect: =>
     if @selectionRect_element
       @selectionRect_element.remove()
