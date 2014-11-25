@@ -109,10 +109,8 @@ class Line
     A = 6
 
     # coordinates of anchors to align along the line
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    [x1, y1] = @anchor1.getVisualCoordinates()
+    [x2, y2] = @anchor2.getVisualCoordinates()
 
     # compute the lengths between the anchors
     dx = x1 - x2

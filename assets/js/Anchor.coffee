@@ -562,3 +562,17 @@ class Anchor
      
   makeSelected: =>
     @element.addClass('selectedElement')
+
+
+  # return the displayed coordinates of the anchor
+  getVisualCoordinates: =>
+    # if there is a constraint 
+    if @constraint
+      # get the constrained anchors
+      coords = @constraint.constrain(@x, @y)
+      # return the coordinates as a list
+      return [coords.x, coords.y]
+    # otherwise there is no constraint
+    else
+      # return the unconstrained coordinates as a list
+      return [@x, @y]
