@@ -93,17 +93,6 @@ class FeynmanCanvas
     $(document).on 'finalizeMove', (event) =>
       @finalizeMove(event)
 
-    # render the canvas with the starting pattern and register it as item 0 in the history
-    new UndoEntry true,
-      title: "rendered canvas with " + startingPattern + " pattern"
-      data: [this, startingPattern]
-      # the forward action is to move to the current location
-      forwards: ->
-        @data[0].drawPattern(@data[1])
-      # the backwards action is to move to the origin as defined when the drag started
-      backwards: ->
-        console.log 'this is the beginning. there is no before me!'
-
     # tell the angular app to load the canvas properties
     $(document).trigger 'doneWithInit'
 
@@ -316,6 +305,10 @@ class FeynmanCanvas
       @drawGrid()
       # with the right color background
       $(@selector).css('background', '#f5f5f5')
+
+    # draw each of the constraints
+    _.each @paper.constraints, (constraint) ->
+        constraint.draw()
     
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->
@@ -447,18 +440,19 @@ class FeynmanCanvas
     # get the anchors
     anchors = _.filter @paper.anchors, (anchor) ->
       # within this range
-      return bound1x <= anchor.x <= bound2x and
-             bound1y <= anchor.y <= bound2y and
+      coords = anchor.getCoordinates()
+      return bound1x <= coords.x <= bound2x and
+             bound1y <= coords.y <= bound2y and
              # ignore the fixed anchors
              not anchor.fixed
 
     # get the lines
     lines = _.filter @paper.lines, (line) ->
-      midx = (line.anchor1.x + line.anchor2.x)/2
-      midy = (line.anchor1.y + line.anchor2.y)/2
+      anchor1 = line.anchor1.getCoordinates()
+      anchor2 = line.anchor2.getCoordinates()
       # within this range
-      return bound1x <= midx <= bound2x and
-             bound1y <= midy <= bound2y
+      return bound1x <= (anchor1.x + anchor2.x)/2 <= bound2x and
+             bound1y <= (anchor1.y + anchor2.y)/2 <= bound2y
 
     # get the constraints
     constraints = _.filter @paper.constraints, (constraint) ->
@@ -640,7 +634,6 @@ class FeynmanCanvas
                 forwards: ->
                   @data.otherAnchor.ressurect()
                   @data.constrainedAnchor.ressurect()
-                  @data.constrainedAnchor.addConstraint(@data.constraint)
                   @data.line.ressurect()
                   @data.constrainedAnchor.draw()
                   @data.otherAnchor.draw()
@@ -831,6 +824,38 @@ class FeynmanCanvas
   # draw the sepecified pattern
   drawPattern: (pattern) =>
 
+    # save references to the lines and anchors that were previously displayed
+    anchors = @paper.anchors.slice()
+    lines = @paper.lines.slice()
+    constraints = @paper.constraints.slice()
+
+    # create an undo entry for the pattern
+    undo = new UndoMulti("rendered canvas with #{pattern} pattern")
+    # the backwards action is to clear the canvas and ressurect the old elements
+    undo.addToBackwards
+        anchors: anchors,
+        lines: lines
+        constraints: constraints
+    , (data) ->
+      # clear the diagram
+      $(document).attr('canvas').clear()
+
+      # ressurect the constraints first
+      _.each data.constraints, (element) ->
+        element.ressurect()
+      # then the old anchors
+      _.each data.anchors, (element) ->
+        element.ressurect()
+      # and then the lines
+      _.each data.lines, (element) ->
+        element.ressurect()
+
+      # draw the canvas
+      $(document).attr("canvas").draw()
+
+    # clear the elements on the canvas before drawing the pattern
+    $(document).attr('canvas').clear()
+
     # handle each pattern 
     switch pattern
       when 'dy'
@@ -846,6 +871,7 @@ class FeynmanCanvas
         lowerLeftFermion = new Line @paper, leftAnchorLow, leftAnchorMid,
           label: '\\overline{l}'
           drawArrow: true
+
         # the outgoing fermion
         rightAnchorTop = new Anchor(@paper, 400, 100)
         rightAnchorMid = new Anchor(@paper, 300, 200)
@@ -858,16 +884,40 @@ class FeynmanCanvas
           label: '\\overline{l}'
           drawArrow: true
           flipArrow: true
+
         # the propagator joining the two fermions
         propagator = new Line @paper, leftAnchorMid, rightAnchorMid,
           style: 'em'
           label: '\\mathrm{Z}'
           color: '#55abff'
 
+    # add the forward action to the undo entry
+
+    # save dereferenced copies of the anchors and lines
+    patternData =
+      anchors: @paper.anchors.slice()
+      lines: @paper.lines.slice()
+
+    # the forward action is to clear the diagram and
+    # ressurect the elements that are currently showing
+    undo.addToForwards patternData, (data) ->
+      # clear the canvas
+      $(document).attr('canvas').clear()
+      # ressurect the anchors first
+      _.each data.anchors, (element) ->
+        element.ressurect()
+      # and then the lines
+      _.each data.lines, (element) ->
+        element.ressurect()
+      # draw the canvas
+      $(document).attr('canvas').draw()
+    
     # draw the anchors
     @draw()
+    # save the entry to the stack
+    undo.save()
 
-  
+
   removeSelectionRect: =>
     if @selectionRect_element
       @selectionRect_element.remove()
@@ -900,6 +950,16 @@ class FeynmanCanvas
     @diagramGroup.transform(scale)
     # update the diagram
     @draw()
+
+
+  # remove all of the lines anchors and constraints from the canvas
+  clear: =>
+    # get a list of the elements
+    elements = _.union @paper.lines, @paper.anchors, @paper.constraints
+    # go over every element
+    _.each elements, (element) ->
+      # remove the element
+      element.remove()
 
 
 # end of file

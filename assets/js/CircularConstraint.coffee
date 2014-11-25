@@ -192,7 +192,6 @@ class CircularConstraint
           forwards: ->
             @data.otherAnchor.ressurect()
             @data.line.ressurect()
-            @data.otherAnchor.addConstraint(@data.constraint)
             @data.otherAnchor.draw()
 
       # no such merge happened
@@ -235,7 +234,6 @@ class CircularConstraint
               @data.splitAnchor.addLine(@data.originalLine)
               @data.splitLine.ressurect()
               @data.constrainedAnchor.ressurect()
-              @data.constrainedAnchor.addConstraint(@data.constraint)
               @data.newLine.ressurect()
               @data.splitAnchor.draw()
               @data.constrainedAnchor.draw()
@@ -263,10 +261,8 @@ class CircularConstraint
               @data.line.remove()
             forwards: ->
               @data.anchor1.ressurect()
-              @data.anchor1.addConstraint(@data.constraint1)
               @data.anchor1.draw()
               @data.anchor2.ressurect()
-              @data.anchor2.addConstraint(@data.constraint2)
               @data.anchor2.draw()
               @data.line.ressurect()
               @data.line.draw()
@@ -287,7 +283,6 @@ class CircularConstraint
             @data.otherAnchor.remove()
           forwards: ->
             @data.otherAnchor.ressurect()
-            @data.otherAnchor.addConstraint(@data.constraint)
             @data.newAnchor.ressurect()
             @data.line.ressurect()
             @data.otherAnchor.draw()

@@ -29,8 +29,9 @@ class Line
 
   # clone the anchor's settings to a new line attached to the given anchors
   clone: (anchor1, anchor2) =>
-    line = new Line(@paper, anchor2, anchor1, @style)
+    line = new Line(@paper, anchor2, anchor1)
     # set the values for tgghge clone
+    line.style = @style
     line.labelPosition = @labelPosition
     line.width = @width
     line.color = @color
@@ -107,11 +108,12 @@ class Line
     # scale factor for the arrow
     A = 6
 
-    # coordinates of anchors to align along the line
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    # save a reference to the coordiantes of the first anchor
+    anchor1 = @anchor1.getCoordinates()
+    [x1, y1] = [anchor1.x, anchor1.y]
+    # save a reference to the coordiantes of the second anchor
+    anchor2 = @anchor2.getCoordinates()
+    [x2, y2] = [anchor2.x, anchor2.y]
 
     # compute the lengths between the anchors
     dx = x1 - x2
@@ -733,7 +735,6 @@ class Line
               @data.originalAnchor.draw()
             forwards: ->
               @data.newAnchor.ressurect()
-              @data.newAnchor.addConstraint(@data.constraint)
               @data.newAnchor.draw()
               @data.otherAnchor.removeLine(@data.originalLine)
               @data.splitAnchor.ressurect()

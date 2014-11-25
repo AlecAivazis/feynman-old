@@ -208,12 +208,10 @@ class Anchor
             constraint: onConstraint
           forwards: ->
             @data.anchor.ressurect()
-            @data.anchor.addConstraint(@data.constraint)
             @data.line.ressurect()
             @data.anchor.draw()
           backwards: ->
             @data.anchor.remove()
-            @data.anchor.removeConstraint()
             @data.line.remove()
       
 
@@ -473,11 +471,19 @@ class Anchor
     @paper.anchors =  _.without @paper.anchors, this
     # @lines = []
     if @constraint
+      # save a reference to the constraint we were attached to
+      @constrained = @constraint
+      # remove the constraint
       @removeConstraint()
 
 
   ressurect: =>
+    # add this anchor to the papers list
     @paper.anchors.push this
+    # if the anchor was constrained when we removed it
+    if @constrained
+      # add the constraint to the anchor
+      @addConstraint(@constrained)
     # @lines = []
     return this
 
@@ -556,3 +562,16 @@ class Anchor
      
   makeSelected: =>
     @element.addClass('selectedElement')
+
+
+  # return the displayed coordinates of the anchor
+  getCoordinates: =>
+    # if there is a constraint 
+    if @constraint
+      # return the constrained coordinates
+      @constraint.constrain(@x, @y)
+    # otherwise there is no constraint
+    else
+      # return the unconstrained coordinates
+      x: @x        
+      y: @y
