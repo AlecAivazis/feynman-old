@@ -442,18 +442,19 @@ class FeynmanCanvas
     # get the anchors
     anchors = _.filter @paper.anchors, (anchor) ->
       # within this range
-      return bound1x <= anchor.x <= bound2x and
-             bound1y <= anchor.y <= bound2y and
+      coords = anchor.getCoordinates()
+      return bound1x <= coords.x <= bound2x and
+             bound1y <= coords.y <= bound2y and
              # ignore the fixed anchors
              not anchor.fixed
 
     # get the lines
     lines = _.filter @paper.lines, (line) ->
-      midx = (line.anchor1.x + line.anchor2.x)/2
-      midy = (line.anchor1.y + line.anchor2.y)/2
+      anchor1 = line.anchor1.getCoordinates()
+      anchor2 = line.anchor2.getCoordinates()
       # within this range
-      return bound1x <= midx <= bound2x and
-             bound1y <= midy <= bound2y
+      return bound1x <= (anchor1.x + anchor2.x)/2 <= bound2x and
+             bound1y <= (anchor1.y + anchor2.y)/2 <= bound2y
 
     # get the constraints
     constraints = _.filter @paper.constraints, (constraint) ->

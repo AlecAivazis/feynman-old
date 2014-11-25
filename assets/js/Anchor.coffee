@@ -565,14 +565,13 @@ class Anchor
 
 
   # return the displayed coordinates of the anchor
-  getVisualCoordinates: =>
+  getCoordinates: =>
     # if there is a constraint 
     if @constraint
-      # get the constrained anchors
-      coords = @constraint.constrain(@x, @y)
-      # return the coordinates as a list
-      return [coords.x, coords.y]
+      # return the constrained coordinates
+      @constraint.constrain(@x, @y)
     # otherwise there is no constraint
     else
-      # return the unconstrained coordinates as a list
-      return [@x, @y]
+      # return the unconstrained coordinates
+      x: @x        
+      y: @y

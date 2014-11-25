@@ -108,9 +108,12 @@ class Line
     # scale factor for the arrow
     A = 6
 
-    # coordinates of anchors to align along the line
-    [x1, y1] = @anchor1.getVisualCoordinates()
-    [x2, y2] = @anchor2.getVisualCoordinates()
+    # save a reference to the coordiantes of the first anchor
+    anchor1 = @anchor1.getCoordinates()
+    [x1, y1] = [anchor1.x, anchor1.y]
+    # save a reference to the coordiantes of the second anchor
+    anchor2 = @anchor2.getCoordinates()
+    [x2, y2] = [anchor2.x, anchor2.y]
 
     # compute the lengths between the anchors
     dx = x1 - x2
