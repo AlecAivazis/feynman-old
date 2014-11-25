@@ -221,10 +221,12 @@ class Line
 
   # map the local coordinate system to the catesian plane of the canvas
   getLabelCoordinates: =>
-    x1 = @anchor1.x
-    y1 = @anchor1.y 
-    x2 = @anchor2.x
-    y2 = @anchor2.y 
+    # get the visual coordinates of the first anchor
+    anchor1 = @anchor1.getCoordinates()
+    [x1, y1] = [anchor1.x, anchor1.y]
+    # get the visual coordinates of the second anchor
+    anchor2 = @anchor2.getCoordinates()
+    [x2, y2] = [anchor2.x, anchor2.y]
 
     # the distance to be from the line
     r = @labelDistance
@@ -527,7 +529,7 @@ class Line
   draw: =>
   
     # if we're supposed to draw the arrow element
-    if @drawArrow and (@style == 'line'  or @style == 'dashed')
+    if @drawArrow and @style in ['line', 'dashed']
       # do so
       @drawArrowElement()
     # we're not supposed to draw the arrow
