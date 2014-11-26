@@ -460,8 +460,7 @@ class FeynmanCanvas
       return bound1x <= constraint.x <= bound2x and
              bound1y <= constraint.y <= bound2y
       
-
-    # add the selectedElement class to each anchor
+    # add the selectedElement class to each element
     _.each _.union(anchors, lines, constraints), (element) ->
       element.makeSelected()
 
