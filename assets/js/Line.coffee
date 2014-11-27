@@ -527,18 +527,22 @@ class Line
 
   # draw the line on the DOM
   draw: =>
+    
+    # if this element was previously selected
+    if @element and @element.hasClass('selectedElement')
+      isSelected = true
   
     # if we're supposed to draw the arrow element
     if @drawArrow and @style in ['line', 'dashed']
       # do so
       @drawArrowElement()
+      # if the line is selected
+      if isSelected
+        # add the appropriate class
+        @arrow.addClass('selectedArrow')
     # we're not supposed to draw the arrow
     else
       @removeArrow()
-    
-    # if this element was previously selected
-    if @element and @element.hasClass('selectedElement')
-      isSelected = true
 
     # clear any previous DOM elements
     @hide()
