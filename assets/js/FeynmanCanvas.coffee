@@ -691,11 +691,11 @@ class FeynmanCanvas
   # figure out the string type of the class
   getClassElement: (element) =>
     if element.anchor
-      return element.anchor
+      return [element.anchor, 'anchor']
     else if element.constraint  
-      return element.constraint
+      return [element.constraint, 'circle']
     else if element.line
-      return element.line
+      return [element.line, 'line']
 
 
   # when the mouse is pressed, regardless of drag or not
