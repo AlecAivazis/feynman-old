@@ -333,9 +333,13 @@ class Anchor
           # the forward action is to move to the current location
           forwards: ->
             @data[1].handleMove(@data[2], @data[3], false)
+            # update various labels
+            $(document).attr('canvas').draw()
           # the backwards action is to move to the origin as defined when the drag started
           backwards: ->
             @data[1].handleMove(@data[4], @data[5], false)
+            # update various labels
+            $(document).attr('canvas').draw()
         
     # there is more than one selected element
     else
