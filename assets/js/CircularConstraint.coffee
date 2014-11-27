@@ -33,7 +33,7 @@ class CircularConstraint
     # add the select event handler to the circle
     @element.node.onclick = (event)=>
       event.stopPropagation()
-      $(document).trigger 'selectedElement', [this, 'circle']
+      $(document).trigger 'selectedElement', this
 
     # if the element was selected before redrawing
     if isSelected
@@ -162,7 +162,7 @@ class CircularConstraint
 
     # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or not @element.hasClass('selectedElement')
-      $(document).trigger 'selectedElement', [this, 'circle']
+      $(document).trigger 'selectedElement', this
 
     # go set up whatever we need for the move
     $(document).trigger 'startMove'

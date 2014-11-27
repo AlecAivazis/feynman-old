@@ -578,7 +578,7 @@ class Line
     # add the click event handler
     @element.node.onclick = (event)=>
       event.stopPropagation()
-      $(document).trigger 'selectedElement', [this, 'line']
+      $(document).trigger 'selectedElement', this
 
 
   # when you start dragging a line
@@ -609,7 +609,7 @@ class Line
     # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or not @element.hasClass('selectedElement')
       # select this element
-      $(document).trigger 'selectedElement', [this, 'line']
+      $(document).trigger 'selectedElement', this
 
       @anchor1.origin_x = @anchor1.x
       @anchor1.origin_y = @anchor1.y

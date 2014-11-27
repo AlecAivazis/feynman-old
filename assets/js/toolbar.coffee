@@ -12,11 +12,21 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   $rootScope.showStartingPatterns = $.cookie('feynmanCanvas_showStartingPatterns') == "true"
 
   # add event handler for element selection
-  $(document).on 'selectedElement', (event, element, type) ->
+  $(document).on 'selectedElement', (event, element) ->
     # clear the previous selection
     $(document).trigger('clearSelection')
     # and add the class to the selected element
     element.element.addClass('selectedElement')
+  
+    # figure out the type of the element
+    if element.element.anchor
+      type = 'anchor'
+    else if element.element.line
+      type = 'line'
+    else if element.element.constraint
+      type = 'circle'
+    else if element.element.text
+      type = 'text'
 
     # load the type of element
     $scope.type = type
@@ -35,7 +45,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     # load the type independent attributes
     $scope.color = element.color
     $scope.selectedElement = element
-
     # apply the change in angular since this is done in the jquery environment
     $scope.$apply()
 
@@ -142,7 +151,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 anchor2.draw()
 
                 # select the newly created line
-                $(document).trigger 'selectedElement', [line, 'line']
+                $(document).trigger 'selectedElement', line
                 paletteData.selectedElement = line
                 # store the necessary data
                 paletteData.anchor1 = anchor1
@@ -165,7 +174,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 paletteData.selectedElement.draw()
 
                 # select the object
-                $(document).trigger 'selectedElement', [paletteData.selectedElement, 'text']
+                $(document).trigger 'selectedElement', paletteData.selectedElement
               
               when 'circle'
                 # compute the coordinates on the canvas
@@ -178,7 +187,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
                 # draw the constraint
                 paletteData.selectedElement.draw()
                 # select the object
-                $(document).trigger 'selectedElement', [paletteData.selectedElement, 'circle']
+                $(document).trigger 'selectedElement', paletteData.selectedElement
                 
             # prevent future drags from creating new elements
             paletteData.placedElement = true

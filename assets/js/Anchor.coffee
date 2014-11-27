@@ -83,7 +83,7 @@ class Anchor
     # when you click on the circle
     @element.node.onclick = =>
       event.stopPropagation()
-      $(document).trigger 'selectedElement', [this, 'anchor']
+      $(document).trigger 'selectedElement', this
 
     # update the associated lines after drawing the anchor
     _.each @lines, (line) ->
@@ -422,7 +422,7 @@ class Anchor
 
     # if there were no elements selected before this or the element was not previously selected
     if selected.length == 0 or not @element.hasClass('selectedElement')
-      $(document).trigger 'selectedElement', [this, 'anchor']
+      $(document).trigger 'selectedElement', this
 
     $(document).trigger 'startMove'
 

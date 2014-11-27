@@ -26,20 +26,23 @@ class Text
     # add it to the diagram group
     $(document).attr('canvas').addToDiagram(@element)
 
-    @element.text = this
-
+    # if the text object was previously selected
     if isSelected
+      # add the appropriate class to the element
       @element.addClass('selectedElement')
 
     # add the select event handler to the circle
     @element.node.onclick = (event)=>
       event.stopPropagation()
-      $(document).trigger 'selectedElement', [this, 'text']
+      $(document).trigger 'selectedElement', this
 
     @element.addClass('text')
 
     # add the event handlers
     @element.drag @onDrag, @dragStart, @onDragEnd
+
+    # add a reference to the text object
+    @element.text = this
 
 
   handleMove: (x, y) =>
@@ -69,7 +72,7 @@ class Text
       y: @y
 
     # select this element
-    $(document).trigger 'selectedElement', [this, 'text']
+    $(document).trigger 'selectedElement', this
 
 
   onDrag: (deltaX, deltaY, x, y, event) =>
