@@ -984,4 +984,9 @@ class Line
 
 
   makeSelected: =>
+    # add the selected element to the line
     @element.addClass('selectedElement')
+    # if the arrow is being displayed
+    if @arrow
+      # add the selected class to it
+      @arrow.addClass('selectedArrow')
