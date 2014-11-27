@@ -377,6 +377,10 @@ class Anchor
               entry.element.anchor.handleMove entry.x, entry.y
             else
               entry.element.handleMove entry.x, entry.y
+
+          # update the canvas
+          $(document).attr('canvas').draw()
+
         # the backwards action is to move the group to the origin as defined when the drag started
         backwards: ->
           _.each @data[0], (entry) ->
@@ -384,6 +388,9 @@ class Anchor
               entry.element.anchor.handleMove entry.origin_x, entry.origin_y
             else
               entry.element.handleMove entry.origin_x, entry.origin_y
+
+          # update the canvas
+          $(document).attr('canvas').draw()
 
     # draw any labels that need to be
     _.each _.compact(@lines), (line)->

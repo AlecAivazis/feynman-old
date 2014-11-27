@@ -904,6 +904,7 @@ class Line
                 entry.element.anchor.handleMove entry.x, entry.y
               else
                 entry.element.handleMove entry.x, entry.y
+            $(document).attr('canvas').draw()
           # the backwards action is to move the group to the origin as defined when the drag started
           backwards: ->
             _.each @data, (entry) ->
@@ -911,6 +912,7 @@ class Line
                 entry.element.anchor.handleMove entry.origin_x, entry.origin_y
               else
                 entry.element.handleMove entry.origin_x, entry.origin_y
+            $(document).attr('canvas').draw()
 
       else
         # register the move on the undo stack
