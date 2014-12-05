@@ -996,3 +996,5 @@ class Line
     if @arrow
       # add the selected class to it
       @arrow.addClass('selectedArrow')
+
+# end of file

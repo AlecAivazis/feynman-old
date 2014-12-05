@@ -76,3 +76,6 @@ $(document).ready ->
 
   # check the checkbox according to the cookie value
   $('#patternsOnStartup').prop 'checked', cookieVal in ["true", undefined]
+
+
+# end of file

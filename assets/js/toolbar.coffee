@@ -761,3 +761,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     
 
 ]
+
+
+# end of file

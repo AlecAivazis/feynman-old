@@ -543,7 +543,7 @@ class Anchor
     # grab the canvas grid size
     gridSize = $(document).attr('canvas').gridSize
     # if they want to snap everything to a grid
-    if gridSize > 0 and not @constraint
+    if gridSize > 0 and not @constraint and useGrid
       # find the nearest point on the grid
       @x = Math.round(x/gridSize)*gridSize
       @y = Math.round(y/gridSize)*gridSize
@@ -586,3 +586,6 @@ class Anchor
       # return the unconstrained coordinates
       x: @x        
       y: @y
+
+
+# end of file

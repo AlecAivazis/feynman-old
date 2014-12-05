@@ -99,9 +99,6 @@ class Text
           @data.element.handleMove(@data.newLoc.x, @data.newLoc.y)
         backwards: ->
           @data.element.handleMove(@data.origin.x, @data.origin.y)
-        
-          
 
 
-
-
+# end of file

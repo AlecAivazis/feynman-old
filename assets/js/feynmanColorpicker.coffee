@@ -13,3 +13,6 @@ angular.module 'feynman.colorpicker', ['colorpicker.module']
   link: (scope, elem, attr) ->
     $('.colorContainer').on 'click', ->
       $(this).siblings('.colorInput').eq(0).trigger('click')
+
+
+# end of file

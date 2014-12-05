@@ -50,3 +50,6 @@ class UndoMulti
   # check wether or not both of the stacks have contents
   isValid: =>
     return @forwardStack.length > 0 and @backwardStack.length > 0
+
+
+# end of file

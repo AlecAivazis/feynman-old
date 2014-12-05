@@ -16,3 +16,5 @@ class UndoEntry
 
     # add the entry to the undo stack
     $(document).trigger 'addEntryToUndo', [transparent, this]
+
+# end of file
