@@ -896,12 +896,16 @@ class FeynmanCanvas
     patternData =
       anchors: @paper.anchors.slice()
       lines: @paper.lines.slice()
+      constraints: @paper.constraints.slice()
 
     # the forward action is to clear the diagram and
     # ressurect the elements that are currently showing
     undo.addToForwards patternData, (data) ->
       # clear the canvas
       $(document).attr('canvas').clear()
+      # ressurect the constraints
+      _.each data.constraints, (element) ->
+        element.ressurect()
       # ressurect the anchors first
       _.each data.anchors, (element) ->
         element.ressurect()
