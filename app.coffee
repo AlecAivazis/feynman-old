@@ -2,7 +2,6 @@
 # import modules
 express = require "express" 
 routes = require "./routes" 
-user = require "./routes/user" 
 http = require "http" 
 path = require "path" 
 
@@ -22,7 +21,6 @@ app.locals.pretty = true
 
 # url configs
 app.get "/", routes.index
-app.get "/users", user.list
 
 # create the server
 http.createServer(app).listen app.get("port"), ->
