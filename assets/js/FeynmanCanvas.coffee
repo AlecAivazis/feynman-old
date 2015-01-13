@@ -556,10 +556,36 @@ class FeynmanCanvas
 
         # otherwise the new anchor was not created on a line
         else
-          # grab the line that the initial anchor is on
+
+          # check if the original anchor was created on an anchor
+          onAnchor = @isAnchorOnAnchor(@newAnchor)
+          # check if the original anchor was created on a line
           onLine = @isAnchorOnLine(@newAnchor)
+          # if such an anchor exists
+          if @isAnchorOnAnchor
+            console.log 'got ya!'
+            merged = @newAnchor.merge(onAnchor)
+            # register it with the undo stack
+            new UndoEntry false ,
+              title: "created vertex at #{@newAnchor.x}, #{@newAnchor.y}"
+              data: 
+                anchor: @newAnchor,
+                line: @newAnchor.lines[0]
+              forwards: ->
+                # resurrect the anchor
+                @data.anchor.ressurect()
+                # ressurect the line
+                @data.line.ressurect()
+                # draw the anchor
+                @data.anchor.draw()
+              backwards: ->
+                # remove the anchor
+                @data.anchor.remove()
+                # remove the line
+                @data.line.remove()
+
           # if such a line exists
-          if onLine
+          else if onLine
             # then the user created an anchor that is close enough to snap to a line
             # split the line
             split = onLine.split(@newAnchor.x, @newAnchor.y)
@@ -636,9 +662,9 @@ class FeynmanCanvas
                   @data.line.ressurect()
                   @data.constrainedAnchor.draw()
                   @data.otherAnchor.draw()
-                
-            # the anchor was not created on a constraint
+           # otherwise the propagator was standalone
             else
+
               # register it with the undo stack
               new UndoEntry false ,
                 title: 'created a standalone propagator'
