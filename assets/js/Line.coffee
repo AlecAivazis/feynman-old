@@ -527,7 +527,6 @@ class Line
 
   # draw the line on the DOM
   draw: =>
-    
     # if this element was previously selected
     if @element and @element.hasClass('selectedElement')
       isSelected = true
@@ -579,6 +578,9 @@ class Line
     @element.node.onclick = (event)=>
       event.stopPropagation()
       $(document).trigger 'selectedElement', this
+
+    # draw the lines label
+    @drawLabel()
 
 
   # when you start dragging a line
