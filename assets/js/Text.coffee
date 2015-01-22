@@ -22,7 +22,7 @@ class Text
         @border.remove()
     
     # use an image from codecogs public api
-    @element = @paper.image("http://latex.codecogs.com/svg.latex?#{@text}" , @x, @y)
+    @element = @paper.image("http://alec.aivazis.com/latex?isMath=False&equation=#{@text}" , @x, @y)
     # add it to the diagram group
     $(document).attr('canvas').addToDiagram(@element)
 
