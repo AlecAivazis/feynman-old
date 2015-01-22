@@ -595,6 +595,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     , 0
 
 
+  # export the diagram in the designated format
+  $scope.exportDiagram = (format) ->
+    # save a reference to the svg element
+    diagram = document.getElementById('canvas')
+    # export the diagram to a png
+    console.log diagram
+
+
   # update the properties of the appropriate element when we change the selectedElements 
   # the only reason to do this is because some attributes are not settable with foo.bar = 2
   # or we need to call the appropriate draw after the variable is reset

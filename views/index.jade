@@ -2,6 +2,10 @@ extends base
 
 append js
 
+  script(type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js")
+  script(type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js")
+  script(type="text/javascript" src="/js/svgDataURL.js")
+
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
   script(type="text/javascript" 
          src="/thirdparty/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js")
@@ -69,6 +73,9 @@ block content
             | hide anchors
           span.button.enabled(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
             | show anchors
+
+        .diagramProperty
+            span.button.enabled(ng-click="exportDiagram('svg')") export
 
       
       // WARNING: this id can't change without reflecting it in the javascript
