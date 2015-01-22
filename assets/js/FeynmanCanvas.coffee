@@ -1,5 +1,5 @@
-# this file handles the instantiation of the default elements as well as the paper based
-# event handlers like group selection,
+# this class handles the instantiation of the default elements as well as the paper based
+# event handlers like group selection
 #
 # author: alec aivazis
 
@@ -483,6 +483,7 @@ class FeynmanCanvas
       onAnchor = @isAnchorOnAnchor(@currentAnchor)
       # if the newly created anchor was merged
       if onAnchor
+        # merge the anchor with the overlapping on
         merged = @currentAnchor.merge(onAnchor)
         # register it with the undo stack
         new UndoEntry false ,
@@ -556,14 +557,13 @@ class FeynmanCanvas
 
         # otherwise the new anchor was not created on a line
         else
-
           # check if the original anchor was created on an anchor
           onAnchor = @isAnchorOnAnchor(@newAnchor)
           # check if the original anchor was created on a line
           onLine = @isAnchorOnLine(@newAnchor)
           # if such an anchor exists
-          if @isAnchorOnAnchor
-            console.log 'got ya!'
+          if onAnchor
+            # merge the anchor with the overlapping one
             merged = @newAnchor.merge(onAnchor)
             # register it with the undo stack
             new UndoEntry false ,

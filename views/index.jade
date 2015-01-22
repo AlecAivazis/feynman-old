@@ -43,8 +43,7 @@ block content
       
       #diagramProperties
         .diagramProperty
-          .label
-            | title
+          .label title
           .value
             input(type="text" ng-model="$parent.title" name="label")
 
@@ -85,10 +84,8 @@ block content
         #historyContent(ng-show="showHistory == true")
           .historyItem(ng-repeat="event in queue | reverse" ng-click="goTo(event.id)"
                        ng-class="{current : event.id == current, disabled: event.id > current}")
-            span.id
-              | {{event.id}} : 
-            span.title
-              | {{event.title}}
+            span.id {{event.id}} :
+            span.title {{event.title}}
      
       #toolbar(ng-cloak)
 
@@ -114,8 +111,7 @@ block content
                 img.paletteItem(element="dashed" src="/images/dashed.png")
               td
                 img.paletteItem(element="text" src="/images/text.png")
-          #showStartingPatterns.button(onclick="showPatterns()")
-            | patterns...
+          #showStartingPatterns.button(onclick="showPatterns()") patterns...
                   
         #selectedElementProperties(ng-show="selectedElement != false")
 
@@ -153,18 +149,12 @@ block content
 
             .property
               select(ng-model="selectedElement.style")
-                option(value = 'line')
-                  | line
-                option(value = 'dashed')
-                  | dashed
-                option(value = 'gluon')
-                  | gluon
-                option(value = 'em')
-                  | em
-                option(value = 'gluino')
-                  | gluino
-                option(value = 'sfermion')
-                  | sfermion
+                option(value = 'line')     line
+                option(value = 'dashed')   dashed
+                option(value = 'gluon')    gluon
+                option(value = 'em')       em
+                option(value = 'gluino')   gluino
+                option(value = 'sfermion') sfermion
 
             .property(ng-show="selectedElement.style == 'line'")
               span.button(ng-click="selectedElement.drawArrow = true" 
@@ -209,8 +199,7 @@ block content
 
           .property
             select(ng-model="selectedElement.style")
-              option(value = 'parton')
-                | parton
+              option(value = 'parton') parton
 
           .property
             span.button.delete(ng-click="removeSelectedElements()")
@@ -289,65 +278,41 @@ block content
             | show
         #footerContent(ng-show="showFooter == true" ng-init="showFooter = true")
           .hotkey
-            span.hotkeyTitle
-              | Select element:
-            span.hotkeyDescription
-              | Left click
+            span.hotkeyTitle Select element:
+            span.hotkeyDescription Left click
           .hotkey
-            span.hotkeyTitle
-              | Select multiple elements:
-            span.hotkeyDescription
-              | Drag on canvas
+            span.hotkeyTitle Select multiple elements:
+            span.hotkeyDescription Drag on canvas
           .hotkey
-            span.hotkeyTitle
-              | New anchor:
-            span.hotkeyDescription
-              | alt + click
+            span.hotkeyTitle New anchor:
+            span.hotkeyDescription alt + click
           .hotkey
-            span.hotkeyTitle
-              | New propagator:
-            span.hotkeyDescription
-              | alt + drag
+            span.hotkeyTitle New propagator:
+            span.hotkeyDescription alt + drag
           .hotkey
-            span.hotkeyTitle
-              | New branch:
-            span.hotkeyDescription
-              | alt + drag from an existing element
+            span.hotkeyTitle New branch:
+            span.hotkeyDescription alt + drag from an existing element
           .hotkey
-            span.hotkeyTitle
-              | Move element/label:
-            span.hotkeyDescription
-              | Drag
+            span.hotkeyTitle Move element/label:
+            span.hotkeyDescription Drag
           .hotkey
-            span.hotkeyTitle
-              | Delete selected element:
-            span.hotkeyDescription
-              | bkspace or delete
+            span.hotkeyTitle Delete selected element:
+            span.hotkeyDescription bkspace or delete
           .hotkey
-            span.hotkeyTitle
-              | Constrain element to circle:
-            span.hotkeyDescription
-              | Drag from pallet and drop on anchor or alt + drag from existing circle
+            span.hotkeyTitle Constrain element to circle:
+            span.hotkeyDescription Drag from pallet and drop on anchor or alt + drag from existing circle
           .hotkey
-            span.hotkeyTitle
-              | Undo:
-            span.hotkeyDescription
-              | ctrl + z
+            span.hotkeyTitle Undo:
+            span.hotkeyDescription ctrl + z
           .hotkey
-            span.hotkeyTitle
-              | Redo:
-            span.hotkeyDescription
-              | shift + ctrl + z
+            span.hotkeyTitle Redo:
+            span.hotkeyDescription shift + ctrl + z
           .hotkey
-            span.hotkeyTitle
-              | Pan:
-            span.hotkeyDescription
-              | space + drag
+            span.hotkeyTitle Pan:
+            span.hotkeyDescription space + drag
           .hotkey
-            span.hotkeyTitle
-              | Zoom:
-            span.hotkeyDescription
-              | scroll wheel
+            span.hotkeyTitle Zoom:
+            span.hotkeyDescription scroll wheel
               
           
         // alt dragging moving the window instead 
