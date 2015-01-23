@@ -5,6 +5,7 @@ append js
   script(type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js")
   script(type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js")
   script(type="text/javascript" src="/js/svgDataURL.js")
+  script(type="text/javascript" src="/thirdparty/FileSaver/FileSaver.js")
 
   script(type="text/javascript" src="/thirdparty/snap.svg/dist/snap.svg.js")
   script(type="text/javascript" 
@@ -75,7 +76,7 @@ block content
             | show anchors
 
         .diagramProperty
-            span.button.enabled(ng-click="exportDiagram('svg')") export
+            //span.button.enabled(ng-click="exportDiagram('svg')") export
 
       
       // WARNING: this id can't change without reflecting it in the javascript

@@ -597,10 +597,14 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   # export the diagram in the designated format
   $scope.exportDiagram = (format) ->
+
     # save a reference to the svg element
     diagram = document.getElementById('canvas')
     # export the diagram to a png
-    console.log diagram
+    diagram.toDataURL "image/png",
+      debug: false
+      callback: (data) ->
+        console.log data
 
 
   # update the properties of the appropriate element when we change the selectedElements 
@@ -774,6 +778,46 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     
 
 ]
+
+
+# get the base 64 representation of a given image
+getBase64Image = (img) ->
+  # Create an empty canvas element
+  canvas = document.createElement("canvas")
+  canvas.width = img.width
+  canvas.height = img.height
+
+  # Copy the image contents to the canvas
+  ctx = canvas.getContext("2d")
+  ctx.drawImage(img, 0, 0)
+
+  # Get the data-URL formatted image
+  # Firefox supports PNG and JPEG. You could check img.src to
+  # guess the original format, but be aware the using "image/jpg"
+  # will re-encode the image.
+  dataURL = canvas.toDataURL("image/png")
+
+  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "")
+
+# create a javascript blob out of the given dataURL
+dataURLtoBlob = (dataURL) ->
+    # convert base64/URLEncoded data component to raw binary data held in a string
+    byteString = ''
+
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURI.split(',')[1])
+    else
+        byteString = unescape(dataURI.split(',')[1])
+
+    # separate out the mime component
+    mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+    # write the bytes of the string to a typed array
+    ia = new Uint8Array(byteString.length)
+    for i in [0..byteString.length]
+        ia[i] = byteString.charCodeAt(i)
+
+    return new Blob([ia], {type:mimeString})
 
 
 # end of file
