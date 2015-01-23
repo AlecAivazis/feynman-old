@@ -39,11 +39,12 @@
     ¹ http://svgopen.org/2010/papers/62-From_SVG_to_Canvas_and_Back/#svg_to_canvas
 */
 
+
 SVGElement.prototype.toDataURL = function(type, options) {
     var _svg = this;
     
     function debug(s) {
-        console.log("SVG.toDataURL:", s);
+        // console.log("SVG.toDataURL:", s);
     }
 
     function exportSVG() {
@@ -149,8 +150,8 @@ SVGElement.prototype.toDataURL = function(type, options) {
         var svg_xml = XMLSerialize(_svg);
 
         // NOTE: canvg gets the SVG element dimensions incorrectly if not specified as attributes
-        //debug("detected svg dimensions " + [_svg.clientWidth, _svg.clientHeight])
-        //debug("canvas dimensions " + [canvas.width, canvas.height])
+        debug("detected svg dimensions " + [_svg.clientWidth, _svg.clientHeight])
+        debug("canvas dimensions " + [canvas.width, canvas.height])
 
         var keepBB = options.keepOutsideViewport;
         if (keepBB) var bb = _svg.getBBox();

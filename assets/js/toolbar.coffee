@@ -597,14 +597,18 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   # export the diagram in the designated format
   $scope.exportDiagram = (format) ->
-
     # save a reference to the svg element
-    diagram = document.getElementById('canvas')
+    diagram = document.getElementById('canvas').clone()
+    console.log $(diagram)
+    # grab the bounding box of the document
+    bb = $(document).attr('canvas').diagramGroup.getBBox()
+    # set the dimensions of the svg element
+    $(diagram).attr('width', bb.width)
+    $(diagram).attr('height', bb.height)
     # export the diagram to a png
     diagram.toDataURL "image/png",
-      debug: false
       callback: (data) ->
-        console.log data
+        saveAs dataURLtoBlob(data), "diagram.png"
 
 
   # update the properties of the appropriate element when we change the selectedElements 
@@ -804,13 +808,13 @@ dataURLtoBlob = (dataURL) ->
     # convert base64/URLEncoded data component to raw binary data held in a string
     byteString = ''
 
-    if (dataURI.split(',')[0].indexOf('base64') >= 0)
-        byteString = atob(dataURI.split(',')[1])
+    if (dataURL.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURL.split(',')[1])
     else
-        byteString = unescape(dataURI.split(',')[1])
+        byteString = unescape(dataURL.split(',')[1])
 
     # separate out the mime component
-    mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0]
 
     # write the bytes of the string to a typed array
     ia = new Uint8Array(byteString.length)
