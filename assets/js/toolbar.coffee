@@ -598,7 +598,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
   # export the diagram in the designated format
   $scope.exportDiagram = (format) ->
     # save a reference to the svg element
-    diagram = document.getElementById('canvas').clone()
+    diagram = $('#canvas')[0]
     console.log $(diagram)
     # grab the bounding box of the document
     bb = $(document).attr('canvas').diagramGroup.getBBox()
@@ -606,7 +606,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $(diagram).attr('width', bb.width)
     $(diagram).attr('height', bb.height)
     # export the diagram to a png
-    diagram.toDataURL "image/png",
+    $(diagram).toDataURL "image/png",
       callback: (data) ->
         saveAs dataURLtoBlob(data), "diagram.png"
 
