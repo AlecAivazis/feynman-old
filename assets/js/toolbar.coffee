@@ -597,9 +597,12 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   # export the diagram in the designated format
   $scope.exportDiagram = (format) ->
+
     # save a reference to the svg element
-    diagram = $('#canvas')[0]
-    console.log $(diagram)
+    diagram = $('#canvas').clone()
+    # remove the anchors from the diagram
+    $(diagram).find('.anchor').remove()
+
     # grab the bounding box of the document
     bb = $(document).attr('canvas').diagramGroup.getBBox()
     # set the dimensions of the svg element
