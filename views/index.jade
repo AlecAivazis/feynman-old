@@ -51,7 +51,7 @@ block content
         .diagramProperty
           .label title
           .value
-            input(type="text" ng-model="$parent.title" name="label")
+            input(type="text" ng-model="$parent.title" name="label" placeholder="Enter a title for your diagram")
 
         .diagramProperty
           .label
@@ -77,8 +77,8 @@ block content
             | show anchors
 
         .diagramProperty
-            span.button.enabled(style="text-transform: none", ng-click="exportDiagram('svg')") 
-              | Export as png
+            // span.button.enabled(style="text-transform: none", ng-click="exportDiagram('svg')") 
+            //  | Export as PNG
 
       
       // WARNING: this id can't change without reflecting it in the javascript
@@ -122,6 +122,10 @@ block content
               td
                 img.paletteItem(element="text" src="/images/text.png")
           #showStartingPatterns.button(onclick="showPatterns()") patterns...
+          #credit
+            | by 
+            a(href="http://alec.aivazis.com" target="_blank")
+              | Alec Aivazis
                   
         #selectedElementProperties(ng-show="selectedElement != false")
 

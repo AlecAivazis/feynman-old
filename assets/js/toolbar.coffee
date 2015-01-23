@@ -602,6 +602,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     diagram = $('#canvas').clone()
     # remove the anchors from the diagram
     $(diagram).find('.anchor').remove()
+    # remove the grid from the diagram
+    $(diagram).find('.grid').remove()
 
     # grab the bounding box of the document
     bb = $(document).attr('canvas').diagramGroup.getBBox()
