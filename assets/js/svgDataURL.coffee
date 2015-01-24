@@ -128,6 +128,7 @@
 
         # encode a string in base64
         base64dataURLencode = (string) ->
+            console.log(string)
             # the output starts with the header for base64 images
             b64 = "data:image/svg+xml;base64" 
 
@@ -136,13 +137,13 @@
                 # log that we are converting to base64 using the native implementation
                 debug("using window.btoa for base64 encoding")
                 # add to the output
-                b64 += btoa(s)
+                b64 += btoa(string)
             # otherwise the browser does not support native base 64 encoding
             else
                 # log that we are using a custom encoding
                 debug("using custom base64 encoder")
                 #  add the encoding to the output
-                b64 += Base64.encode(s)
+                b64 += Base64.encode(string)
 
 
         # export the image to a raster version
@@ -230,7 +231,7 @@
                     debug("exported image dimensions #{canvas.width}, #{canvas.height}")
                     png_dataurl = canvas.toDataURL(type)
                     debug("#{type} length: #{png_dataurl.length}")
-                    #console.log "#{width}, #{height}, #{x1}, #{y1}"
+                    console.log "#{width}, #{height}, #{x1}, #{y1}"
         
                     if (options.callback)
                         options.callback(png_dataurl)

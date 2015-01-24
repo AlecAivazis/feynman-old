@@ -612,11 +612,29 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $(diagram).attr('x1', bb.x1)
     $(diagram).attr('y1', bb.y1)
 
-    # export the diagram to a png
-    $(diagram).toDataURL "image/png",
-      keepOutsideViewport: true
-      callback: (data) ->
-        saveAs dataURLtoBlob(data), "diagram.png"
+
+    # export the diagram to the requested format
+    switch format
+      # if they asked for a png
+      when "png"
+        # convert the diagram to a png data url
+        $(diagram).toDataURL "image/png",
+          keepOutsideViewport: true
+          callback: (data) ->
+            # and save it as a named blob
+            saveAs dataURLtoBlob(data), "diagram.png"
+      # if they asked for the latex 
+      when "latex"
+        console.log 'converting the diagram to TikZ'
+      # if they asked for an 
+      when "svg"
+        # convert the diagram to a png data url
+        $(diagram).toDataURL "image/svg+xml",
+          keepOutsideViewport: true
+          callback: (data) ->
+            console.log dataURLtoBlob(data)
+            # and save it as a named blob
+            #saveAs dataURLtoBlob(data), "diagram.svg"
 
 
   # update the properties of the appropriate element when we change the selectedElements 
@@ -794,23 +812,36 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
 # create a javascript blob out of the given dataURL
 dataURLtoBlob = (dataURL) ->
-    # convert base64/URLEncoded data component to raw binary data held in a string
-    byteString = ''
+    # the string indicating base 64
+    BASE64_MARKER = ';base64,'
+    # if the dataURL is not in base64
+    if (dataURL.indexOf(BASE64_MARKER) == -1) 
+        # splite the url into the various parts
+        parts = dataURL.split(',')
+        # grab the content type
+        contentType = parts[0].split(':')[1]
+        # and the raw data
+        raw = decodeURIComponent(parts[1])
+        # create a blob out of the data with thet appropriate content type
+        return new Blob([raw], {type: contentType})
+    
+    # grab the parts of the base64 string
+    parts = dataURL.split(BASE64_MARKER)
+    # save a reference to the content type
+    contentType = parts[0].split(':')[1]
+    # decode the string
+    raw = window.atob(parts[1])
+    # save the string's length
+    rawLength = raw.length
+    # make a bit array for the string
+    uInt8Array = new Uint8Array(rawLength)
+    for i in [0..rawLength]
+        # copy the character into the bit array
+        uInt8Array[i] = raw.charCodeAt(i)
 
-    if (dataURL.split(',')[0].indexOf('base64') >= 0)
-        byteString = atob(dataURL.split(',')[1])
-    else
-        byteString = unescape(dataURL.split(',')[1])
+    # return a blob made out of the bit array
+    return new Blob([uInt8Array], {type: contentType});
 
-    # separate out the mime component
-    mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0]
-
-    # write the bytes of the string to a typed array
-    ia = new Uint8Array(byteString.length)
-    for i in [0..byteString.length]
-        ia[i] = byteString.charCodeAt(i)
-
-    return new Blob([ia], {type:mimeString})
 
 
 # end of file
