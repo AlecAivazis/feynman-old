@@ -357,6 +357,37 @@ class FeynmanCanvas
     @addToDiagram @selectionRect_element
 
 
+  # return the bounding box of the diagram
+  getDiagramBoundingBox: ->
+    # the coordinates of the upper left corner of the box
+    [x1, y1] = [0,0]
+    # the coordinates of the lowre right corner of the box
+    [x2, y2] = [0,0]
+    # go over each anchor
+    _.each @paper.anchors, (anchor) ->
+      # if the anchor is to the left of the left coordindates
+      if anchor.x < x1
+        # set upper coordinate x value
+        x1 = anchor.x
+      if anchor.y < y1
+        # set the upper cordinate y value
+        y1 = anchor.y
+
+      # if the anchor is to the right of the right coordindates
+      if anchor.x > x2
+        # set lower coordinate x value
+        x2 = anchor.x
+      if anchor.y > y2
+        # set the lower cordinate y value
+        y2 = anchor.y
+
+    # return the bounding box as an object with the appropriate values
+    x1: x1
+    y1: y1
+    x2: x2
+    y2: y2
+    width: Math.abs(x1-x2)
+    height: Math.abs(y1-y2)
 
   # handle drags on the paper
   # should draw a selection rectangle

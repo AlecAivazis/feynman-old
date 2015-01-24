@@ -600,10 +600,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
     # save a reference to the svg element
     diagram = $('#canvas').clone()
-    # remove the anchors from the diagram
-    $(diagram).find('.anchor').remove()
-    # remove the grid from the diagram
-    $(diagram).find('.grid').remove()
+    # remove the anchors and grid from the diagram
+    $(diagram).find('.anchor, .grid').remove()
 
     # grab the bounding box of the document
     bb = $(document).attr('canvas').diagramGroup.getBBox()
@@ -788,25 +786,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
 ]
 
-
-# get the base 64 representation of a given image
-getBase64Image = (img) ->
-  # Create an empty canvas element
-  canvas = document.createElement("canvas")
-  canvas.width = img.width
-  canvas.height = img.height
-
-  # Copy the image contents to the canvas
-  ctx = canvas.getContext("2d")
-  ctx.drawImage(img, 0, 0)
-
-  # Get the data-URL formatted image
-  # Firefox supports PNG and JPEG. You could check img.src to
-  # guess the original format, but be aware the using "image/jpg"
-  # will re-encode the image.
-  dataURL = canvas.toDataURL("image/png")
-
-  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "")
 
 # create a javascript blob out of the given dataURL
 dataURLtoBlob = (dataURL) ->
