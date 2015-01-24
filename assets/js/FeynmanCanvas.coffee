@@ -929,7 +929,7 @@ class FeynmanCanvas
           drawArrow: true
           flipArrow: true
         lowerLeftFermion = new Line @paper, leftAnchorLow, leftAnchorMid,
-          label: '\\anti{l}'
+          label: '\\overline{l}'
           drawArrow: true
 
         # the outgoing fermion
@@ -941,7 +941,7 @@ class FeynmanCanvas
           label: 'l'
           drawArrow: true
         lowerRightFermion = new Line @paper, rightAnchorLow, rightAnchorMid,
-          label: '\\anti{l}'
+          label: '\\overline{l}'
           drawArrow: true
           flipArrow: true
 
