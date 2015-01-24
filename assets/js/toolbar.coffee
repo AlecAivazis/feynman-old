@@ -604,12 +604,17 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
     $(diagram).find('.anchor, .grid').remove()
 
     # grab the bounding box of the document
-    bb = $(document).attr('canvas').diagramGroup.getBBox()
+    bb = $(document).attr('canvas').getDiagramBoundingBox()
     # set the dimensions of the svg element
     $(diagram).attr('width', bb.width)
     $(diagram).attr('height', bb.height)
+    # set the offset variables of the svg element
+    $(diagram).attr('x1', bb.x1)
+    $(diagram).attr('y1', bb.y1)
+
     # export the diagram to a png
     $(diagram).toDataURL "image/png",
+      keepOutsideViewport: true
       callback: (data) ->
         saveAs dataURLtoBlob(data), "diagram.png"
 

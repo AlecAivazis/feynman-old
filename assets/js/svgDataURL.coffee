@@ -208,26 +208,31 @@
             keepBB = options.keepOutsideViewport
             # if it is true
             if (keepBB)
+                debug("using a custom bounding box")
                 # save a reference to the bounding box
-                bb = _svg.getBBox()
+                width = $(_svg).attr('width')
+                height = $(_svg).attr('height')
+                x1 = $(_svg).attr('x1')
+                y1 = $(_svg).attr('y1')
 
             # render the svg element using canvg
             # NOTE: this canvg call is synchronous and blocks
             canvg canvas, xml, 
-                ignoreMouse: true, ignoreAnimation: true,
-                offsetX: if keepBB then -bb.x else undefined, 
-                offsetY: if keepBB then -bb.y else undefined,
-                scaleWidth: if keepBB then bb.width+bb.x else undefined,
-                scaleHeight: if keepBB then bb.height+bb.y else undefined,
+                ignoreMouse: true, ignoreAnimation: true
+                offsetX: if keepBB then -x1 else undefined
+                offsetY: if keepBB then -y1 else undefined
+                scaleWidth: if keepBB then width else undefined
+                scaleHeight: if keepBB then height else undefined
+                useCORS: true
                 renderCallback: () ->
-                    debug("exported image dimensions " + [canvas.width, canvas.height])
+                    debug("exported image dimensions #{canvas.width}, #{canvas.height}")
                     png_dataurl = canvas.toDataURL(type)
-                    debug(type + " length: " + png_dataurl.length)
+                    debug("#{type} length: #{png_dataurl.length}")
         
                     if (options.callback)
-                        options.callback( png_dataurl )
+                        options.callback(png_dataurl)
 
-            # NOTE: return in addition to callback
+            # return dataURL in addition to performing callback
             return canvas.toDataURL(type)
 
 
