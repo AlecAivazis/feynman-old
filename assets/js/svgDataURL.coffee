@@ -209,11 +209,14 @@
             # if it is true
             if (keepBB)
                 debug("using a custom bounding box")
+                # the padding for the bounding box
+                padding = options.padding
                 # save a reference to the bounding box
-                width = $(_svg).attr('width')
-                height = $(_svg).attr('height')
-                x1 = $(_svg).attr('x1')
-                y1 = $(_svg).attr('y1')
+                width = parseInt($(_svg).attr('width')) - (2 * padding)
+                height = parseInt($(_svg).attr('height')) - (2 * padding)
+                x1 = parseInt($(_svg).attr('x1')) - padding
+                y1 = parseInt($(_svg).attr('y1')) - padding
+                console.log width
 
             # render the svg element using canvg
             # NOTE: this canvg call is synchronous and blocks
@@ -225,9 +228,10 @@
                 scaleHeight: if keepBB then height else undefined
                 useCORS: true
                 renderCallback: () ->
-                    debug("exported image dimensions #{canvas.width}, #{canvas.height}")
+                    console.log("exported image dimensions #{canvas.width}, #{canvas.height}")
                     png_dataurl = canvas.toDataURL(type)
-                    debug("#{type} length: #{png_dataurl.length}")
+                    console.log("#{type} length: #{png_dataurl.length}")
+                    console.log "#{width}, #{height}, #{x1}, #{y1}"
         
                     if (options.callback)
                         options.callback(png_dataurl)
@@ -292,6 +296,7 @@
         callback: undefined
         keepNonSafe: false
         keepOutsideViewport: false
+        padding: 15
 ) jQuery
 
 # end of file
