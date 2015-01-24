@@ -1,0 +1,21 @@
+//- -*- Jade -*-
+//- -*- coding: utf-8 -*-
+//-
+//- Alec Aivazis <alec@aivazis.com>
+//- 
+//- (c) 2009-2015 all rights reserved
+//-
+
+extends base
+
+- load staticfiles
+
+append css
+  link(rel="stylesheet", type="text/stylus", href="{% static 'styles/default.styl' %}")
+
+append js
+  script(src="{% static 'scripts/core.coffee' %}", type="text/coffeescript")
+
+append content
+
+//- end of file

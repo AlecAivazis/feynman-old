@@ -1,0 +1,24 @@
+//- -*- Jade -*-
+//- -*- coding: utf-8 -*-
+//-
+//- Alec Aivazis <alec@aivazis.com>
+//- 
+//- (c) 2009-2015 all rights reserved
+//-
+
+- load compress
+
+html
+  head
+    {% compress css %}
+    block css
+    {% endcompress %}
+
+    {% compress js %}
+    block js
+    {% endcompress %}
+
+  body
+    block content
+
+//- end of file
