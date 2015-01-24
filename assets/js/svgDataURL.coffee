@@ -216,7 +216,6 @@
                 height = parseInt($(_svg).attr('height')) - (2 * padding)
                 x1 = parseInt($(_svg).attr('x1')) - padding
                 y1 = parseInt($(_svg).attr('y1')) - padding
-                console.log width
 
             # render the svg element using canvg
             # NOTE: this canvg call is synchronous and blocks
@@ -228,10 +227,10 @@
                 scaleHeight: if keepBB then height else undefined
                 useCORS: true
                 renderCallback: () ->
-                    console.log("exported image dimensions #{canvas.width}, #{canvas.height}")
+                    debug("exported image dimensions #{canvas.width}, #{canvas.height}")
                     png_dataurl = canvas.toDataURL(type)
-                    console.log("#{type} length: #{png_dataurl.length}")
-                    console.log "#{width}, #{height}, #{x1}, #{y1}"
+                    debug("#{type} length: #{png_dataurl.length}")
+                    #console.log "#{width}, #{height}, #{x1}, #{y1}"
         
                     if (options.callback)
                         options.callback(png_dataurl)
