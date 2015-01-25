@@ -99,7 +99,7 @@ block content
         span.button.enabled(ng-click="hideAnchors = false" ng-show="hideAnchors == true")
           | show anchors
 
-      .diagramProperty
+      .diagramProperty.hidden
           span.button.enabled(style="text-transform: none", ng-click="exportDiagram('png')") 
             | Export PNG
           span.button.enabled(style="text-transform: none", ng-click="exportDiagram('svg')") 
