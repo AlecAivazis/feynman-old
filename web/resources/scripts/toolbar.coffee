@@ -5,6 +5,8 @@
 
 # create the angular module 
 app = angular.module 'feynman', [ 'ui.slider', 'undo', 'feynman.colorpicker']
+
+
 # define the controller for the properties menu
 app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootScope, $timeout, $cookies) ->
 
@@ -667,7 +669,6 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       $(document).attr('canvas').gridSize = parseInt(newVal)
       # redraw the canvas
       $(document).attr('canvas').draw()
-
 
   $scope.$watch 'hideAnchors', (newVal, oldVal) ->
     if $(document).attr 'canvas'

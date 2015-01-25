@@ -70,7 +70,7 @@ Handlebars.registerHelper 'pattern', ->
   element = """
     <div class="pattern" onclick="renderPattern('#{pattern}')">
       <div class="title">#{title}</div>
-      <img src="/images/patterns/#{image}">
+      <img src="/static/images/patterns/#{image}">
     </div>
   """
   # return the string in a handlebar safe manner

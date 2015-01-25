@@ -172,7 +172,7 @@ class Line
     # grab the label coordinates
     labelCoords = @getLabelCoordinates()
     # create the element
-    @labelElement = @paper.image("http://localhost:8000/latex?equation=#{@label}", labelCoords.x,
+    @labelElement = @paper.image("http://latex.codecogs.com/gif.latex?#{@label}", labelCoords.x,
                                                                                    labelCoords.y)
     # add it to the diagram
     $(document).attr('canvas').addToDiagram @labelElement

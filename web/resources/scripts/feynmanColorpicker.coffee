@@ -2,7 +2,7 @@
 #
 # author: alec aivazis
 
-angular.module 'feynman.colorpicker', ['colorpicker.module']
+angular.module('feynman.colorpicker', ['colorpicker.module'])
 
 .directive 'colorPicker', ->
   restrict: 'EA'

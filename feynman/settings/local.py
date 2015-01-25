@@ -13,7 +13,7 @@ from .feynman import *
 # enable debugging support
 DEBUG = True
 TEMPLATE_DEBUG = True
-COMPRESS_DEBUG_TOGGLE = True
+COMPRESS_DEBUG_TOGGLE = False
 
 # add django_toolbar to the installed apps
 INSTALLED_APPS += ("debug_toolbar", )
