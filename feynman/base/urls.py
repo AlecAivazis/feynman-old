@@ -10,7 +10,6 @@
 
 # python imports
 from django.conf.urls import url, patterns
-from django.views.generic import TemplateView
 
 # import the views from the base application
 from .views import *
@@ -18,6 +17,7 @@ from .views import *
 # base urls
 urlpatterns = patterns('',
     url(r'(?i)^$', home),
+    url(r'(?i)^latex/$', RenderLatex.as_view()),
 )
 
 # end of file

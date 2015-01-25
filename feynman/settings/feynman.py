@@ -77,13 +77,9 @@ COMPRESS_OUTPUT_DIR = "cache"
 stylus_conf = ('-u jeet -u axis -u rupture -I ' +
                os.path.join(RESOURCES,'styles') +' < {infile} > {outfile}')
 
-print(stylus_conf)
-
 COMPRESS_PRECOMPILERS = (
     ('text/stylus', 'stylus '+ stylus_conf),
     ('text/coffeescript', 'coffee --compile --stdio -b'),
 )
-
-
 
 # end of file

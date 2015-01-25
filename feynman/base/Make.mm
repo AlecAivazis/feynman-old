@@ -13,6 +13,7 @@ PACKAGE = base
 # the list of directories to visit
 RECURSE_DIRS = \
     migrations \
+    templatetags 
 
 # the list of python modules
 EXPORT_PYTHON_MODULES = \

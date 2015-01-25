@@ -15,7 +15,7 @@ PROJ_CLEAN = $(EXPORT_MODULEDIR)
 # the list of directories to visit
 RECURSE_DIRS = \
     base \
-    settings \
+    settings 
 
 # the list of python modules
 EXPORT_PYTHON_MODULES = \
