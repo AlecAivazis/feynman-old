@@ -16,7 +16,7 @@ from .views import *
 
 # base urls
 urlpatterns = patterns('',
-    url(r'(?i)^$', home),
+    url(r'(?i)^$', Home.as_view()),
     url(r'(?i)^latex/$', RenderLatex.as_view()),
 )
 

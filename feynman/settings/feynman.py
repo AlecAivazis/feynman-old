@@ -26,6 +26,7 @@ third_party_apps = (
  )
 
 feynman_apps = (
+    'feynman.base',
 )
 
 INSTALLED_APPS = django_apps + third_party_apps + feynman_apps

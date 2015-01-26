@@ -8,6 +8,11 @@
 
 # this file describes the base views for feynman
 
+# python imports
+import os
+from subprocess import call, PIPE, Popen
+import tempfile
+
 # django imports
 from django.shortcuts import render_to_response
 
@@ -16,10 +21,14 @@ from django.http import HttpResponse
 from django.template import Context
 from django.template.loader import get_template
 
+
 # index view
 def home(request):
     # return the rendered template
     return render_to_response('index.jade')
+
+class Home(TemplateView):
+    template_name = 'index.jade'
 
 # Create your views here.
 class RenderLatex(TemplateView):
@@ -47,7 +56,7 @@ class RenderLatex(TemplateView):
             'string': get['equation'] if 'equation' in get else string ,
             'color': get['color'] if 'color' in get else color ,
             'fontsize': get['fontsize'] if 'fontsize' in get else fontsize ,
-            'baseline': int(get['fontisize']) * 1.2 if 'fontisize' in get else fontsize * 1.2 ,
+            'baseline': int(get['fontsize']) * 1.2 if 'fontsize' in get else fontsize * 1.2 ,
             'isMath': get['isMath'].lower() != str(not isMath).lower() if 'isMath' in get else isMath,
         })
         # grab the string template
