@@ -1,0 +1,77 @@
+% -*- LaTeX -*-
+% -*- coding: utf-8 -*-
+%
+% Alec Aivazis <alec@aivazis.com>
+% 
+% (c) 2009-2015 all rights reserved
+%
+
+% A package for drawing feynman diagrams in LaTex
+
+\documentclass[varwidth=true, border=1pt]{standalone}
+\usepackage{tikz}
+\usepackage{ifthen}
+\usepackage{kvoptions}
+
+% treat @ like a normal letter
+\makeatletter
+
+% define the configuration settings family
+\SetupKeyvalOptions{
+    family=style,
+    prefix=style@
+}
+% define the configuration parameters
+\DeclareStringOption[black]{color}
+\DeclareStringOption[1.5]{linewidth}
+\DeclareBoolOption[false]{endcaps}
+
+% process the parameters
+\ProcessKeyvalOptions{style}
+
+% define macros to wrap around various propagator styles
+
+% fermions
+\newcommand{\fermion}[3][]{
+    % load the configuration parameters
+    \setkeys{style}{#1}
+    % draw the line
+    \draw[color=\style@color, line width = \style@linewidth] ({#2}) -- ({#3});
+}
+
+% dashed propagators
+\newcommand{\dashed}[3][]{
+    % load the configuration parameters
+    \setkeys{style}{#1}
+    % draw the dasked line
+    \draw[\style@color, dashed] ({#2}) -- ({#3});
+}
+
+% gluons
+\newcommand{\gluon}[3][]{
+    % load the configuration parameters
+    \setkeys{style}{#1}
+
+    % if they want the end caps
+    \ifstyle@endcaps
+        \line{#2}{#3}
+    % they did not want end caps
+    \else
+        \dashed{#2}{#3}
+    \fi
+    
+}
+
+% turn @ back into a special character
+\makeatother
+
+% draw an example diagram
+\begin{document}
+    \begin{tikzpicture}[]
+        \fermion[color=blue, linewidth=1.5]{1,0}{0,0}
+        \gluon[endcaps=false, color=blue]{0,1}{0,0}
+    \end{tikzpicture}
+\end{document}
+
+
+% end of file
