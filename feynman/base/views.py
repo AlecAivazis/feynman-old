@@ -22,13 +22,12 @@ from django.template import Context
 from django.template.loader import get_template
 
 
-# index view
-def home(request):
-    # return the rendered template
-    return render_to_response('index.jade')
-
 class Home(TemplateView):
+    """
+    render the index template
+    """
     template_name = 'index.jade'
+
 
 # Create your views here.
 class RenderLatex(TemplateView):
