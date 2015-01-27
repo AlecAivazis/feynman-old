@@ -8,11 +8,14 @@
 
 % A package for drawing feynman diagrams in LaTex
 
-\documentclass[varwidth=true, border=1pt]{standalone}
+\documentclass[border=1pt]{standalone}
 \usepackage{tikz}
-\usepackage{ifthen}
+\usepackage{xifthen}
 \usepackage{kvoptions}
 \usepackage{fp}
+
+% turn off the fp messages
+\FPmessagesfalse
 
 % treat @ like a normal letter
 \makeatletter
@@ -26,15 +29,15 @@
 
 % define the propagator configuration parameters
 \DeclareStringOption[black]{color}[black]
-\DeclareStringOption[1]{lineWidth}
+\DeclareStringOption[5]{lineWidth}
 \DeclareBoolOption[false]{endcaps}
-\DeclareStringOption[10]{gluonWidth}
+\DeclareStringOption[5]{gluonWidth}
 
 % define an enviroment to encompass a single diagram
 \newenvironment{feynman}[1][]
 % before the content
 {
-    \begin{tikzpicture}[]
+    \begin{tikzpicture}[x=1cm, y=1cm]
 }
 % after the content
 {
@@ -87,35 +90,88 @@
     % load the configuration parameters
     \setkeys{style}{#1}
 
-    % store a value for half of the gluonWidth
-    \FPeval{\halfWidth}{\style@gluonWidth/2}
-    % store a value for the height of the gluon loop
-    \FPeval{\height}{\style@gluonWidth}
-
     % create TikZ coordinates at the end points
     \coordinate  (start) at (#2);
     \coordinate  (finish) at (#3);
     % store the distance between the two points
     \calcLength(start,finish){length} % stores it in a macro called \length
 
+    \FPeval{\gluonWidth}{\style@gluonWidth}
+    % store a value for half of the gluonWidth
+    \FPeval{\halfWidth}{\gluonWidth/2}
     % store the closest whole number of full periods
-    \FPeval{\nLoops}{round(\length / \style@gluonWidth / 2, 0)}
+    \FPeval{\nLoops}{round((\length / \gluonWidth / 2) - 1, 0)}
 
-    % if they want the end caps
+    % if they want the end caps (to reduce nLoops by one)
     \ifstyle@endcaps
         % we are going to use one loop to draw the endcaps so remove one from nLoops
         \FPeval{\nLoops}{round(\nLoops - 1, 0)}
-
-        \fermion{#2}{#3}
-    % they did not want end caps
-    \else
-        \dashed{#2}{#3}
     \fi
 
-    \node{\nLoops};
+    % if we dont fit a whole loop between the two points
+    \ifthenelse{\equal{\nLoops}{0}}{
+        % use a fermion line instead
+        \fermion{#2}{#3}
 
+    % we fit at least one loop between the two points
+    }{
+
+        % if they want the end caps (to draw the right kind of line)
+        \ifstyle@endcaps
+         
+            \FPeval{\ymax}{\halfWidth}
+            \FPeval{\ymin}{0-\halfWidth}
+
+            % draw the opening end cap
+            \draw (0,0) .. controls (\halfWidth, 0) and (0, \ymin) .. (\halfWidth, \ymin);
+
+            % for each loop that we have to draw
+            \foreach \loopNumber in {1,...,\nLoops}{
+                % compute the starting location of the loop
+                \FPeval{\x}{\loopNumber * \gluonWidth - \halfWidth}
+                % compute the half way point of the loop
+                \FPeval{\xMid}{\halfWidth + \x}
+                % compute the endpoint of the loop
+                \FPeval{\xFinal}{\gluonWidth + \x}
+                
+                \typeout{\x}
+                % draw the first half of the loop
+                \draw (\x, \ymin) .. controls (\xFinal, \ymin) and (\xFinal, \ymax) .. (\xMid, \ymax);
+                % draw the second half of the loop
+                \draw (\xMid, \ymax) .. controls (\x, \ymax) and (\x, \ymin) .. (\xFinal, \ymin);
+            }
+
+            % compute the locations for the closing end cap
+            \FPeval{\finalStart}{(\nLoops + 1) * \gluonWidth - \halfWidth}
+            \FPeval{\finalHalf}{\finalStart + \halfWidth}
+            \FPeval{\finalStop}{\finalStart + \halfWidth}
+            % draw the closing end cap
+            \draw (\finalStart, \ymin) .. controls (\finalStop, \ymin) and (\finalStart, 0) .. (\finalStop, 0);
+
+        % they did not want end caps
+        \else
+            % store a value for the height of the gluon loop
+            \FPeval{\height}{\gluonWidth}
+            % for each loop that we have to draw
+            \foreach \loopNumber in {0,...,\nLoops}{
+                % compute the starting location of the loop
+                \FPeval{\x}{\loopNumber * \gluonWidth}
+                % compute the midpoint of the loop
+                \FPeval{\xMid}{\halfWidth + \x}
+                % compute the endpoint of the loop
+                \FPeval{\xFinal}{\gluonWidth + \x}
+
+                % draw the first half of the loop
+                \draw (\x,0) .. controls (\xFinal, 0) and  (\xFinal, \height) .. (\xMid, \height);
+                % draw the second half of the loop
+                \draw (\xMid,\height) .. controls (\x, \height) and  (\x, 0) .. (\xFinal, 0);
+            }
+        \fi
+    }
 }
 
+% em line
+%\draw (0,0) to[out=0, in=180] (\halfWidth, \height);
 
 
 % turn @ back into a special character
@@ -125,8 +181,8 @@
 % draw an example diagram
 \begin{document}
     \begin{feynman}
-        \fermion[color=yellow]{1,0}{0,0}
-        \gluon[endcaps=true]{0,1}{0,0}
+        %\fermion[color=yellow]{1,0}{0,0}
+        \gluon[endcaps=true]{0,2}{0,0}
     \end{feynman}
 \end{document}
 
