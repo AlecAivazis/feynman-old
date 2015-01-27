@@ -13,6 +13,7 @@
 \usepackage{xifthen}
 \usepackage{kvoptions}
 \usepackage{fp}
+\usepackage{lengthconvert}
 
 % turn off the fp messages
 \FPmessagesfalse
@@ -21,30 +22,39 @@
 \makeatletter
 
 
-% define the propagator configuration settings family
-\SetupKeyvalOptions{
-    family=style,
-    prefix=style@
-}
+% define the diagram configuration settings family
+\SetupKeyvalOptions{family=diagram, prefix=diagram@}
+\DeclareStringOption[1cm]{unit}
+\DeclareStringOption[An Example Feynman Diagram]{title}
 
-% define the propagator configuration parameters
+
+% define the propagator configuration settings family
+\SetupKeyvalOptions{family=style, prefix=style@}
 \DeclareStringOption[black]{color}[black]
-\DeclareStringOption[5]{lineWidth}
+\DeclareStringOption[1]{lineWidth}
 \DeclareBoolOption[false]{endcaps}
 \DeclareStringOption[5]{gluonWidth}
+
+
+%--- the feynman diagram environment
 
 % define an enviroment to encompass a single diagram
 \newenvironment{feynman}[1][]
 % before the content
 {
-    \begin{tikzpicture}[x=1cm, y=1cm]
+    % load the diagram configuration settings
+    \setkeys{diagram}{#1}
+    % start the tikz environment
+    \begin{tikzpicture}[x=\diagram@unit, y=\diagram@unit]
 }
 % after the content
 {
+    % close the tikz environment
     \end{tikzpicture}
 }
 
 
+%--- utility macros
 
 % compute the length between two points 
 \def\calcLength(#1,#2)#3{
@@ -67,7 +77,19 @@
 }
 
 
-% define macros to wrap around various propagator styles
+\newcommand\xcoord[2][center]{{%
+    \pgfpointanchor{#2}{#1}%
+    \pgfmathparse{\pgf@x/\pgf@xx}%
+    \pgfmathprintnumber{\pgfmathresult}%
+}}
+\newcommand\ycoord[2][center]{{%
+    \pgfpointanchor{#2}{#1}%
+    \pgfmathparse{\pgf@y/\pgf@yy}%
+    \pgfmathprintnumber{\pgfmathresult}%
+}}
+
+
+%--- propagator styles
 
 % fermions
 \newcommand*{\fermion}[3][]{
@@ -77,6 +99,7 @@
     \draw[color=\style@color, line width = \style@lineWidth] ({#2}) -- ({#3});
 }
 
+
 % dashed propagators
 \newcommand*{\dashed}[3][]{
     % load the configuration parameters
@@ -84,6 +107,7 @@
     % draw the dasked line
     \draw[\style@color, line width = \style@lineWidth, dashed] ({#2}) -- ({#3});
 }
+
 
 % gluons
 \newcommand*{\gluon}[3][]{
@@ -134,7 +158,6 @@
                 % compute the endpoint of the loop
                 \FPeval{\xFinal}{\gluonWidth + \x}
                 
-                \typeout{\x}
                 % draw the first half of the loop
                 \draw (\x, \ymin) .. controls (\xFinal, \ymin) and (\xFinal, \ymax) .. (\xMid, \ymax);
                 % draw the second half of the loop
@@ -170,6 +193,7 @@
     }
 }
 
+
 % em line
 %\draw (0,0) to[out=0, in=180] (\halfWidth, \height);
 
@@ -180,9 +204,10 @@
 
 % draw an example diagram
 \begin{document}
-    \begin{feynman}
-        %\fermion[color=yellow]{1,0}{0,0}
-        \gluon[endcaps=true]{0,2}{0,0}
+    \begin{feynman}[title=Example Feynman Diagram, unit=1cm] 
+        \fermion[color=yellow]{1,1}{1,0}
+        \fermion{0,1}{0,0}
+        \gluon[endcaps=true]{1,0}{0,1}
     \end{feynman}
 \end{document}
 
