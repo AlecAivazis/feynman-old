@@ -22,11 +22,14 @@
 \makeatletter
 
 
+%------------------------------------------------------------------------------
+% configuration parameters                                           
+%------------------------------------------------------------------------------
+
 % define the diagram configuration settings family
 \SetupKeyvalOptions{family=diagram, prefix=diagram@}
 \DeclareStringOption[1cm]{unit}
 \DeclareStringOption[An Example Feynman Diagram]{title}
-
 
 % define the propagator configuration settings family
 \SetupKeyvalOptions{family=style, prefix=style@}
@@ -36,7 +39,9 @@
 \DeclareStringOption[5]{gluonWidth}
 
 
-%--- the feynman diagram environment
+%------------------------------------------------------------------------------
+% the feynman diagram environment                                           
+%------------------------------------------------------------------------------
 
 % define an enviroment to encompass a single diagram
 \newenvironment{feynman}[1][]
@@ -54,7 +59,9 @@
 }
 
 
-%--- utility macros
+%------------------------------------------------------------------------------
+% utility macros
+%------------------------------------------------------------------------------
 
 % compute the length between two points 
 \def\calcLength(#1,#2)#3{
@@ -89,7 +96,9 @@
 }}
 
 
-%--- propagator styles
+%------------------------------------------------------------------------------
+% propagator styles
+%------------------------------------------------------------------------------
 
 % fermions
 \newcommand*{\fermion}[3][]{
@@ -194,7 +203,7 @@
 }
 
 
-% em line
+% electroweak line
 %\draw (0,0) to[out=0, in=180] (\halfWidth, \height);
 
 
