@@ -83,17 +83,22 @@
     \expandafter\edef\csname #3\endcsname{\FPMathLen}
 }
 
+% compute the angle between two points 
+\def\calcAngle(#1,#2)#3{
+    \pgfpointdiff{\pgfpointanchor{#1}{center}}
+                 {\pgfpointanchor{#2}{center}}
+    % extract the delta between the two points
+    \pgf@xa=\pgf@x
+    \pgf@ya=\pgf@y
+    % cast the deltas as numbers
+    \FPeval{\deltaX}{\pgfmath@tonumber{\pgf@xa}}
+    \FPeval{\deltaY}{\pgfmath@tonumber{\pgf@ya}}
+    \FPeval{\angle}{round(arctan(\deltaY / \deltaX) * 180 / pi, 5)}
+    % set the value of the macro we were given
+    \expandafter\edef\csname #3\endcsname{\angle}
+}
 
-\newcommand\xcoord[2][center]{{%
-    \pgfpointanchor{#2}{#1}%
-    \pgfmathparse{\pgf@x/\pgf@xx}%
-    \pgfmathprintnumber{\pgfmathresult}%
-}}
-\newcommand\ycoord[2][center]{{%
-    \pgfpointanchor{#2}{#1}%
-    \pgfmathparse{\pgf@y/\pgf@yy}%
-    \pgfmathprintnumber{\pgfmathresult}%
-}}
+% leave behind the style parameters that align the line by \angle and \scale
 
 
 %------------------------------------------------------------------------------
@@ -128,18 +133,14 @@
     \coordinate  (finish) at (#3);
     % store the distance between the two points
     \calcLength(start,finish){length} % stores it in a macro called \length
+    % store the angle between the two points
+    \calcAngle(start,finish){angle} % stores it in a macro called \length
 
     \FPeval{\gluonWidth}{\style@gluonWidth}
     % store a value for half of the gluonWidth
     \FPeval{\halfWidth}{\gluonWidth/2}
     % store the closest whole number of full periods
-    \FPeval{\nLoops}{round((\length / \gluonWidth / 2) - 1, 0)}
-
-    % if they want the end caps (to reduce nLoops by one)
-    \ifstyle@endcaps
-        % we are going to use one loop to draw the endcaps so remove one from nLoops
-        \FPeval{\nLoops}{round(\nLoops - 1, 0)}
-    \fi
+    \FPeval{\nLoops}{round((\length / \gluonWidth ) - 1, 0)}
 
     % if we dont fit a whole loop between the two points
     \ifthenelse{\equal{\nLoops}{0}}{
@@ -156,7 +157,8 @@
             \FPeval{\ymin}{0-\halfWidth}
 
             % draw the opening end cap
-            \draw (0,0) .. controls (\halfWidth, 0) and (0, \ymin) .. (\halfWidth, \ymin);
+            \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                (0,0) .. controls (\halfWidth, 0) and (0, \ymin) .. (\halfWidth, \ymin);
 
             % for each loop that we have to draw
             \foreach \loopNumber in {1,...,\nLoops}{
@@ -168,9 +170,11 @@
                 \FPeval{\xFinal}{\gluonWidth + \x}
                 
                 % draw the first half of the loop
-                \draw (\x, \ymin) .. controls (\xFinal, \ymin) and (\xFinal, \ymax) .. (\xMid, \ymax);
+                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                    (\x, \ymin) .. controls (\xFinal, \ymin) and (\xFinal, \ymax) .. (\xMid, \ymax);
                 % draw the second half of the loop
-                \draw (\xMid, \ymax) .. controls (\x, \ymax) and (\x, \ymin) .. (\xFinal, \ymin);
+                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                    (\xMid, \ymax) .. controls (\x, \ymax) and (\x, \ymin) .. (\xFinal, \ymin);
             }
 
             % compute the locations for the closing end cap
@@ -178,7 +182,8 @@
             \FPeval{\finalHalf}{\finalStart + \halfWidth}
             \FPeval{\finalStop}{\finalStart + \halfWidth}
             % draw the closing end cap
-            \draw (\finalStart, \ymin) .. controls (\finalStop, \ymin) and (\finalStart, 0) .. (\finalStop, 0);
+            \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                (\finalStart, \ymin) .. controls (\finalStop, \ymin) and (\finalStart, 0) .. (\finalStop, 0);
 
         % they did not want end caps
         \else
@@ -194,9 +199,11 @@
                 \FPeval{\xFinal}{\gluonWidth + \x}
 
                 % draw the first half of the loop
-                \draw (\x,0) .. controls (\xFinal, 0) and  (\xFinal, \height) .. (\xMid, \height);
+                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                    (\x,0) .. controls (\xFinal, 0) and  (\xFinal, \height) .. (\xMid, \height);
                 % draw the second half of the loop
-                \draw (\xMid,\height) .. controls (\x, \height) and  (\x, 0) .. (\xFinal, 0);
+                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                    (\xMid,\height) .. controls (\x, \height) and  (\x, 0) .. (\xFinal, 0);
             }
         \fi
     }
@@ -214,9 +221,9 @@
 % draw an example diagram
 \begin{document}
     \begin{feynman}[title=Example Feynman Diagram, unit=1cm] 
-        \fermion[color=yellow]{1,1}{1,0}
+        \fermion{1,0}{1,1}
         \fermion{0,1}{0,0}
-        \gluon[endcaps=true]{1,0}{0,1}
+        \gluon[endcaps=true]{0,1}{1,0}
     \end{feynman}
 \end{document}
 
