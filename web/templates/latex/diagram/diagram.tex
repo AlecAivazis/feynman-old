@@ -13,6 +13,7 @@
 \usepackage{xifthen}
 \usepackage{kvoptions}
 \usepackage{fp}
+\usepackage{calc}
 \usepackage{lengthconvert}
 
 % turn off the fp messages
@@ -28,7 +29,7 @@
 
 % define the diagram configuration settings family
 \SetupKeyvalOptions{family=diagram, prefix=diagram@}
-\DeclareStringOption[1cm]{unit}
+\DeclareStringOption[in]{unit}
 \DeclareStringOption[An Example Feynman Diagram]{title}
 
 % define the propagator configuration settings family
@@ -36,7 +37,7 @@
 \DeclareStringOption[black]{color}[black]
 \DeclareStringOption[1]{lineWidth}
 \DeclareBoolOption[false]{endcaps}
-\DeclareStringOption[5]{gluonWidth}
+\DeclareStringOption[1]{gluonWidth}
 
 
 %------------------------------------------------------------------------------
@@ -50,18 +51,24 @@
     % load the diagram configuration settings
     \setkeys{diagram}{#1}
     % start the tikz environment
-    \begin{tikzpicture}[x=\diagram@unit, y=\diagram@unit]
+    \begin{tikzpicture}[x=1\diagram@unit, y=1\diagram@unit]
+    \print{}
 }
 % after the content
 {
     % close the tikz environment
     \end{tikzpicture}
+    \print{}
 }
 
 
 %------------------------------------------------------------------------------
 % utility macros
 %------------------------------------------------------------------------------
+
+% convert a particular length to the designated unit
+% i.e. \convertto{mm}{1pt}
+\newcommand*{\convertto}[2]{\strip@pt\dimexpr #2*65536/\number\dimexpr 1#1}
 
 % compute the length between two points 
 \def\calcLength(#1,#2)#3{
@@ -71,14 +78,16 @@
     \pgf@xa=\pgf@x
     \pgf@ya=\pgf@y
     % cast the deltas as numbers
-    \FPeval\@temp@a{\pgfmath@tonumber{\pgf@xa}}
-    \FPeval\@temp@b{\pgfmath@tonumber{\pgf@ya}}
+    \FPeval\@temp@a{\pgfmath@tonumber{\pgf@xa}/72.27}
+    \FPeval\@temp@b{\pgfmath@tonumber{\pgf@ya}/72.27}
+
+
     % store the sum of the squares
     \FPeval\@temp@sum{(\@temp@a*\@temp@a+\@temp@b*\@temp@b)}
     % take the square root of the result
     \FProot{\FPMathLen}{\@temp@sum}{2}
     % cut off at 5 decimal places
-    \FPround\FPMathLen\FPMathLen5\relax
+    \FPround\FPMathLen\FPMathLen9\relax
     % set the value of the macro we were given
     \expandafter\edef\csname #3\endcsname{\FPMathLen}
 }
@@ -98,7 +107,8 @@
     \expandafter\edef\csname #3\endcsname{\angle}
 }
 
-% leave behind the style parameters that align the line by \angle and \scale
+% shortcut macro to print an expression to the console
+\newcommand*{\print}[1]{\typeout{#1}}
 
 
 %------------------------------------------------------------------------------
@@ -107,10 +117,25 @@
 
 % fermions
 \newcommand*{\fermion}[3][]{
+    % create TikZ coordiantes at the end points
+    \coordinate  (start) at (#2);
+    \coordinate  (finish) at (#3);
+    % convert the start to a pt representation
+    \pgfpointanchor{start}{center}
+    \FPeval{\startX}{\pgfmath@tonumber{\pgf@x}}
+    \FPeval{\startY}{\pgfmath@tonumber{\pgf@y}}
+    % convert the end to a pt representation
+    \pgfpointanchor{finish}{center}
+    \FPeval{\endX}{\pgfmath@tonumber{\pgf@x}}
+    \FPeval{\endY}{\pgfmath@tonumber{\pgf@y}}
+    \print{drawing fermion: (#2) -- (#3)}
     % load the configuration parameters
     \setkeys{style}{#1}
     % draw the line
-    \draw[color=\style@color, line width = \style@lineWidth] ({#2}) -- ({#3});
+    %\draw[color=\style@color, line width = \style@lineWidth] 
+    %    (\startX, \startY) -- (\endX, \endY);
+    \draw[color=\style@color, line width = \style@lineWidth] 
+        (#2) -- (#3);
 }
 
 
@@ -127,6 +152,7 @@
 \newcommand*{\gluon}[3][]{
     % load the configuration parameters
     \setkeys{style}{#1}
+    \print{}
 
     % create TikZ coordinates at the end points
     \coordinate  (start) at (#2);
@@ -136,11 +162,19 @@
     % store the angle between the two points
     \calcAngle(start,finish){angle} % stores it in a macro called \length
 
+    % turn the start coordinate into a pgf point
+    \pgfpointanchor{start}{center}
+    \FPeval{\startX}{\pgfmath@tonumber{\pgf@x}}
+    \FPeval{\startY}{\pgfmath@tonumber{\pgf@y}}
+    \print{starting gluon at: (#2)}
+
     \FPeval{\gluonWidth}{\style@gluonWidth}
     % store a value for half of the gluonWidth
     \FPeval{\halfWidth}{\gluonWidth/2}
     % store the closest whole number of full periods
     \FPeval{\nLoops}{round((\length / \gluonWidth ) - 1, 0)}
+    \FPeval{\totalLength}{(\nLoops+1) * \gluonWidth}
+    \FPeval{\scale}{\length / \totalLength}
 
     % if we dont fit a whole loop between the two points
     \ifthenelse{\equal{\nLoops}{0}}{
@@ -157,9 +191,8 @@
             \FPeval{\ymin}{0-\halfWidth}
 
             % draw the opening end cap
-            \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+            \draw[\style@color, line width = \style@lineWidth, yshift=\startY, xshift=\startX, rotate=\angle, xscale=\scale, yscale=\scale] 
                 (0,0) .. controls (\halfWidth, 0) and (0, \ymin) .. (\halfWidth, \ymin);
-
             % for each loop that we have to draw
             \foreach \loopNumber in {1,...,\nLoops}{
                 % compute the starting location of the loop
@@ -170,19 +203,19 @@
                 \FPeval{\xFinal}{\gluonWidth + \x}
                 
                 % draw the first half of the loop
-                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                \draw[\style@color, line width = \style@lineWidth, yshift=\startY, xshift=\startX, rotate=\angle, xscale=\scale, yscale=\scale] 
                     (\x, \ymin) .. controls (\xFinal, \ymin) and (\xFinal, \ymax) .. (\xMid, \ymax);
                 % draw the second half of the loop
-                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+                \draw[\style@color, rotate=\angle, line width = \style@lineWidth, yshift=\startY, xshift=\startX, xscale=\scale, yscale=\scale] 
                     (\xMid, \ymax) .. controls (\x, \ymax) and (\x, \ymin) .. (\xFinal, \ymin);
             }
 
             % compute the locations for the closing end cap
-            \FPeval{\finalStart}{(\nLoops + 1) * \gluonWidth - \halfWidth}
+            \FPeval{\finalStart}{(\nLoops+1) * \gluonWidth - \halfWidth}
             \FPeval{\finalHalf}{\finalStart + \halfWidth}
             \FPeval{\finalStop}{\finalStart + \halfWidth}
             % draw the closing end cap
-            \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
+            \draw[\style@color, rotate=\angle, line width = \style@lineWidth, yshift=\startY, xshift=\startX, xscale=\scale, yscale=\scale] 
                 (\finalStart, \ymin) .. controls (\finalStop, \ymin) and (\finalStart, 0) .. (\finalStop, 0);
 
         % they did not want end caps
@@ -197,13 +230,14 @@
                 \FPeval{\xMid}{\halfWidth + \x}
                 % compute the endpoint of the loop
                 \FPeval{\xFinal}{\gluonWidth + \x}
-
                 % draw the first half of the loop
-                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
-                    (\x,0) .. controls (\xFinal, 0) and  (\xFinal, \height) .. (\xMid, \height);
-                % draw the second half of the loop
-                \draw[\style@color, rotate=\angle, line width = \style@lineWidth] 
-                    (\xMid,\height) .. controls (\x, \height) and  (\x, 0) .. (\xFinal, 0);
+                \begin{scope}
+                    \draw[\style@color, line width = \style@lineWidth, yshift=\startY, xshift=\startX, rotate=\angle, xscale=\scale, yscale=\scale] 
+                        (\x,0) .. controls (\xFinal, 0) and  (\xFinal, \height) .. (\xMid, \height);
+                    % draw the second half of the loop
+                    \draw[\style@color, line width = \style@lineWidth, yshift=\startY, xshift=\startX, rotate=\angle, xscale=\scale, yscale=\scale] 
+                        (\xMid,\height) .. controls (\x, \height) and  (\x, 0) .. (\xFinal, 0);
+                \end{scope}
             }
         \fi
     }
@@ -220,10 +254,11 @@
 
 % draw an example diagram
 \begin{document}
-    \begin{feynman}[title=Example Feynman Diagram, unit=1cm] 
-        \fermion{1,0}{1,1}
-        \fermion{0,1}{0,0}
-        \gluon[endcaps=true]{0,1}{1,0}
+    \begin{feynman}[title=Example Feynman Diagram] 
+        \fermion{3,3}{3,0}
+        \fermion{0,0}{0,1}
+        \gluon{0,2}{3,3}
+        \gluon[endcaps=true]{0,0}{3,0}
     \end{feynman}
 \end{document}
 
