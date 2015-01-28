@@ -308,6 +308,20 @@
 }
 
 
+%------------------------------------------------------------------------------
+% other objects in a diagram
+%------------------------------------------------------------------------------
+
+% circle centered at #2 with radius #3
+\newcommand*{\parton}[3][]{
+    % load the configuration parameters
+    \setkeys{style}{#1}
+    % draw the circle with the given parameters
+    \draw[\style@color, line width = \style@lineWidth] (#2) circle (#3 \diagram@unit);
+}
+
+
+
 % turn @ back into a special character
 \makeatother
 
@@ -315,10 +329,11 @@
 % draw an example diagram
 \begin{document}
     \begin{feynman}[title=Example Feynman Diagram] 
-        \sfermion{3,3}{3,0}
-        \fermion{0,0}{0,2}
-        \sfermion{0,2}{3,3}
-        \gluino{0,0}{3,0}
+        \fermion{3,3}{3,0}
+        \gluon{0,0}{0,2}
+        \gluon[endcaps=true]{0,2}{3,3}
+        \fermion{0,0}{3,0}
+        \parton{-1,-1}{1.42}
     \end{feynman}
 \end{document}
 
