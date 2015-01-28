@@ -223,7 +223,6 @@
 
 
 % electroweak lines
-%\draw (0,0) to[out=0, in=180] (\halfWidth, \height);
 \newcommand*{\electroweak}[3][]{
     % load the configuration parameters
     \setkeys{style}{#1}
@@ -279,6 +278,33 @@
     }
 }
 
+
+% gluinos
+\newcommand*{\gluino}[3][]{
+    % load the configuration parameters
+    \setkeys{style}{#1}
+    % enforce that endcaps is true
+    \setkeys{style}{endcaps=true}
+    % draw a fermion between the two points
+    \fermion{#2}{#3}
+    % draw a gluon between the two points
+    \gluon{#2}{#3}
+}
+
+
+% sfermions
+\newcommand*{\sfermion}[3][]{
+    % load the configuration parameters
+    \setkeys{style}{#1}
+    % enforce that endcaps is true
+    \setkeys{style}{endcaps=true}
+    % draw a fermion between the two points
+    \fermion{#2}{#3}
+    % draw a gluon between the two points
+    \electroweak{#2}{#3}
+}
+
+
 % turn @ back into a special character
 \makeatother
 
@@ -288,8 +314,8 @@
     \begin{feynman}[title=Example Feynman Diagram] 
         \fermion{3,3}{3,0}
         \fermion{0,0}{0,2}
-        \electroweak{0,2}{3,3}
-        \gluon[endcaps=true]{0,0}{3,0}
+        \sfermion{0,2}{3,3}
+        \gluino{0,0}{3,0}
     \end{feynman}
 \end{document}
 
