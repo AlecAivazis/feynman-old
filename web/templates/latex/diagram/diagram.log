@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/MacPorts 2014_5) (preloaded format=pdflatex 2014.10.24)  28 JAN 2015 00:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/MacPorts 2014_5) (preloaded format=pdflatex 2014.10.24)  28 JAN 2015 01:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -55,6 +55,35 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \sa@box=\box26
 )
+(/opt/local/share/texmf-texlive/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/opt/local/share/texmf-texlive/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(/opt/local/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/opt/local/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/opt/local/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count89
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
 (/opt/local/share/texmf/tex/latex/pgf/frontendlayer/tikz.sty
 (/opt/local/share/texmf/tex/latex/pgf/basiclayer/pgf.sty
 (/opt/local/share/texmf/tex/latex/pgf/utilities/pgfrcs.sty
@@ -89,18 +118,7 @@ Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
-
-(/opt/local/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
-Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
-)
-\Gread@gobject=\count89
-))
 \Gin@req@height=\dimen105
 \Gin@req@width=\dimen106
 )
@@ -152,23 +170,6 @@ File: pgfsyssoftpath.code.tex 2013/09/09  (rcs-revision 1.9)
 (/opt/local/share/texmf/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
 File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
 ))
-(/opt/local/share/texmf-texlive/tex/latex/xcolor/xcolor.sty
-Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
-
-(/opt/local/share/texmf-texlive/tex/latex/latexconfig/color.cfg
-File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
-)
-Package xcolor Info: Driver file: pdftex.def on input line 225.
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
-Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
-Package xcolor Info: Model `RGB' extended on input line 1353.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
-)
 (/opt/local/share/texmf/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2010/04/11 v3.0.0 (rcs-revision 1.7)
 
@@ -336,7 +337,13 @@ File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
 ytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2008/06/17 v3.0.0 (rcs-revision 1.2)
 )))
-(/opt/local/share/texmf-texlive/tex/latex/xifthen/xifthen.sty
+(/opt/local/share/texmf/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrar
+ypatterns.code.tex
+File: tikzlibrarypatterns.code.tex 2008/01/15 v3.0.0 (rcs-revision 1.2)
+
+(/opt/local/share/texmf/tex/generic/pgf/libraries/pgflibrarypatterns.code.tex
+File: pgflibrarypatterns.code.tex 2008/03/03 v3.0.0 (rcs-revision 1.13)
+)) (/opt/local/share/texmf-texlive/tex/latex/xifthen/xifthen.sty
 Package: xifthen 2009/04/17 v1.3 Extended ifthen features
 
 (/opt/local/share/texmf-texlive/tex/latex/etex-pkg/etex.sty
@@ -425,20 +432,19 @@ Package: fp-eval 1995/04/03
 )) (./diagram.aux)
 \openout1 = `diagram.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 330.
-LaTeX Font Info:    ... okay on input line 330.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 330.
-LaTeX Font Info:    ... okay on input line 330.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 330.
-LaTeX Font Info:    ... okay on input line 330.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 330.
-LaTeX Font Info:    ... okay on input line 330.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 330.
-LaTeX Font Info:    ... okay on input line 330.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 330.
-LaTeX Font Info:    ... okay on input line 330.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 391.
+LaTeX Font Info:    ... okay on input line 391.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 391.
+LaTeX Font Info:    ... okay on input line 391.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 391.
+LaTeX Font Info:    ... okay on input line 391.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 391.
+LaTeX Font Info:    ... okay on input line 391.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 391.
+LaTeX Font Info:    ... okay on input line 391.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 391.
+LaTeX Font Info:    ... okay on input line 391.
 
-ABD: EveryShipout initializing macros
 (/opt/local/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count124
@@ -452,7 +458,8 @@ ABD: EveryShipout initializing macros
 \MPnumerator=\count128
 \makeMPintoPDFobject=\count129
 \everyMPtoPDFconversion=\toks29
-) (/opt/local/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
+) ABD: EveryShipout initializing macros
+(/opt/local/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
 Package pdftexcmds Info: LuaTeX not detected.
@@ -480,20 +487,21 @@ e
 ))
 [1
 
-] (./diagram.aux) ) 
+{/opt/local/var/db/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./diagram.aux) )
+ 
 Here is how much of TeX's memory you used:
- 12657 strings out of 494213
- 248571 string characters out of 6157462
- 298663 words of memory out of 5000000
- 15695 multiletter control sequences out of 15000+600000
+ 12792 strings out of 494213
+ 252941 string characters out of 6157462
+ 306821 words of memory out of 5000000
+ 15821 multiletter control sequences out of 15000+600000
  3640 words of font info for 14 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 55i,5n,56p,408b,639s stack positions out of 5000i,500n,10000p,200000b,80000s
-
-Output written on diagram.pdf (1 page, 1790 bytes).
+ 55i,7n,59p,413b,632s stack positions out of 5000i,500n,10000p,200000b,80000s
+</opt/local/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on diagram.pdf (1 page, 11473 bytes).
 PDF statistics:
- 11 PDF objects out of 1000 (max. 8388607)
- 7 compressed objects within 1 object stream
+ 16 PDF objects out of 1000 (max. 8388607)
+ 10 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 17 words of extra memory for PDF output out of 10000 (max. 10000000)
 
