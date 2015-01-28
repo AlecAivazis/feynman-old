@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/MacPorts 2014_5) (preloaded format=pdflatex 2014.10.24)  28 JAN 2015 08:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/MacPorts 2014_4) (preloaded format=pdflatex 2015.1.27)  28 JAN 2015 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -432,18 +432,18 @@ Package: fp-eval 1995/04/03
 )) (./diagram.aux)
 \openout1 = `diagram.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 414.
-LaTeX Font Info:    ... okay on input line 414.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 414.
-LaTeX Font Info:    ... okay on input line 414.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 414.
-LaTeX Font Info:    ... okay on input line 414.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 414.
-LaTeX Font Info:    ... okay on input line 414.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 414.
-LaTeX Font Info:    ... okay on input line 414.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 414.
-LaTeX Font Info:    ... okay on input line 414.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 495.
+LaTeX Font Info:    ... okay on input line 495.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 495.
+LaTeX Font Info:    ... okay on input line 495.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 495.
+LaTeX Font Info:    ... okay on input line 495.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 495.
+LaTeX Font Info:    ... okay on input line 495.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 495.
+LaTeX Font Info:    ... okay on input line 495.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 495.
+LaTeX Font Info:    ... okay on input line 495.
 
 (/opt/local/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -487,20 +487,21 @@ e
 ))
 [1
 
-] (./diagram.aux) ) 
+{/opt/local/var/db/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./diagram.aux) )
+ 
 Here is how much of TeX's memory you used:
- 12745 strings out of 494213
- 251578 string characters out of 6157462
- 303832 words of memory out of 5000000
- 15776 multiletter control sequences out of 15000+600000
+ 12774 strings out of 494213
+ 252017 string characters out of 6157463
+ 305344 words of memory out of 5000000
+ 15804 multiletter control sequences out of 15000+600000
  3640 words of font info for 14 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 55i,5n,59p,413b,654s stack positions out of 5000i,500n,10000p,200000b,80000s
-
-Output written on diagram.pdf (1 page, 1270 bytes).
+ 55i,7n,59p,413b,663s stack positions out of 5000i,500n,10000p,200000b,80000s
+</opt/local/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on diagram.pdf (1 page, 10501 bytes).
 PDF statistics:
- 11 PDF objects out of 1000 (max. 8388607)
- 7 compressed objects within 1 object stream
+ 15 PDF objects out of 1000 (max. 8388607)
+ 10 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

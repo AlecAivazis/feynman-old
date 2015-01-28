@@ -39,6 +39,9 @@
 \DeclareBoolOption[false]{endcaps}
 \DeclareStringOption[1/3]{gluonWidth}
 \DeclareStringOption[center]{location}
+\DeclareStringOption{label}
+\DeclareStringOption[0.5]{labelDistance}
+\DeclareStringOption[0.5]{labelLocation}
 
 
 %------------------------------------------------------------------------------
@@ -76,7 +79,7 @@
                  {\pgfpointanchor{#2}{center}}
     \pgf@xa=\pgf@x
     \pgf@ya=\pgf@y
-    % cast the deltas as numbers
+    % cast the deltas in the appropriate unit system
     \FPeval\@temp@a{\pgfmath@tonumber{\pgf@xa}/72.27}
     \FPeval\@temp@b{\pgfmath@tonumber{\pgf@ya}/72.27}
 
@@ -92,6 +95,7 @@
 
 % compute the angle between two points 
 \def\calcAngle(#1,#2)#3{
+    % compute the difference between the two points
     \pgfpointdiff{\pgfpointanchor{#1}{center}}
                  {\pgfpointanchor{#2}{center}}
     % extract the delta between the two points
@@ -158,6 +162,8 @@
         \setkeys{style}{#1}
         % draw the line
         \draw[color=\style@color, line width = \style@lineWidth] (#2) -- (#3);
+        % draw the label
+        \drawLabel{#2}{#3}
     \endgroup
 }
 
@@ -170,6 +176,9 @@
         \setkeys{style}{#1}
         % draw the dasked line
         \draw[\style@color, line width = \style@lineWidth, dashed] ({#2}) -- ({#3});
+        % draw the label
+        \drawLabel{#2}{#3}
+    \endgroup
 }
 
 
@@ -276,6 +285,8 @@
                 }
             \fi
         }
+        % draw the label
+        \drawLabel{#2}{#3}
     \endgroup
 }
 
@@ -338,6 +349,8 @@
                     (\x,0) .. controls (\xMid, \ymin) and  (\xMid, \ymax) .. (\xFinal, 0);
             }
         }
+        % draw the label
+        \drawLabel{#2}{#3}
     \endgroup
 }
 
@@ -354,6 +367,8 @@
         \fermion{#2}{#3}
         % draw a gluon between the two points
         \gluon{#2}{#3}
+        % draw the label
+        \drawLabel{#2}{#3}
     \endgroup
 }
 
@@ -370,6 +385,8 @@
         \fermion{#2}{#3}
         % draw a gluon between the two points
         \electroweak{#2}{#3}
+        % draw the label
+        \drawLabel{#2}{#3}
     \endgroup
 }
 
@@ -398,6 +415,70 @@
     \draw[text=\style@color, anchor=\style@location] (#2) node {#3};
 }
 
+
+% draw a label using the coordinate system along the line joining #1 and #2
+\newcommand*{\drawLabel}[2]{
+
+    % if they provided a value for the label
+    \ifthenelse{\equal{\style@label}{}}{}{
+
+        % create TikZ coordinates at the end points
+        \coordinate  (start) at (#1);
+        \coordinate  (finish) at (#2);
+
+        % compute the difference between the two points
+        \pgfpointdiff{\pgfpointanchor{start}{center}}
+                     {\pgfpointanchor{finish}{center}}
+        \pgf@xa=\pgf@x
+        \pgf@ya=\pgf@y
+        % cast the deltas in the appropriate unit system
+        \FPeval\dX{\pgfmath@tonumber{\pgf@xa}/72.27}
+        \FPeval\dY{\pgfmath@tonumber{\pgf@ya}/72.27}
+
+        % compute the location of the starting coordinate
+        \pgfpointanchor{start}{center}
+        \pgf@xa=\pgf@x
+        \pgf@ya=\pgf@y
+        \FPeval{\@temp@x1}{round(\pgfmath@tonumber{\pgf@xa}/72.27, 5)}
+        \FPeval{\@temp@y1}{round(\pgfmath@tonumber{\pgf@ya}/72.27, 5)}
+
+        % store local copies of the target position
+        \FPeval{\labelLocation}{\style@labelLocation}
+        \FPeval{\labelDistance}{\style@labelDistance}
+
+        % compute the location along the line where we belong
+        \FPeval{\@temp@locX}{round(\@temp@x1 + \labelLocation * \dX, 5)}
+        \FPeval{\@temp@locY}{round(\@temp@y1 + \labelLocation * \dY, 5)}
+
+
+        % if the change in y is zero (infinite slope)
+        \ifthenelse{\equal{\dY}{0}}{
+            \FPeval{\slope}{0}
+            \FPeval{\labelX}{0}
+            \FPeval{\labelY}{0}
+        % otherwise we are safe to compute the slope
+        }{
+            % compute the slope of the perpendicular line
+            \FPeval{\slope}{0 - \dX/\dY}
+
+            % the points that are perpedicular to the line a distance r away satisfy
+            % y = mx
+            % x^2 + y^2 = r
+
+            % compute the x that satisfies this equation
+            \FPeval{\x}{root(\labelDistance * \labelDistance / (1 + \slope * \slope),2)/72.27}
+            % compute the y that satisfies this equation
+            \FPeval{\y}{\x * \slope}
+
+            \FPeval{\labelX}{\x}
+            \FPeval{\labelY}{\y}
+        }
+
+        \draw (\labelX,\labelY) node {\style@label};
+    }
+
+}
+
 %------------------------------------------------------------------------------
 % cleanup
 %------------------------------------------------------------------------------
@@ -420,7 +501,7 @@
         \electroweak[color=blue]{1,1}{3,1}
 
         \fermion{3,1}{4,2}
-        \fermion{3,1}{4,0}
+        \fermion[label=hello]{3,1}{4,0}
     \end{feynman}
 
 \end{document}
