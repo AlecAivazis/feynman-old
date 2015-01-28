@@ -77,7 +77,6 @@
     \FPeval\@temp@a{\pgfmath@tonumber{\pgf@xa}/72.27}
     \FPeval\@temp@b{\pgfmath@tonumber{\pgf@ya}/72.27}
 
-
     % store the sum of the squares
     \FPeval\@temp@sum{(\@temp@a*\@temp@a+\@temp@b*\@temp@b)}
     % take the square root of the result
@@ -98,7 +97,11 @@
     % cast the deltas as numbers
     \FPeval{\deltaX}{\pgfmath@tonumber{\pgf@xa}}
     \FPeval{\deltaY}{\pgfmath@tonumber{\pgf@ya}}
-    \FPeval{\angle}{round(arctan(\deltaY / \deltaX) * 180 / pi, 5)}
+    % use pgf to compute atan2 
+    \pgfmathparse{atan2(\deltaY, \deltaX)}
+    %  set the angle to the result
+    \FPeval{\angle}{round(\pgfmathresult , 5)}
+
     % set the value of the macro we were given
     \expandafter\edef\csname #3\endcsname{\angle}
 }
@@ -312,7 +315,7 @@
 % draw an example diagram
 \begin{document}
     \begin{feynman}[title=Example Feynman Diagram] 
-        \fermion{3,3}{3,0}
+        \sfermion{3,3}{3,0}
         \fermion{0,0}{0,2}
         \sfermion{0,2}{3,3}
         \gluino{0,0}{3,0}
