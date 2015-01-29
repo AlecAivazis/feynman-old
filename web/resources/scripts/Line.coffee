@@ -172,8 +172,7 @@ class Line
     # grab the label coordinates
     labelCoords = @getLabelCoordinates()
     # create the element
-    @labelElement = @paper.image("/latex?equation=#{@label}", labelCoords.x,
-                                                                                   labelCoords.y)
+    @labelElement = @paper.image("/latex?equation=#{@label}", labelCoords.x, labelCoords.y)
     # add it to the diagram
     $(document).attr('canvas').addToDiagram @labelElement
 

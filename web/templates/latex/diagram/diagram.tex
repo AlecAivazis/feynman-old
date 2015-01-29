@@ -444,7 +444,7 @@
 
         % store local copies of the target position
         \FPeval{\labelLocation}{\style@labelLocation}
-        \FPeval{\labelDistance}{\style@labelDistance}
+        \FPeval{\labelDistance}{0+\style@labelDistance}
 
         % compute the location along the line where we belong
         \FPeval{\@temp@locX}{round(\@temp@x1 + \labelLocation * \dX, 5)}
@@ -459,22 +459,47 @@
         % otherwise we are safe to compute the slope
         }{
             % compute the slope of the perpendicular line
-            \FPeval{\slope}{0 - \dX/\dY}
+            \FPeval{\perpSlope}{0 - \dX/\dY}
+            \FPeval{\roundedSlope}{round(\perpSlope,0)}
+            \FPeval{\roundedDistance}{round(\labelDistance, 0)}
 
             % the points that are perpedicular to the line a distance r away satisfy
             % y = mx
             % x^2 + y^2 = r
 
             % compute the x that satisfies this equation
-            \FPeval{\x}{root(\labelDistance * \labelDistance / (1 + \slope * \slope),2)/72.27}
+            %\FPeval{\x}{\labelDistance * root(1 / (1 + \perpSlope * \perpSlope),2)/72.27}
+            \FPeval{\x2}{(0+\labelDistance) * (0+\labelDistance) / (1 + (\perpSlope * \perpSlope))}
+            \FProot{\x}{\x2}{2}
             % compute the y that satisfies this equation
-            \FPeval{\y}{\x * \slope}
+            \FPeval{\y}{\x * \perpSlope}
 
-            \FPeval{\labelX}{\x}
-            \FPeval{\labelY}{\y}
+            \ifthenelse{\roundedSlope > 0 \OR \roundedSlope = 0}{
+
+                \ifthenelse{\roundedDistance > 0}{
+                    \FPeval{\labelX}{\@temp@locX + \x}
+                    \FPeval{\labelY}{\@temp@locY + \y}
+                    \def\loc{right}
+                }{
+                    \FPeval{\labelX}{\@temp@locX - \x}
+                    \FPeval{\labelY}{\@temp@locY - \y}
+                    \def\loc{right}
+                }
+            }{
+                \ifthenelse{\roundedDistance > 0}{
+                    \FPeval{\labelX}{\@temp@locX - \x}
+                    \FPeval{\labelY}{\@temp@locY - \y}
+                    \def\loc{right}
+                }{
+                    \FPeval{\labelX}{\@temp@locX + \x}
+                    \FPeval{\labelY}{\@temp@locY + \y}
+                    \def\loc{right}
+                }
+
+            }
+            \draw[\loc] (\labelX,\labelY) node {\style@label};
+
         }
-
-        \draw (\labelX,\labelY) node {\style@label};
     }
 
 }
@@ -495,13 +520,13 @@
 \begin{document}
     
     \begin{feynman}[title=Example Feynman Diagram] 
-        \fermion{0,2}{1,1}
+        \fermion[label=hello, labelDistance = -0.5]{0,2}{1,1}
         \fermion{0,0}{1,1}
 
         \electroweak[color=blue]{1,1}{3,1}
 
-        \fermion{3,1}{4,2}
-        \fermion[label=hello]{3,1}{4,0}
+        \fermion[label=hello, labelDistance = -0.5]{3,1}{4,2}
+        \fermion[label=goodbye, labelDistance = 0.5]{3,1}{4,0}
     \end{feynman}
 
 \end{document}
