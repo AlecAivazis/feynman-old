@@ -4,11 +4,11 @@
 \begin{document}
 
     \begin{feynman}[title=Example Feynman Diagram] 
-        \gluon[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50, showArrow=true, flip=false, label=l, endcaps=false]{0, 4}{2, 2}
-        \fermion[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50,color=FF0000, showArrow=true, flip=false, label=\anti{l}, endcaps=true]{0, 0}{2, 2}
-        \fermion[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50, showArrow=true, flip=false, label=l, endcaps=true]{7, 4}{5, 2}
-        \fermion[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50, showArrow=true, flip=false, label=\anti{l}, endcaps=true]{7, 0}{5, 2}
-        \electroweak[lineWidth=1,label=Z,labelDistance=0.42,labelLocation=0.50,color=FF0000,showArrow=false,flip=false,endcaps=true]{2, 2}{5, 2}
-   \end{feynman}
+        \fermion[color=000000, endcaps=true, flip=false, label=l, labelDistance=0.42, labelLocation=0.50, showArrow=true, lineWidth=1]{0, 4}{2, 2} 
+        \fermion[color=000000, endcaps=true, flip=false, label=\anti{l}, labelDistance=0.42, labelLocation=0.50, showArrow=true, lineWidth=1]{0, 0}{2, 2} 
+        \fermion[color=000000, endcaps=true, flip=false, label=l, labelDistance=0.42, labelLocation=0.50, showArrow=true, lineWidth=1]{7, 4}{5, 2} 
+        \fermion[color=000000, endcaps=true, flip=false, label=\anti{l}, labelDistance=0.42, labelLocation=0.50, showArrow=true, lineWidth=1]{7, 0}{5, 2} 
+        \electroweak[color=55ABFF, endcaps=true, flip=false, label=\txt{Z}, labelDistance=0.42, labelLocation=0.50, showArrow=false, lineWidth=1]{2, 2}{5, 2} 
+    \end{feynman}
 
 \end{document}
