@@ -137,7 +137,7 @@ block content
         table#paletteItems(cellspacing="20px", style="margin: -20px")
           tr
             td
-              img.paletteItem(element="line", src="/static/images/line.png")
+              img.paletteItem(element="fermion", src="/static/images/line.png")
             td
               img.paletteItem(element="circle", src="/static/images/circle.png")
           tr
@@ -192,14 +192,14 @@ block content
 
           .property
             select(ng-model="selectedElement.style")
-              option(value='line') fermion
+              option(value='fermion') fermion
               option(value='dashed') dashed
               option(value='gluon') gluon
               option(value='electroweak') electroweak
               option(value='gluino') gluino
               option(value='sfermion') sfermion
 
-          .property(ng-show="selectedElement.style == 'line'")
+          .property(ng-show="selectedElement.style == 'fermion' || selectedElement.style == 'dashed'")
             span.button(ng-click="selectedElement.drawArrow = true", ng-show="selectedElement.drawArrow == false", style="width: 149px")
               | show arrow
             span.button.disabled(ng-click="selectedElement.drawArrow = false", 

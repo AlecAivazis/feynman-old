@@ -13,7 +13,7 @@ class Line
     @paper.lines.push this
 
     # default values
-    @style = if style.style then style.style else 'line'
+    @style = if style.style then style.style else 'fermion'
     @width = if style.width then style.width else 1.4
     @color = if style.color then style.color else '#000000'
     @loopDirection = if style.loopDirection then style.loopDirection else  1
@@ -532,7 +532,7 @@ class Line
       isSelected = true
   
     # if we're supposed to draw the arrow element
-    if @drawArrow and @style in ['line', 'dashed']
+    if @drawArrow and @style in ['fermion', 'dashed']
       # do so
       @drawArrowElement()
       # if the line is selected
@@ -547,7 +547,7 @@ class Line
     @hide()
     # what is drawn changes on the style attribute
     switch @style
-      when "line" then @element = @drawAsLine()
+      when "fermion" then @element = @drawAsLine()
       when "dashed" then @element = @drawAsDashedLine()
       when "gluino" then @element = @drawAsGluino()
       when "electroweak" then @element = @drawAsEW()
@@ -569,7 +569,7 @@ class Line
     if isSelected
       @element.addClass('selectedElement')
 
-    @element.addClass('line')
+    @element.addClass('fermion')
 
     # on drag move
     @element.drag @onDrag, @dragStart, @dragEnd
