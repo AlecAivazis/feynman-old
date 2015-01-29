@@ -131,7 +131,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             # handle each type independently
             switch paletteData.type
               # when it is a line style
-              when "line", "em", "gluon", "dashed"
+              when "line", "electroweak", "gluon", "dashed"
                 # compute the lower left coordinates of the bounding box
                 lowerLeft = canvas.getCanvasCoordinates(
                    offset.left - paletteData.draggedElement.width() - $('#sidebar').width(),
@@ -197,7 +197,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # move the selected element
           switch paletteData.type
             # when it is a line style
-            when "line", "em", "gluon", "dashed"
+            when "line", "electroweak", "gluon", "dashed"
               # compute the change in mouse coordinates
               dx = (event.pageX - paletteData.mouse_origin.x)/canvas.zoomLevel
               dy = (event.pageY - paletteData.mouse_origin.y)/canvas.zoomLevel
@@ -221,7 +221,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # if there is a selected element
           if paletteData.selectedElement
             # when its a line
-            if paletteData.type in ["line", "em", "gluon", "dashed"]
+            if paletteData.type in ["line", "electroweak", "gluon", "dashed"]
               # remove the two anchors
               paletteData.selectedElement.anchor1.remove()
               paletteData.selectedElement.anchor2.remove()
@@ -245,7 +245,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # leave an appropriate undo element
           switch paletteData.type
             # when it is a line 
-            when "line", "em", "gluon", "dashed"
+            when "line", "electroweak", "gluon", "dashed"
               # create an undo entry for this action
               undo = new UndoMulti('added line from palette')
               # save references to the selected data
@@ -627,7 +627,11 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             saveAs dataURLtoBlob(data), "diagram.png"
       # if they asked for the latex 
       when "latex"
-        console.log 'converting the diagram to TikZ'
+
+        # grab the list of anchors
+        lines = $(document).attr('canvas').paper.lines
+        console.log lines
+
       # if they asked for an 
       when "svg"
         # convert the diagram to a png data url

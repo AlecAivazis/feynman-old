@@ -142,7 +142,7 @@ block content
               img.paletteItem(element="circle", src="/static/images/circle.png")
           tr
             td
-              img.paletteItem(element="em", src="/static/images/em.png")
+              img.paletteItem(element="electroweak", src="/static/images/em.png")
             td
               img.paletteItem(element="gluon", src="/static/images/gluon.png")
           tr
@@ -192,10 +192,10 @@ block content
 
           .property
             select(ng-model="selectedElement.style")
-              option(value='line') line
+              option(value='line') fermion
               option(value='dashed') dashed
               option(value='gluon') gluon
-              option(value='em') em
+              option(value='electroweak') electroweak
               option(value='gluino') gluino
               option(value='sfermion') sfermion
 
@@ -209,12 +209,12 @@ block content
                         ng-show="selectedElement.drawArrow == true", style="width: 58px")
               | flip
           
-          .property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'em' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
+          .property(ng-show="selectedElement.style == 'gluon' || selectedElement.style == 'electroweak' || selectedElement.style == 'gluino'  || selectedElement.style == 'sfermion'")
             span.button(ng-click="selectedElement.loopDirection = 0 - selectedElement.loopDirection",
                         style="width: 150px", ng-show="selectedElement.style == 'gluon' || selectedElement.style =='gluino'")
               | invert loop direction
             span.button(ng-click="selectedElement.loopDirection = 0 - selectedElement.loopDirection",
-                        style="width: 150px", ng-show="selectedElement.style == 'em' || selectedElement.style =='sfermion'")
+                        style="width: 150px", ng-show="selectedElement.style == 'electroweak' || selectedElement.style =='sfermion'")
               | invert amplitude
 
           .property(ng-show="selectedElement.style == 'gluon'")

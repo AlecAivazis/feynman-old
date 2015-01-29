@@ -550,7 +550,7 @@ class Line
       when "line" then @element = @drawAsLine()
       when "dashed" then @element = @drawAsDashedLine()
       when "gluino" then @element = @drawAsGluino()
-      when "em" then @element = @drawAsEW()
+      when "electroweak" then @element = @drawAsEW()
       when "sfermion" then @element = @drawAsSfermion()
       when "gluon"
         @element = if @drawEndCaps then @drawAsGluonWithEndCaps() else @drawAsGluon()

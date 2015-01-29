@@ -947,7 +947,7 @@ class FeynmanCanvas
 
         # the propagator joining the two fermions
         propagator = new Line @paper, leftAnchorMid, rightAnchorMid,
-          style: 'em'
+          style: 'electroweak'
           label: '\\text{Z}'
           color: '#55abff'
 
