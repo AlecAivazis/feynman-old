@@ -30,9 +30,9 @@ append js
   script(src="{% static 'angular-slider/slider.js' %}" type="text/javascript")
   script(src="{% static 'thirdparty/handlebars/handlebars.js' %}" type="text/javascript")
   script(src="{% static 'thirdparty/jquery-cookie/jquery.cookie.js' %}" type="text/javascript")
+  script(src="{% static 'scripts/overlay.js' %}")
 
   {% compress js %}
-  script(src="{% static 'scripts/overlay.coffee' %}", type="text/coffeescript")
   script(src="{% static 'scripts/svgDataURL.coffee' %}", type="text/coffeescript")
 
   script(src="{% static 'scripts/Anchor.coffee' %}", type="text/coffeescript")

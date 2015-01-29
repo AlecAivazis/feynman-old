@@ -641,13 +641,13 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         _.each $(document).attr('canvas').paper.lines, (line) ->
           # compute the location of anchor1 relative to the origin
           anchor1 = 
-            x: (line.anchor1.x - origin.x)/gridSize
-            y: (line.anchor1.y - origin.y)/gridSize
+            x: (line.anchor1.x - origin.x)/50
+            y: (line.anchor1.y - origin.y)/50
 
           # compute the location of anchor2 relative to the origin
           anchor2 = 
-            x: (line.anchor2.x - origin.x)/gridSize
-            y: (line.anchor2.y - origin.y)/gridSize
+            x: (line.anchor2.x - origin.x)/50
+            y: (line.anchor2.y - origin.y)/50
 
           defaultUnit = 
             label: "in"
