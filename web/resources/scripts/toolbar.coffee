@@ -131,7 +131,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             # handle each type independently
             switch paletteData.type
               # when it is a line style
-              when "line", "electroweak", "gluon", "dashed"
+              when "fermion", "electroweak", "gluon", "dashed"
                 # compute the lower left coordinates of the bounding box
                 lowerLeft = canvas.getCanvasCoordinates(
                    offset.left - paletteData.draggedElement.width() - $('#sidebar').width(),
@@ -197,7 +197,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # move the selected element
           switch paletteData.type
             # when it is a line style
-            when "line", "electroweak", "gluon", "dashed"
+            when "fermion", "electroweak", "gluon", "dashed"
               # compute the change in mouse coordinates
               dx = (event.pageX - paletteData.mouse_origin.x)/canvas.zoomLevel
               dy = (event.pageY - paletteData.mouse_origin.y)/canvas.zoomLevel
@@ -221,7 +221,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # if there is a selected element
           if paletteData.selectedElement
             # when its a line
-            if paletteData.type in ["line", "electroweak", "gluon", "dashed"]
+            if paletteData.type in ["fermion", "electroweak", "gluon", "dashed"]
               # remove the two anchors
               paletteData.selectedElement.anchor1.remove()
               paletteData.selectedElement.anchor2.remove()
@@ -245,7 +245,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # leave an appropriate undo element
           switch paletteData.type
             # when it is a line 
-            when "line", "electroweak", "gluon", "dashed"
+            when "fermion", "electroweak", "gluon", "dashed"
               # create an undo entry for this action
               undo = new UndoMulti('added line from palette')
               # save references to the selected data
