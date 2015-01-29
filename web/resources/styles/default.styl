@@ -9,12 +9,14 @@
 // this file describes the default style for feynman
 
 // imports
-@import mixins
+@import 'axis'
 
 // color palette
 $blue = #0091ff
 $grey = #b8b8b8
+$light-grey = #e9e9e9
 $toolbarColor = rgba(50, 50, 50, .65)
+$red = #c85553
 
 // size variables
 $sidebarWidth = 210px
@@ -74,9 +76,7 @@ svg
 
   padding: 0 20px
 
-  -webkit-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
-  -moz-box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
-  box-shadow: 1px 0px 1px 0px rgba(214,214,214,1);
+  box-shadow: 1px 0px 1px 0px rgba(214,214,214,1)
 
 
 #sidebar > div
@@ -147,39 +147,44 @@ svg
 
 .button 
   cursor: pointer
-  button(grey, auto)
-  color: #1c83ce
+  glossy-button: $light-grey
   height: 15px
   border: 1px solid #bbbbbb
-  padding-top: 7px
   text-transform: capitalize
   font-weight: bold
-
-  -webkit-box-shadow: 0px 1px 5px 0px rgba(50, 50, 50, 0.24)
-  -moz-box-shadow:    0px 1px 5px 0px rgba(50, 50, 50, 0.24)
-  box-shadow:         0px 1px 5px 0px rgba(50, 50, 50, 0.24)
+  padding: 5px 10px
+  text-align: center
+  box-shadow: 0px 1px 5px 0px rgba(50, 50, 50, 0.24)
+  color: #1c83ce
 
   font-size: 11px
+
+  &:hover
+    color: #1c83ce
 
   &.disabled
     color: #bf5352
 
   &.delete
+    glossy-button: $red
+    width: 170px
+    height: 30px
+    padding: 5px 10px
+    box-sizing: border-box
     color: white
-    button(red, 155px)
-    border: none
+
+    &:hover
+      color: white
 
 
 input , select
   text-align: left
-  height: 30px
+  height: 27px
   width: 170px
-  border-radius(3px)  
   border: none
   background: white
 
-  -webkit-box-shadow: inset 1px 1px 1px 0px #000000
-  -moz-box-shadow: inset 1px 1px 1px 0px #000000
+  border-radius: 3px 
   box-shadow: inset 1px 1px 1px 0px #000000
 
   text-indent: 10px
@@ -317,8 +322,6 @@ input , select
   border: 1px solid #bbbbbb
   width: $sidebarWidth
   box-shadow: none
-  -moz-box-shadow: none
-  -webkit-box-shadow: none
 
 
 .propertyValue
@@ -364,11 +367,9 @@ input , select
     padding: 15px
     height: 45px
     width: 45px
-    vGradient(rgba(153, 153, 153, .8) , rgba(137, 137, 137, .8))
-    border-radius(2px)
+    border-radius: 2px
+    gradient: (rgba(153, 153, 153, .8) rgba(137, 137, 137, .8))
   
-    -webkit-box-shadow: inset 1px 1px 5px 0px rgba(204,204,204,.2), 0px 1px 5px 0px rgba(50, 50, 50, 0.3)
-    -moz-box-shadow: inset 1px 1px 5px 0px rgba(204,204,204,.2), 0px 1px 5px 0px rgba(50, 50, 50, 0.3)
     box-shadow: inset 1px 1px 5px 0px rgba(204,204,204,.2), 0px 2px 1px 0px rgba(50, 50, 50, 0.3)
 
 
@@ -382,17 +383,13 @@ input , select
   float: left
   display: inline-block
   margin: 1.5%
-  border-radius($patternSelectRadius)
+  border-radius: $patternSelectRadius
   cursor: pointer
   background: white
 
   box-shadow: 0px 2px 5px 0px rgba(208, 208, 208, 0.75)
-  -webkit-box-shadow: 0px 2px 5px 0px rgba(208, 208, 208, 0.75)
-  -moz-box-box-shadow: 0px 2px 5px 0px rgba(208, 208, 208, 0.75)
 
   box-sizing: border-box
-  -moz-box-sizing: border-box
-  -webkit-box-sizing: border-box
 
   &:hover
     border: 2px solid #078fff
@@ -404,7 +401,7 @@ input , select
     background: white
     border-bottom: 1px solid #dddddd
     padding: 10px
-    border-radius($patternSelectRadius $patternSelectRadius 0 0 )
+    border-radius: $patternSelectRadius $patternSelectRadius 0 0 
     color: #333333
     text-transform: capitalize
     font-size: 14px
@@ -416,12 +413,12 @@ input , select
   width: 97%
   text-align: center
   padding: 1.5%
-  border-radius(0 0 $patternSelectRadius $patternSelectRadius)
+  border-radius: 0 0 $patternSelectRadius $patternSelectRadius
 
 
 #patternSelectTitle 
   padding: 2%
-  border-radius($patternSelectRadius $patternSelectRadius 0 0)
+  border-radius: $patternSelectRadius $patternSelectRadius 0 0
   background:#5a768e  
   width: 100%
   font-size: 18px
@@ -429,8 +426,6 @@ input , select
   font-weight: bold
 
   box-sizing: border-box
-  -moz-box-sizing: border-box
-  -webkit-box-sizing: border-box
 
   input
     margin: 0 5px 5px 0
