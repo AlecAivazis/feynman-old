@@ -628,9 +628,51 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
       # if they asked for the latex 
       when "latex"
 
-        # grab the list of anchors
-        lines = $(document).attr('canvas').paper.lines
-        console.log lines
+        origin = 
+          x: bb.x1
+          y: bb.y1 + bb.height
+
+        # save a copy of the grid size
+        gridSize =  $(document).attr('canvas').gridSize
+
+        doc = ""
+
+        # for each line in the diagram
+        _.each $(document).attr('canvas').paper.lines, (line) ->
+          # compute the location of anchor1 relative to the origin
+          anchor1 = 
+            x: (line.anchor1.x - origin.x)/gridSize
+            y: (line.anchor1.y - origin.y)/gridSize
+
+          # compute the location of anchor2 relative to the origin
+          anchor2 = 
+            x: (line.anchor2.x - origin.x)/gridSize
+            y: (line.anchor2.y - origin.y)/gridSize
+
+          defaultUnit = 
+            label: "in"
+            pt_value: 72.27
+
+          # create the configuration parameters
+          configuration = 
+            color: line.color.substring(1).toUpperCase()
+            endcaps: line.drawEndCaps
+            flip: line.loopDirection == -1
+            label: line.label
+            labelDistance: (line.labelDistance/defaultUnit.pt_value).toFixed(2)
+            labelLocation: line.labelLocation.toFixed(2)
+            showArrow: line.drawArrow
+            lineWidth: line.width.toFixed(2) / 1.4
+
+
+          # create the configuration line for the latex package
+          config = [" #{entry[0]}=#{entry[1]}" for entry in _.pairs(configuration)].join(',').substring(1)
+          # build the latex command to draw this element
+          latexString = "\\#{line.style}[#{config}]{#{anchor1.x}, #{-anchor1.y}}{#{anchor2.x}, #{-anchor2.y}} <br>"
+
+          doc += latexString
+
+        overlay(doc)
 
       # if they asked for an 
       when "svg"

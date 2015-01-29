@@ -948,7 +948,7 @@ class FeynmanCanvas
         # the propagator joining the two fermions
         propagator = new Line @paper, leftAnchorMid, rightAnchorMid,
           style: 'electroweak'
-          label: '\\text{Z}'
+          label: '\\txt{Z}'
           color: '#55abff'
 
     # add the forward action to the undo entry
