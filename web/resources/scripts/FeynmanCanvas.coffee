@@ -381,6 +381,29 @@ class FeynmanCanvas
         # set the lower cordinate y value
         y2 = anchor.y
 
+    console.log @paper.constraints
+    # go over each of the constraints
+    _.each @paper.constraints, (constraint)->
+      console.log constraint.x, constraint.y, constraint.radius
+      # if the center is within radius of the left edge
+      if constraint.x - constraint.radius < x1 or x1 == undefined
+        # set the left edge of the bounding box
+        x1 = constraint.x - constraint.radius
+      # if the center is within radius of the left edge
+      if constraint.y - constraint.radius < y1 or y1 == undefined
+        # set the bottom edge of the bounding box
+        y1 = constraint.y - constraint.radius
+
+      # if the center is within radius of the right edge
+      if constraint.x + constraint.radius > x2 or x2 == undefined
+        # set the left edge of the bounding box
+        x2 = constraint.x + constraint.radius
+      # if the center is within radius of the top edge
+      if constraint.y + constraint.radius > y2 or y2 == undefined
+        # set the bottom edge of the bounding box
+        y2 = constraint.y + constraint.radius
+      
+
     # define the bounding box as an dictionary with the appropriate values
     boundingBox = 
       x1: x1
@@ -389,6 +412,8 @@ class FeynmanCanvas
       y2: y2
       width: Math.abs(x1-x2)
       height: Math.abs(y1-y2)
+
+    console.log boundingBox
 
     # return the bounding box
     return boundingBox

@@ -231,7 +231,6 @@
                     debug("exported image dimensions #{canvas.width}, #{canvas.height}")
                     png_dataurl = canvas.toDataURL(type)
                     debug("#{type} length: #{png_dataurl.length}")
-                    console.log "#{width}, #{height}, #{x1}, #{y1}"
         
                     if (options.callback)
                         options.callback(png_dataurl)
