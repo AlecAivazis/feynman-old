@@ -3,14 +3,12 @@
 
 \begin{document}
 
-   \begin{feynman}[title=Example Feynman Diagram] 
-       \electroweak[color=red]{0,2}{0,0}
-       \fermion{0,2}{1,1}
-       \fermion{0,0}{1,1}
-       \gluon[label=Z, color=blue, labelDistance = 0.4, endcaps = true]{1,1}{3,1}
-       \fermion[label=Look Ma! Math: $x^2 + 2x$, labelDistance = -.2]{3,1}{4,2}
-       \fermion[color=orange, showArrow=true, label= Hi Alex!]{3,1}{4,0}
-       \parton{4,2.5}{.5}
+    \begin{feynman}[title=Example Feynman Diagram] 
+        \gluon[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50, showArrow=true, flip=false, label=l, endcaps=false]{0, 4}{2, 2}
+        \fermion[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50,color=FF0000, showArrow=true, flip=false, label=\anti{l}, endcaps=true]{0, 0}{2, 2}
+        \fermion[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50, showArrow=true, flip=false, label=l, endcaps=true]{7, 4}{5, 2}
+        \fermion[color=000000, lineWidth=1, labelDistance=0.42, labelLocation=0.50, showArrow=true, flip=false, label=\anti{l}, endcaps=true]{7, 0}{5, 2}
+        \electroweak[lineWidth=1,label=Z,labelDistance=0.42,labelLocation=0.50,color=FF0000,showArrow=false,flip=false,endcaps=true]{2, 2}{5, 2}
    \end{feynman}
 
 \end{document}
