@@ -23,7 +23,7 @@ EXPORT_ETC = $(APACHE_CONF) \
 all: export
 
 # make sure we scope the files correctly
-export:: export-package-etc
+export:: export-etc
 
 # install
 install: tidy

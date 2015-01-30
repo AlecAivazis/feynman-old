@@ -27,7 +27,13 @@ function overlay(content){
     });
 
     $(overlay).on('click', function(event){
-        event.stopPropagation()
+        event.stopPropagation();
+        closeOverlay();
+    });
+
+
+    $(overlayContent).on('click', function(event){
+        event.stopPropagation();
     });
 }
 
