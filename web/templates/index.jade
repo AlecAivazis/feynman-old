@@ -365,7 +365,7 @@ block content
   script#patternSelect_template(type="text/x-handlebars-template")
     #patternSelect
       .modalTitle
-        span#closePatternSelect(onclick="closeOverlay()")
+        span.closeModal(onclick="closeOverlay()")
           | x
         | Select starting template...
         span#togglePatternsOnStartup(onclick="toggleShowStartingPatterns()")
@@ -376,11 +376,30 @@ block content
         | {{#each patterns}}
         |   {{pattern}}
         | {{/each}}
-  {% endverbatim %}
 
   // the template for displaying the result of exporting to latex
   script#exportLatex_template(type="text/x-handlebars-template")
-    | hello
+    #latexExport
+      .modalTitle
+        span.closeModal(onclick="closeOverlay()")
+            | x
+        | Export to LaTeX
+      .modalBody
+        .toolbar
+          span.button(style="margin-right: 1.5%")
+            | Copy to Clipboard
+          span.button
+            | Download LaTeX package
+        .step
+          .title Add this to your preamble:
+          .body \usepackage{feynman}
+
+        .step
+          .title Here's your diagram:
+          .body
+            | {{{docString}}}
+
+  {% endverbatim %}
 
               
 
