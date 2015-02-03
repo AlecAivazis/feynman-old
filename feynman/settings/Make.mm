@@ -13,6 +13,7 @@ PACKAGE = settings
 EXPORT_PYTHON_MODULES = \
     base.py \
     local.py \
+    live.py \
     feynman.py \
     __init__.py
 
