@@ -22,7 +22,7 @@ import feynman
 
 # folder definitions
 BASE = os.path.abspath(os.path.join(feynman.home, os.pardir, os.pardir))
-WEB = os.path.join(BASE, 'web', 'feynman')
+WEB = os.path.join(BASE, 'web', 'www', 'feynman')
 # important folder definitions
 TEMPLATES = os.path.join(WEB, 'templates')
 RESOURCES = os.path.join(WEB, 'resources')
