@@ -16,7 +16,7 @@ TEMPLATE_DEBUG = True
 COMPRESS_DEBUG_TOGGLE = False
 
 # add django_toolbar to the installed apps
-INSTALLED_APPS += ("debug_toolbar", )
+#INSTALLED_APPS += ("debug_toolbar", )
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

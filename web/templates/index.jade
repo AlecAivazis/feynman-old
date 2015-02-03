@@ -354,18 +354,17 @@ block content
         .hotkey
           span.hotkeyTitle Zoom:
           span.hotkeyDescription scroll wheel
-            
-        
+
       // alt dragging moving the window instead 
       // gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier "<Super>"
 
   #mainContent
     svg#canvas
     
-  // the pattern for the starting pattern select window
+  // the template for the starting pattern select window
   script#patternSelect_template(type="text/x-handlebars-template")
     #patternSelect
-      #patternSelectTitle
+      .modalTitle
         span#closePatternSelect(onclick="closeOverlay()")
           | x
         | Select starting template...
@@ -373,11 +372,16 @@ block content
           | show at startup
           input#patternsOnStartup(type="checkbox")
           
-      #patternSelectBody
+      .modalBody
         | {{#each patterns}}
         |   {{pattern}}
         | {{/each}}
   {% endverbatim %}
+
+  // the template for displaying the result of exporting to latex
+  script#exportLatex_template(type="text/x-handlebars-template")
+    | hello
+
               
 
 

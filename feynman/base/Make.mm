@@ -12,6 +12,7 @@ PACKAGE = base
 # my subdirectories
 RECURSE_DIRS = \
     migrations \
+    templatetags \
 # the python modules
 EXPORT_PYTHON_MODULES = \
     admin.py \
