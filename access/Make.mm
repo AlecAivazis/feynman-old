@@ -5,32 +5,29 @@
 # (c) 1998-2015 all rights reserved
 #
 
-
 # project defaults
 include feynman.def
 # the name of this package
 PACKAGE = access
 # add this to the clean pile
 PROJ_CLEAN += authorized_keys
-#
-SCP = scp
-SERVER = orthologue.com
-MANAGER = root
-DESTINATION = /home/projects/feynman/.ssh
+# the list of public keys
 PUBLIC_KEYS = $(wildcard *.pub)
 
-# standard build targets
+# standard targets
 all: tidy
 
-# the local product
+# do nothing by default
+live:
+
+# make the authorized keys file
 authorized_keys: $(PUBLIC_KEYS) grant.py grant.cfg Make.mm
 	./grant.py
 
-# convenience
 deploy: authorized_keys
-	$(SCP) $< $(MANAGER)@$(SERVER):$(DESTINATION)
+	$(SCP) $< $(PROJ_LIVE_ADMIN)@$(PROJ_LIVE_HOST):$(PROJ_LIVE_HOME)/.ssh
 
+# convenience (and for checking before deploying)
 keys: authorized_keys
 
-
-# end of file 
+# end of file

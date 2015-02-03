@@ -2,7 +2,7 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
 
 # project defaults
@@ -13,9 +13,14 @@ PACKAGE = bin
 EXPORT_BINS = \
     feynman
 
+# add these to the clean pile
+PROJ_CLEAN = ${addprefix $(EXPORT_BINDIR)/, $(EXPORT_BINS)}
+
 # the standard build targets
 all: export
 
 export:: export-binaries
+
+live: live-bin
 
 # end of file

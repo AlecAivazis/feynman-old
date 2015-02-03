@@ -8,7 +8,7 @@
 
 
 """
-Build the {{authorized_keys}} file that grants write access to the repository
+Build the {authorized_keys} file that grants write access to the repository
 """
 
 
@@ -21,42 +21,45 @@ import pyre
 # the app declaration
 class Grant(pyre.application):
     """
-    Build the {{authorized_keys}} file that grants write access to the repository
+    Build the {authorized_keys} file that grants write access to the repository
     """
-    
+
 
     # public state
     repository = pyre.properties.str()
+    admin = pyre.properties.list(schema=pyre.properties.str())
     readers = pyre.properties.list(schema=pyre.properties.str())
     writers = pyre.properties.list(schema=pyre.properties.str())
-    
+
 
     @pyre.export
     def main(self, *args, **kwds):
         """
-        Build the {{authorized_keys}} file
+        Build the {authorized_keys} file
         """
         # the command template
-        command = (
-            'command="bzr serve --inet --directory={{}}{{{{}}}}"'.format(self.repository) +
-            ',no-port-forwarding,no-X11-forwarding,no-agent-forwarding {{}}'
+        repositoryAccess = (
+            'command="bzr serve --inet --directory={}{{}}"'.format(self.repository) +
+            ',no-port-forwarding,no-X11-forwarding,no-agent-forwarding {}'
             )
 
         # create the output file
-        authorized = open('authorized_keys', 'w')
+        with open('authorized_keys', 'w') as authorized
+            # team members with login privileges
+            for user in self.admin:
+                # copy the keys
+                authorized.writelines(self.readKeys(user))
+            # team members with write access to the repository
+            for user in self.writers:
+                # build the line and add write privileges
+                authorized.writelines(
+                    repositoryAccess.format(' --allow-writes', key) for key in self.readKeys(user))
+            # team members with read-only access
+            for user in self.readers:
+                # build the line without write privileges
+                authorized.writelines(
+                    repositoryAccess.format('', key) for key in self.readKeys(user))
 
-        # first the writers
-        for user in self.writers:
-            # build the line and add write privileges
-            authorized.writelines(
-                command.format(' --allow-writes',key) for key in self.readKeys(user))
-
-        # now the readers
-        for user in self.readers:
-            # build the line without write privileges
-            authorized.writelines(
-                command.format('', key) for key in self.readKeys(user))
-                    
         # all done
         return 0
 
@@ -64,7 +67,7 @@ class Grant(pyre.application):
     # implementation details
     def readKeys(self, user):
         """
-        Open all the public key file for the given {{user}} and return all the keys it contains
+        Open all the public key file for the given {user} and return all the keys it contains
         """
         # assemble the path to the key file
         keyfile = user + '.pub'
@@ -87,4 +90,4 @@ if __name__ == "__main__":
     sys.exit(status)
 
 
-# end of file 
+# end of file

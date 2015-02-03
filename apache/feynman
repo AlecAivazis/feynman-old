@@ -2,26 +2,27 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
 
 # feynman virtual host definition file
 
 <VirtualHost *:80>
-    ServerName orthologue.com
+    ServerName feynman.orthologue.com
     ServerAdmin root
 
-    # application support
-    WSGIScriptAlias / /home/projects/feynman/web/apache/feynman.wsgi
+    # make sure there is a usable locale
+    SetEnv LANG en_US.UTF-8
+    # and a python path
+    SetEnv PYTHONPATH /home/staff/alec.aivazis/live/packages
 
-    # the web
-    DocumentRoot /home/projects/feynman/web/www
-    <Directory />
+    # application support
+    WSGIScriptAlias / /home/staff/alec.aivazis/live/web/apache/feynman.wsgi
+    # permissions
+    <Location "/">
         Options Indexes FollowSymLinks MultiViews
-        AllowOverride None
-        Order allow,deny
-        Allow from all
-    </Directory>
+        Require all granted
+    </Location>
 
     # what to log; possible values include:
     #    debug, info, notice, warn, error, crit, alert, emerg

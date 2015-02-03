@@ -2,7 +2,7 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
 
 """
@@ -13,6 +13,10 @@ It exposes the WSGI callable as a module-level variable named ``application``.
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
+
+# adjust the python path
+import sys
+sys.path = ['/home/staff/alec.aivazis/live/packages'] + sys.path
 
 # set the environment variable django uses to hunt down application settings
 import os

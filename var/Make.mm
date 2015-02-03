@@ -2,20 +2,21 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
 
 # project defaults
 include feynman.def
 # the package name
 PACKAGE = var
-# the stuff in this directory goes to {etc/feynman/apache}
+# the stuff in this directory goes to {var/feynman}
 EXPORT_ETCDIR = $(EXPORT_ROOT)/$(PACKAGE)/$(PROJECT)
 
 # the standard build targets
 all: export
 
-# make sure we scope the files correctly
 export:: export-etcdir
+
+live: live-vardir
 
 # end of file

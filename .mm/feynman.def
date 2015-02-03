@@ -3,20 +3,17 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
-
 
 # the project name
 PROJECT = feynman
 
-# deployment settings for web servers
-APACHE_HOST = orthologue.com
-APACHE_USER = www-data
-APACHE_SUPERUSER = root
-APACHE_USERURL = $(APACHE_SUPERUSER)@$(APACHE_HOST)
-APACHE_CONFIGDIR = /etc/apache2/sites-available
-APACHE_CONFIGURL = $(APACHE_USERURL):$(APACHE_CONFIGDIR)
-
+# the live host
+PROJ_LIVE_HOST = feynman.orthologue.com
+PROJ_LIVE_ADMIN = root
+PROJ_LIVE_HOME = /home/staff/alec.aivazis
+PROJ_LIVE_ROOT = /home/staff/alec.aivazis/live
+PROJ_LIVE_WEB = /home/staff/alec.aivazis/live/web
 
 # end of file

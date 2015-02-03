@@ -2,7 +2,7 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
 
 # access the project defaults
@@ -10,14 +10,13 @@ include feynman.def
 # the package name
 PACKAGE = feynman
 # clean up
-PROJ_CLEAN = $(EXPORT_MODULEDIR)
-
-# the list of directories to visit
+PROJ_CLEAN += $(EXPORT_MODULEDIR)
+# my subdirectories
 RECURSE_DIRS = \
     base \
-    settings 
+    settings \
 
-# the list of python modules
+# the python modules
 EXPORT_PYTHON_MODULES = \
     urls.py \
     __init__.py
@@ -45,9 +44,11 @@ export:: __init__.py export-python-modules
 	BLD_ACTION="export" $(MM) recurse
 	@$(RM) __init__.py
 
+live: live-python-modules
+	BLD_ACTION="live" $(MM) recurse
+
 # construct my {__init__.py}
 __init__.py: __init__py
 	@sed -e "s:REVISION:$(REVISION):g" __init__py > __init__.py
-
 
 # end of file

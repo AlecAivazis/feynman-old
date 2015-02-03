@@ -2,9 +2,8 @@
 #
 # Alec Aivazis <alec@aivazis.com>
 # 
-# (c) 2009-2015 all rights reserved
+# (c) 2014-2015 all rights reserved
 #
-
 
 # access the project defaults
 include feynman.def
@@ -14,10 +13,10 @@ RECURSE_DIRS = \
     feynman \
     web \
     bin \
+    var \
     apache \
     doc \
     access \
-    var \
 
 # standard targets
 all:
@@ -32,6 +31,9 @@ clean::
 distclean::
 	BLD_ACTION="distclean" $(MM) recurse
 
+live:
+	BLD_ACTION="live" $(MM) recurse
+
 # convenience
 build: feynman lib extension defaults
 
@@ -43,6 +45,5 @@ test: build tests
 
 $(RECURSE_DIRS):
 	(cd $@; $(MM))
-
 
 # end of file
