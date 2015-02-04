@@ -673,7 +673,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           doc += latexString
 
         # close the latex diagram tag
-        doc += "\\end{feynman}"
+        doc += "\\end{feynman}<br><br>"
 
         # render the template for the latex view
         template = Handlebars.compile $('#exportLatex_template').html()

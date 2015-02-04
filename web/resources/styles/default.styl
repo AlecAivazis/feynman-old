@@ -26,10 +26,6 @@ $patternSelectRadius = 6px
 
 // styling
 
-html
-  height: 100%
-
-
 body
   font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif
   width: 100%
@@ -52,7 +48,7 @@ a
 
 
 #canvasTitle
-  position: absolute
+  position: fixed
   top: 20px
   left: $sidebarWidth + 40px
   right: $toolbarWidth + 50px
@@ -62,7 +58,11 @@ a
 
 
 svg
-  float: left
+  position: fixed
+  left: 250px
+  right: 0
+  top: 0
+  bottom: 0
 
 
 #sidebar
@@ -452,23 +452,27 @@ input , select
     text-align: left
   
   .toolbar
-    padding: 1.5% 0
+    padding: 5px 0
     text-align: center
 
   .step
-    margin: 1.5%
+    margin: 5px 5px 10px 5px
     overlay: auto
     font-size: 14px
 
     .title
       font-size: 16px
-      margin: 1.5% 0
+      margin: 5px 0
 
     .body
       background: white
-      padding: 3%
-      margin: 1.5%
       border-radius: $patternSelectRadius
+      padding: 5px
+
+      p
+        white-space: pre
+        overflow: auto
+        margin: 10px
 
 
 #showStartingPatterns
@@ -499,6 +503,6 @@ input , select
 
   a
     text-decoration: none
-    
+
 
 // end of file
