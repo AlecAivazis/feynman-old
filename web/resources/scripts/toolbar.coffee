@@ -635,7 +635,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
         # save a copy of the grid size
         gridSize =  $(document).attr('canvas').gridSize
 
-        doc = "\\begin{feynman}<br>"
+        doc = "\\begin{feynman}"
 
         # for each line in the diagram
         _.each $(document).attr('canvas').paper.lines, (line) ->
@@ -668,12 +668,12 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
           # create the configuration line for the latex package
           config = [" #{entry[0]}=#{entry[1]}" for entry in _.pairs(configuration)].join(',').substring(1)
           # build the latex command to draw this element
-          latexString = "&nbsp;&nbsp;&nbsp;&nbsp;\\#{line.style}[#{config}]{#{anchor1.x}, #{-anchor1.y}}{#{anchor2.x}, #{-anchor2.y}}<br>"
+          latexString = "<div class='exportLine'>&nbsp;&nbsp;&nbsp;&nbsp;\\#{line.style}[#{config}]{#{anchor1.x}, #{-anchor1.y}}{#{anchor2.x}, #{-anchor2.y}}</div>"
           # add the propagator to the latex document
           doc += latexString
 
         # close the latex diagram tag
-        doc += "\\end{feynman}<br><br>"
+        doc += "\\end{feynman}"
 
         # render the template for the latex view
         template = Handlebars.compile $('#exportLatex_template').html()

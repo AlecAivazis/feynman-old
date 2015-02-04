@@ -385,20 +385,19 @@ block content
             | x
         | Export to LaTeX
       .modalBody
-        .toolbar
-          span.button(style="margin-right: 1.5%")
-            | Copy to Clipboard
-          span.button
-            | Download LaTeX package
         .step
           .title Add this to your preamble:
-          .body 
-            p \usepackage{feynman}
+          .body \usepackage{feynman}
 
         .step
           .title Here's your diagram:
-          .body
-            p {{{docString}}}
+          .body {{{docString}}}
+        .toolbar
+          span.button.disabled(onclick="closeOverlay()", style="margin-right: 5px")
+            | close
+          a(href="/static/misc/feynman.sty")
+            span.button
+              | Download LaTeX package
 
   {% endverbatim %}
 
