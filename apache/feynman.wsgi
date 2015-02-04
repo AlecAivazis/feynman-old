@@ -1,7 +1,7 @@
 # -*- Python -*-
 #
 # Alec Aivazis <alec@aivazis.com>
-# 
+#
 # (c) 2014-2015 all rights reserved
 #
 
@@ -16,7 +16,7 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 
 # adjust the python path
 import sys
-sys.path = ['/home/staff/alec.aivazis/live/packages'] + sys.path
+sys.path = ['/home/projects/feynman/live/packages'] + sys.path
 
 # set the environment variable django uses to hunt down application settings
 import os

@@ -12,8 +12,8 @@ PROJECT = feynman
 # the live host
 PROJ_LIVE_HOST = feynman.orthologue.com
 PROJ_LIVE_ADMIN = root
-PROJ_LIVE_HOME = /home/staff/alec.aivazis
-PROJ_LIVE_ROOT = /home/staff/alec.aivazis/live
-PROJ_LIVE_WEB = /home/staff/alec.aivazis/live/web
+PROJ_LIVE_HOME = /home/projects/feynman
+PROJ_LIVE_ROOT = $(PROJ_LIVE_HOME)/live
+PROJ_LIVE_WEB = $(PROJECT_LIVE_ROOT)/web
 
 # end of file

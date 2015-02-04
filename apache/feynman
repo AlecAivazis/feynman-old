@@ -1,7 +1,7 @@
 # -*- apache -*-
 #
 # Alec Aivazis <alec@aivazis.com>
-# 
+#
 # (c) 2014-2015 all rights reserved
 #
 
@@ -14,10 +14,10 @@
     # make sure there is a usable locale
     SetEnv LANG en_US.UTF-8
     # and a python path
-    SetEnv PYTHONPATH /home/staff/alec.aivazis/live/packages
+    SetEnv PYTHONPATH /home/projects/feynman/live/packages
 
     # application support
-    WSGIScriptAlias / /home/staff/alec.aivazis/live/web/apache/feynman.wsgi
+    WSGIScriptAlias / /home/projects/feynman/live/web/apache/feynman.wsgi
     # permissions
     <Location "/">
         Options Indexes FollowSymLinks MultiViews
