@@ -496,7 +496,7 @@
         % load the configuration parameters
         \setkeys{style}{#1}
         % parse the color of the line
-        \definecolor{lineColor}{HTML}{FF0000}
+        \definecolor{lineColor}{HTML}{\style@color}
         % style the circle 
         \draw[color=lineColor, line width = \style@lineWidth, pattern=parton,
             pattern color=light-gray] 
@@ -513,7 +513,7 @@
         % load the configuration parameters
         \setkeys{style}{#1}
         % parse the color of the line
-        \definecolor{color}{HTML}{FF0000}
+        \definecolor{color}{HTML}{\style@color}
         % create a node at the location with the given contents
         \draw[text=color, anchor=\style@location] (#2) node {#3};
     \endgroup
