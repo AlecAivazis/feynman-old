@@ -564,8 +564,6 @@
         }{
             % compute the slope of the perpendicular line
             \FPeval{\perpSlope}{0 - \dX/\dY}
-            \FPeval{\roundedSlope}{round(\perpSlope,0)}
-            \FPeval{\roundedDistance}{round(\labelDistance, 0)}
 
             % the points that are perpedicular to the line a distance r away satisfy
             % y = mx
@@ -577,10 +575,15 @@
             % compute the y that satisfies this equation
             \FPeval{\y}{\x * \perpSlope}
 
+            \newdimen \distance
+            \distance = \labelDistance pt
+            \newdimen \slope
+            \slope = \perpSlope pt
+
             % if the perpendicular line has positive slope
-            \ifthenelse{\roundedSlope > 0 \OR \roundedSlope = 0}{
+            \ifthenelse{\slope > 0 pt \OR \slope = 0 pt}{
                 % if they are a positive distance away
-                \ifthenelse{\roundedDistance > 0}{
+                \ifthenelse{\distance > 0 pt}{
                     \FPeval{\labelX}{\@temp@locX + \x}
                     \FPeval{\labelY}{\@temp@locY + \y}
                     \def\loc{right}
@@ -593,7 +596,7 @@
             % otherwise the perpendicular line as negative slope
             }{
                 % if the label is a positive distance away
-                \ifthenelse{\roundedDistance > 0}{
+                \ifthenelse{\distance > 0 pt}{
                     \FPeval{\labelX}{\@temp@locX - \x}
                     \FPeval{\labelY}{\@temp@locY - \y}
                     \def\loc{right}
