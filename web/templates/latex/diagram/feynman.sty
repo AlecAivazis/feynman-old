@@ -598,11 +598,13 @@
                 % if the label is a positive distance away
                 \ifthenelse{\distance > 0 pt}{
                     \FPeval{\labelX}{\@temp@locX - \x}
+                    % note: the y is negative so we subtract even though we want to add
                     \FPeval{\labelY}{\@temp@locY - \y}
                     \def\loc{right}
                 % otherwise the label is a negative distance from the line
                 }{
                     \FPeval{\labelX}{\@temp@locX + \x}
+                    % note: the y is negative so we add even though we want to subtract
                     \FPeval{\labelY}{\@temp@locY + \y}
                     \def\loc{right}
                 }
