@@ -8,10 +8,10 @@ class FeynmanCanvas
   # when a canvas is created
   constructor: (@selector, startingPattern = 'dy') ->
     # create the snap object around the specified selector
-    @paper = Snap(selector)
+    @paper = Snap(@selector)
     @diagramGroup = @paper.g().addClass('diagram')
-    @paper.anchors = [] 
-    @paper.lines = [] 
+    @paper.anchors = []
+    @paper.lines = []
     @paper.constraints = []
     @zoomLevel = 1
 
@@ -39,7 +39,7 @@ class FeynmanCanvas
     @spacebarPressed = false
     # whenever they press a button
     $(window).keydown (evt) =>
-      # if its spacebar 
+      # if its spacebar
       if evt.which == 32
         # set the state variable
         @spacebarPressed = true
@@ -66,7 +66,7 @@ class FeynmanCanvas
         else
           # step back in history
           $(document).trigger('goBackOneUndo')
-      
+
 
     # whenever the scroll over the paper
     $(@paper.node).on 'mousewheel', (event) =>
@@ -81,7 +81,7 @@ class FeynmanCanvas
       else
         # so zoom out
         @zoomOut()
-      
+
     # whenever they drag on the paper
     @paper.drag(@dragMove, @dragStart, @dragEnd)
 
@@ -168,7 +168,7 @@ class FeynmanCanvas
 
       # if the element is one we care about
       if feynElement
-        # compute the coordinates we are moving the element to 
+        # compute the coordinates we are moving the element to
         x = feynElement.origin.x + dx/zoom
         y = feynElement.origin.y + dy/zoom
         # if the coordinates are not visible
@@ -184,7 +184,7 @@ class FeynmanCanvas
           # compute the lower right corner coordinates
           x1 = x0 + ( $(@selector).width() - $('#toolbar').innerWidth()  ) / scalex
           y1 = y0 + ( $(@selector).height() ) / scaley
-          
+
           # instantiate the variables that will store the distance to translate
           [x2, y2] = [0, 0]
           # set the  necssary x translations
@@ -223,7 +223,7 @@ class FeynmanCanvas
       _.each element.anchor.lines, (line) ->
         # and draw the label
         line.drawLabel()
-    
+
 
 
   addToDiagram: (element) ->
@@ -241,7 +241,7 @@ class FeynmanCanvas
     @removeGrid()
     # create a group for the new grid
     grid = @paper.group().addClass('grid')
-    # grab the current transformations of the diagram 
+    # grab the current transformations of the diagram
     xform = @diagramGroup.transform().globalMatrix.split()
     scalex = xform.scalex
     scaley = xform.scaley
@@ -266,7 +266,7 @@ class FeynmanCanvas
     for x in [xg0 .. xg0+width] by xDensity
       # draw a horizontal line
       grid.add @paper.path("M #{x} #{yg0} L #{x} #{yg0+height}").addClass('gridLine')
-    
+
     # go through all visible grid-aligned y coordinates
     for y in [yg0 .. yg0+height] by yDensity
       # draw a vertical line
@@ -274,10 +274,10 @@ class FeynmanCanvas
 
     # add the grid to the diagram
     @diagramGroup.add grid
-    
+
     # all done
     return
-    
+
 
   # remove the grid if it exists
   removeGrid: () =>
@@ -309,7 +309,7 @@ class FeynmanCanvas
     # draw each of the constraints
     _.each @paper.constraints, (constraint) ->
         constraint.draw()
-    
+
     # draw each of the anchors
     _.each @paper.anchors, (anchor) ->
       anchor.draw()
@@ -344,7 +344,7 @@ class FeynmanCanvas
       # dont do anything else
       # ie create a selection rectangle
       return
-    
+
     # get the event coordinates
     coords = @getMouseEventCoordinates(event)
 
@@ -402,10 +402,10 @@ class FeynmanCanvas
       if constraint.y + constraint.radius > y2 or y2 == undefined
         # set the bottom edge of the bounding box
         y2 = constraint.y + constraint.radius
-      
+
 
     # define the bounding box as an dictionary with the appropriate values
-    boundingBox = 
+    boundingBox =
       x1: x1
       y1: y1
       x2: x2
@@ -446,7 +446,7 @@ class FeynmanCanvas
       coords = @getMouseEventCoordinates(event)
       # move the created anchor
       @currentAnchor.handleMove(coords.x, coords.y)
-      
+
       return
 
     # if there hasnt been a  selection rectangle drawn or the user is holding the alt key
@@ -459,7 +459,7 @@ class FeynmanCanvas
       width: Math.abs(dx)
       height: Math.abs(dy)
 
-    # create the appropriate translation 
+    # create the appropriate translation
     if dx >= 0
       if dy <= 0
         transform = new Snap.Matrix().translate(0, dy)
@@ -479,7 +479,7 @@ class FeynmanCanvas
     # turn the strings into floats
     bound1x = parseInt(@selectionRect_element.attr('x'))
     dx = parseFloat(dx)
-    
+
     # create the inner bounds that these represent
     if bound1x < bound1x + dx
       bound2x = bound1x + dx
@@ -519,7 +519,7 @@ class FeynmanCanvas
       # within this range
       return bound1x <= constraint.x <= bound2x and
              bound1y <= constraint.y <= bound2y
-      
+
     # add the selectedElement class to each element
     _.each _.union(anchors, lines, constraints), (element) ->
       element.makeSelected()
@@ -527,7 +527,7 @@ class FeynmanCanvas
 
   # after the drag
   dragEnd: (event) =>
-    # grab the selection    
+    # grab the selection
     selected = Snap.selectAll('.selectedElement')
     # clear the selection rectangle
     @removeSelectionRect()
@@ -535,11 +535,11 @@ class FeynmanCanvas
     # if i was holding the spacebar
     if @spacebarPressed
       # do nothing else
-      return 
+      return
 
     # if the user was holding the alt key
     if event.altKey
-      # check for merges for the new 
+      # check for merges for the new
       onAnchor = @isAnchorOnAnchor(@currentAnchor)
       # if the newly created anchor was merged
       if onAnchor
@@ -577,9 +577,9 @@ class FeynmanCanvas
           # save a reference to the other anchor
           otherAnchor = if splitLine.anchor2 == splitAnchor then splitLine.anchor1 else splitLine.anchor2
           # register the backwards split with the undo stack
-          new UndoEntry false, 
+          new UndoEntry false,
             title: 'added branch to propagator'
-            data: 
+            data:
               originalLine: onLine
               splitAnchor: splitAnchor
               splitLine: splitLine
@@ -628,7 +628,7 @@ class FeynmanCanvas
             # register it with the undo stack
             new UndoEntry false ,
               title: "created vertex at #{@newAnchor.x}, #{@newAnchor.y}"
-              data: 
+              data:
                 anchor: @newAnchor,
                 line: @newAnchor.lines[0]
               forwards: ->
@@ -695,7 +695,7 @@ class FeynmanCanvas
 
 
           # neither the initial or the other anchor are on a line
-          else 
+          else
             # check if the new anchor is on a constraint
             onConstraint = @isAnchorOnConstraint(@currentAnchor)
             # if such a constraint exists
@@ -743,11 +743,11 @@ class FeynmanCanvas
                   @data[2].remove()
                   @data[1].remove()
                   @data[0].remove()
-              
+
       # clear the anchor references
       @currentAnchor = undefined
       @newAnchor = undefined
-       
+
       # do nothing else
       return
 
@@ -778,7 +778,7 @@ class FeynmanCanvas
   getClassElement: (element) =>
     if element.anchor
       return [element.anchor, 'anchor']
-    else if element.constraint  
+    else if element.constraint
       return [element.constraint, 'circle']
     else if element.line
       return [element.line, 'line']
@@ -805,7 +805,7 @@ class FeynmanCanvas
         # add it to the list
         constrained.push(anchor)
 
-    # once were done return the list 
+    # once were done return the list
     return constrained
 
 
@@ -820,7 +820,7 @@ class FeynmanCanvas
 
     # return the response
     return constraint
-      
+
 
   # check if a particular anchor falls on any of the lines in the canvas
   # removing any of its children before calculating
@@ -868,21 +868,21 @@ class FeynmanCanvas
 
     # return the response
     return onAnchor
-      
-      
+
+
   # compute the event coordinates bsaed on a mouse event
   getMouseEventCoordinates: (event) =>
     # compute the coordinates of the event using the offset coordinates if they exists
     if event.offsetX
       x = event.offsetX
-    # otherwise compute them 
+    # otherwise compute them
     else
-      x = event.pageX 
+      x = event.pageX
     # same for y
     if event.offsetY
       y = event.offsetY
     else
-      y = event.pageY 
+      y = event.pageY
 
     if navigator.userAgent.toLowerCase().indexOf('firefox') > -1
       # subtract the width of the sidebar from x
@@ -892,7 +892,7 @@ class FeynmanCanvas
     return @getCanvasCoordinates(x, y)
 
 
-  # turn page coordinates into canvas coordinates (ie take into account zoom and pan) 
+  # turn page coordinates into canvas coordinates (ie take into account zoom and pan)
   getCanvasCoordinates: (x, y) =>
 
     # grab the current transformation
@@ -901,11 +901,11 @@ class FeynmanCanvas
     diagramX = (x - transformInfo.dx) / transformInfo.scalex
     diagramY = (y - transformInfo.dy) / transformInfo.scaley
 
-    coords = 
+    coords =
       x: diagramX
       y: diagramY
 
-   
+
   # draw the sepecified pattern
   drawPattern: (pattern) =>
 
@@ -941,7 +941,7 @@ class FeynmanCanvas
     # clear the elements on the canvas before drawing the pattern
     $(document).attr('canvas').clear()
 
-    # handle each pattern 
+    # handle each pattern
     switch pattern
       when 'dy'
         # the incoming fermion
@@ -1000,7 +1000,7 @@ class FeynmanCanvas
         element.ressurect()
       # draw the canvas
       $(document).attr('canvas').draw()
-    
+
     # draw the anchors
     @draw()
     # save the entry to the stack
