@@ -14,13 +14,15 @@ extends base
 
 append js
 
+  {% compress js %}
   script(src="{% static 'thirdparty/jquery/dist/jquery.js' %}" type="text/javascript")
   script(src="{% static 'thirdparty/jquery-ui/jquery-ui.min.js' %}" type="text/javascript")
   script(src="{% static 'thirdparty/angular/angular.js' %}" type="text/javascript")
   script(src="{% static 'thirdparty/underscore/underscore.js' %}" type="text/javascript")
-
+  {% endcompress %}
   script(src="http://gabelerner.github.io/canvg/rgbcolor.js" type="text/javascript")
   script(src="http://gabelerner.github.io/canvg/canvg.js" type="text/javascript")
+  {% compress js %}
   script(src="{% static 'scripts/base64.js' %}" type="text/javascript")
   script(src="{% static 'thirdparty/FileSaver/FileSaver.js' %}" type="text/javascript")
 
@@ -32,7 +34,6 @@ append js
   script(src="{% static 'thirdparty/jquery-cookie/jquery.cookie.js' %}" type="text/javascript")
   script(src="{% static 'scripts/overlay.js' %}")
 
-  {% compress js %}
   script(src="{% static 'scripts/svgDataURL.coffee' %}", type="text/coffeescript")
 
   script(src="{% static 'scripts/Anchor.coffee' %}", type="text/coffeescript")
