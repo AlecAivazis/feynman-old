@@ -157,6 +157,14 @@ class Line
     # apply the transformation
     @arrow.transform(rotation)
 
+
+    # add event handlers to the arrow element
+    @arrow.drag @onDrag, @dragStart, @dragEnd
+    # add the click event handler
+    @arrow.node.onclick = (event)=>
+      event.stopPropagation()
+      $(document).trigger 'selectedElement', this
+
     
   # calculate the location for the label and then draw it
   drawLabel: =>
