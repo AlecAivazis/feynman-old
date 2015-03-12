@@ -106,7 +106,7 @@ class Line
     @removeArrow()
 
     # scale factor for the arrow
-    A = 6
+    A = 6 * @width/1.4
 
     # save a reference to the coordiantes of the first anchor
     anchor1 = @anchor1.getCoordinates()
