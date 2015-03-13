@@ -14,6 +14,7 @@ from .feynman import *
 DEBUG = True
 TEMPLATE_DEBUG = True
 COMPRESS_DEBUG_TOGGLE = True
+COMPRESS_ENABLED = True
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
