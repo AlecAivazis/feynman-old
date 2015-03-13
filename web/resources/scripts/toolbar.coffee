@@ -659,8 +659,8 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
             endcaps: line.drawEndCaps
             flip: line.loopDirection == -1
             label: line.label
-            labelDistance: parseInt(line.labelDistance/defaultUnit.pt_value).toFixed(2)
-            labelLocation: parseInt(line.labelLocation).toFixed(2)
+            labelDistance: (line.labelDistance/defaultUnit.pt_value).toFixed(2)
+            labelLocation: line.labelLocation.toFixed(2)
             showArrow: line.drawArrow
             lineWidth: parseInt(line.width).toFixed(2) / 1.4
 
@@ -813,7 +813,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   $scope.$watch 'width', (newVal, oldVal) ->
     if $scope.selectedElement
-      $scope.selectedElement.width = newVal
+      $scope.selectedElement.width = parseFloat(newVal)
       $scope.selectedElement.draw()
 
   $scope.$watch 'selectedElement.label', (newVal, oldVal) ->
