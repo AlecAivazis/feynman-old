@@ -813,7 +813,7 @@ app.controller 'sidebar', ['$scope',  '$rootScope', '$timeout', ($scope, $rootSc
 
   $scope.$watch 'width', (newVal, oldVal) ->
     if $scope.selectedElement
-      $scope.selectedElement.width = newVal
+      $scope.selectedElement.width = parseInt(newVal)
       $scope.selectedElement.draw()
 
   $scope.$watch 'selectedElement.label', (newVal, oldVal) ->
