@@ -607,11 +607,12 @@ class Line
       splitx = if event.offsetX then event.offsetX else event.clientX - $(event.target).offset().left
       splity = if event.offsetY then event.offsetY else event.clientY - $(event.target).offset().top
 
-      # if we haven't already made a new one this drag
       # create a node off of this one
       @newAnchor = @split(splitx, splity, true)
-      @newAnchor.origin_x = splitx
-      @newAnchor.origin_y = splity
+
+      # set the origin for the drag event
+      @newAnchor.origin_x = @newAnchor.x
+      @newAnchor.origin_y = @newAnchor.y
 
       # do nothing else
       return
@@ -966,10 +967,16 @@ class Line
   # create an anchor at the given coordinates and 
   split: (x, y, createAttachedNode = false, mergeAnchor = undefined) =>
 
-    # find the closest point on the line to the requested point
-    m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
-    anchorX = ( m * y + x + m * (m * @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
-    anchorY = ( m * ( x + m * y ) - (m * @anchor1.x - @anchor1.y) ) / (m*m + 1)
+    # if the line is vertical
+    if @anchor1.x == @anchor2.x
+        anchorX = @anchor1.x 
+        anchorY = y
+    # otherwise the line is not vertical
+    else 
+        # find the closest point on the line to the requested point
+        m = ( @anchor2.y - @anchor1.y ) / (@anchor2.x - @anchor1.x)
+        anchorX = ( m * y + x + m * (m * @anchor1.x - @anchor1.y) ) / ( m*m + 1 )
+        anchorY = ( m * ( x + m * y ) - (m * @anchor1.x - @anchor1.y) ) / (m*m + 1)
     
     # create the new elements
     anch = new Anchor(@paper, anchorX, anchorY)
@@ -993,7 +1000,7 @@ class Line
     # if they didn't tell use to create a new node
     else
       # return the newly created elements
-      anchor: if mergeAnchor then mergeAnchor.merge(anch) else anch
+      anchor: if mergeAnchor then anch.merge(mergeAnchor) else anch
       line: l
       originalLine: this
       otherAnchor: if l.anchor1 == anch then l.anchor2 else l.anchor1

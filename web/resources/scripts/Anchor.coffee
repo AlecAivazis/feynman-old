@@ -11,6 +11,8 @@ class Anchor
     @lines = []
     @paper.anchors.push this
 
+    console.log @x, @y
+
     # default values
     @color = '#000000'
     @fixed = false
