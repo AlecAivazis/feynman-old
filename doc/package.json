@@ -1,0 +1,29 @@
+{
+  "name": "feynman",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "jeet": "~6.1.2",
+    "rupture": "~0.6.1",
+    "coffee": "~1.0.0",
+    "axis": "~0.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aaivazis/feynman.git"
+  },
+  "keywords": [
+    "feynman",
+    "diagrams"
+  ],
+  "author": "alec aivazis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aaivazis/feynman/issues"
+  }
+}
