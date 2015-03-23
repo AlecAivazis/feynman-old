@@ -11,8 +11,6 @@ import os
 
 # geography
 home = os.path.dirname(__file__)
-# version
-version = (1,0, REVISION)
 
 
 # end of file
