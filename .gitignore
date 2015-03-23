@@ -1,0 +1,4 @@
+__pycache__
+web/resources/cache/
+web/resources/thirdparty/
+var/feynman.sqlite3
