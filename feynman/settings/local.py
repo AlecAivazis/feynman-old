@@ -23,7 +23,7 @@ COMPRESS_DEBUG_TOGGLE = False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE, 'var', 'feynman', 'feynman.sqlite3'),
+        'NAME': os.path.join(BASE, 'var', 'feynman.sqlite3'),
     }
 }
 
