@@ -16,9 +16,9 @@ from .views import Home, RenderLatex
 
 # define the primary url patterns
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', Home.as_view()),
+    url(r'(?i)^admin/', include(admin.site.urls)),
     url(r'(?i)^latex/$', RenderLatex.as_view()),
+    url(r'^$', Home.as_view()),
     # add the static urls
 ) 
 
