@@ -2,6 +2,6 @@ __pycache__
 **/.DS_Store
 *.pyc
 static/
-web/resources/cache/
-web/resources/thirdparty/
+assets/cache/
+assets/thirdparty/
 var/feynman.sqlite3
