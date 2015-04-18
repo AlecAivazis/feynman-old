@@ -4,4 +4,4 @@ __pycache__
 static/
 assets/cache/
 assets/thirdparty/
-var/feynman.sqlite3
+db/feynman.sqlite3
