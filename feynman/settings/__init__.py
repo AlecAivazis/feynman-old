@@ -1,9 +1,6 @@
 # -*- Python -*-
 # -*- coding: utf-8 -*-
 #
-# Alec Aivazis <alec@aivazis.com>
-# 
-# (c) 2014-2015 all rights reserved
+# alec aivazis
 #
-
 # end of file
