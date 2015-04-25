@@ -6,7 +6,7 @@
 from fabric.api import *
 
 # the server hosting the project
-env.hosts = []
+env.hosts = ['104.236.200.165']
 # the user to connect to the server as
 env.user = "feynman"
 
