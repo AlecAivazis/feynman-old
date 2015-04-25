@@ -28,8 +28,6 @@ UPLOADS = os.path.join(STATIC_DIR, 'uploads')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'c_j=+(4w66f+w0z22j$oapix_974gnq8@9+r4)hjf0gea%qd1j'
 
-# WSGI_APPLICATION = 'apache.wsgi.application'
-
 ALLOWED_HOSTS = ['test.feynman.com', 'feynman.aivazis.com']
 
 # Internationalization
@@ -90,6 +88,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
+)
+
+# where the static files live
+STATICFILES_DIRS = (
+    RESOURCES,
 )
 
 # Template definitions
