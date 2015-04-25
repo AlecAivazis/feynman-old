@@ -5,7 +5,7 @@ upstream feynman_server {
 
 # the nginx server
 server {
-    server_name _; # _ means all hosts
+    server_name feynman.aivazis.com; # _ means all hosts
     client_max_body_size 4G;
 
     listen 80 default_server;
