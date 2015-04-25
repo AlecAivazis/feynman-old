@@ -5,7 +5,7 @@ upstream feynman_server {
 
 # the nginx server
 server {
-    server_name test.aivazis.com; 
+    server_name test.aivazis.com feynman.aivazis.com; 
     client_max_body_size 4G;
 
     listen 80;
