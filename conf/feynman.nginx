@@ -1,11 +1,11 @@
 # the upstream application server (forward actual connections there)
 upstream feynman_server {
-    server 127.0.0.1:9000 fail_timeout=0;
+    server 127.0.0.1:7000 fail_timeout=0;
 }
 
 # the nginx server
 server {
-    server_name feynman.aivazis.com; 
+    server_name test.aivazis.com; 
     client_max_body_size 4G;
 
     listen 80;
