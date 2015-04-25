@@ -30,7 +30,7 @@ SECRET_KEY = 'c_j=+(4w66f+w0z22j$oapix_974gnq8@9+r4)hjf0gea%qd1j'
 
 # WSGI_APPLICATION = 'apache.wsgi.application'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['test.feynman.com', 'feynman.aivazis.com']
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
