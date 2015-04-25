@@ -5,11 +5,11 @@ upstream feynman_server {
 
 # the nginx server
 server {
-    server_name feynman.aivazis.com; # _ means all hosts
+    server_name feynman.aivazis.com; 
     client_max_body_size 4G;
 
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
+    listen 80;
+    listen [::]:80;
 
     keepalive_timeout 5;
 
