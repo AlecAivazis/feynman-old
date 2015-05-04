@@ -51,7 +51,7 @@ def deploy():
         # update the local dependencies
         # run('fab update_dependencies')
         # update the database
-        run('./manage.py migrate')
+        # run('./manage.py migrate')
         # update the static files
         run('./manage.py collectstatic')
         # restart the application server
