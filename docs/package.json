@@ -1,0 +1,16 @@
+{
+  "name": "feynman",
+  "version": "1.0.0",
+  "description": "",
+  "author": "alec aivazis",
+  "license": "MIT",
+  "dependencies": {
+    "axis": "^0.3.1",
+    "babel": "^5.1.9",
+    "coffee": "^1.0.0",
+    "coffee-react-transform": "^3.1.0",
+    "jeet": "^6.1.2",
+    "rupture": "^0.6.1",
+    "stylus": "^0.50.0"
+  }
+}

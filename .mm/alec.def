@@ -1,8 +1,0 @@
-# -*- Makefile -*-
-#
-
-# user specific settings
-
-PROJ_LIVE_USER = alec.aivazis
-
-# end of file

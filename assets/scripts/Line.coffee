@@ -14,7 +14,7 @@ class Line
 
     # default values
     @style = if style.style then style.style else 'fermion'
-    @width = if style.width then style.width else 1.4
+    @width = if style.width then style.width else 2
     @color = if style.color then style.color else '#000000'
     @loopDirection = if style.loopDirection then style.loopDirection else  1
     @labelDistance = if style.labelDistance then style.labelDistance else  30

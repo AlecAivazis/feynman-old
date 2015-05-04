@@ -1,11 +1,8 @@
 # -*- Python -*-
 # -*- coding: utf-8 -*-
 #
-# Alec Aivazis <alec@aivazis.com>
-# 
-# (c) 2014-2015 all rights reserved
+# alec aivazis
 #
-
 # this file describes the primary url router for feynman
 
 # django imports
@@ -14,14 +11,20 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
-# import the feynman applications
-from . import base
+# import the feynmanapplications
+from .views import Home, RenderLatex
 
 # define the primary url patterns
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'', include(base.urls)),
+    url(r'(?i)^admin/', include(admin.site.urls)),
+    url(r'(?i)^latex/$', RenderLatex.as_view()),
+    url(r'^$', Home.as_view()),
     # add the static urls
-) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+) 
+
+# if the debug flag is on
+if settings.DEBUG:
+    # add the local static url configuration
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # end of file
