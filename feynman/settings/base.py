@@ -28,7 +28,7 @@ UPLOADS = os.path.join(STATIC_DIR, 'uploads')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-ALLOWED_HOSTS = ['test.feynman.com', 'feynman.aivazis.com']
+ALLOWED_HOSTS = ['feynman.aivazis.com']
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
